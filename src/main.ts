@@ -219,15 +219,27 @@ function renderToolchainPartition() {
     ? `
       <div class="toolchain-featured-section">
         ${featured.map(art => `
-          <div class="toolchain-featured-card" onclick="window.viewArticle(${art.id})">
-            <div class="featured-cover" style="background: linear-gradient(135deg, ${getCategoryColor('toolchain')} 0%, #1e222b 100%);">
-              <div class="featured-subcat-badge">${(art.subcategory || 'toolchain').toUpperCase()}</div>
-              <span class="featured-cover-text">${(art.subcategory || 'toolchain').toUpperCase()} 技术精选</span>
+          <div class="card" style="width: auto; flex: 1;">
+            <div class="card-cover-wrapper" style="width: 100%; height: auto; display: flex; flex-direction: column; gap: 16px;">
+              <div class="featured-cover" style="background: linear-gradient(135deg, ${getCategoryColor('toolchain')} 0%, #1e222b 100%);">
+                <div class="featured-subcat-badge">${(art.subcategory || 'toolchain').toUpperCase()}</div>
+                <span class="featured-cover-text">${(art.subcategory || 'toolchain').toUpperCase()} 技术精选</span>
+              </div>
+              <div class="featured-info" style="padding: 0;">
+                <span class="featured-date">${art.publishTime}</span>
+                <h4 class="featured-title">${art.title}</h4>
+                <p class="featured-snippet">${art.contentSnippet}</p>
+              </div>
             </div>
-            <div class="featured-info">
-              <span class="featured-date">${art.publishTime}</span>
-              <h4 class="featured-title">${art.title}</h4>
-              <p class="featured-snippet">${art.contentSnippet}</p>
+            <div class="card-content" style="width: 100%;">
+              <div class="card-title-container">
+                <p class="card-title" style="visibility: hidden;">${art.title}</p>
+              </div>
+              <div class="card-btn-container">
+                <div class="card-btn" onclick="window.viewArticle(${art.id})">
+                  <img src="https://fastcdn.hoyoverse.com/static-resource-v2/2024/03/21/882dcd6829a489afda8ba322eb982e7d_2051193489758981573.png" alt="arrow" />
+                </div>
+              </div>
             </div>
           </div>
         `).join('')}
@@ -241,17 +253,29 @@ function renderToolchainPartition() {
     ? `
       <div class="toolchain-list-section">
         ${visibleList.map(art => `
-          <div class="toolchain-list-card" onclick="window.viewArticle(${art.id})">
-            <div class="list-card-cover" style="background: linear-gradient(135deg, ${getCategoryColor('toolchain')} 0%, #2e3440 100%);">
-              <span class="list-cover-badge">${(art.subcategory || 'toolchain').toUpperCase()}</span>
-            </div>
-            <div class="list-card-info">
-              <div class="list-card-header">
-                <span class="list-card-badge">${(art.subcategory || 'toolchain').toUpperCase()}</span>
-                <span class="list-card-date">${art.publishTime}</span>
+          <div class="card" style="width: 100%;">
+            <div class="card-cover-wrapper" style="width: 100%; height: auto; display: flex; gap: 24px;">
+              <div class="list-card-cover" style="background: linear-gradient(135deg, ${getCategoryColor('toolchain')} 0%, #2e3440 100%);">
+                <span class="list-cover-badge">${(art.subcategory || 'toolchain').toUpperCase()}</span>
               </div>
-              <h4 class="list-card-title">${art.title}</h4>
-              <p class="list-card-snippet">${art.contentSnippet}</p>
+              <div class="list-card-info" style="padding: 0; flex-grow: 1;">
+                <div class="list-card-header">
+                  <span class="list-card-badge">${(art.subcategory || 'toolchain').toUpperCase()}</span>
+                  <span class="list-card-date">${art.publishTime}</span>
+                </div>
+                <h4 class="list-card-title">${art.title}</h4>
+                <p class="list-card-snippet">${art.contentSnippet}</p>
+              </div>
+            </div>
+            <div class="card-content" style="width: 100%;">
+              <div class="card-title-container">
+                <p class="card-title" style="visibility: hidden;">${art.title}</p>
+              </div>
+              <div class="card-btn-container">
+                <div class="card-btn" onclick="window.viewArticle(${art.id})">
+                  <img src="https://fastcdn.hoyoverse.com/static-resource-v2/2024/03/21/882dcd6829a489afda8ba322eb982e7d_2051193489758981573.png" alt="arrow" />
+                </div>
+              </div>
             </div>
           </div>
         `).join('')}
