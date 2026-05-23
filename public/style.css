@@ -402,18 +402,39 @@ body {
   flex-shrink: 0;
 }
 
+/* Category solid background colors */
+.media-wrapper[data-category="rust"] { background-color: #b15b45; }
+.media-wrapper[data-category="rtos"] { background-color: #3b7a9e; }
+.media-wrapper[data-category="mcu"] { background-color: #438e68; }
+.media-wrapper[data-category="markup"] { background-color: #968045; }
+.media-wrapper[data-category="c"] { background-color: #a84545; }
+.media-wrapper[data-category="toolchain"] { background-color: #5e4b8b; }
+
 .home-collection:hover .media-wrapper {
   width: clamp(280px, 34vw, 380px); /* expands on hover */
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* Slideshow images styling */
-.media-wrapper .media {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
-  border-radius: 8px;
+/* Slideshow text keyword styling */
+.media-wrapper .media-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(20px, 2.8vw, 32px);
+  font-weight: 600;
+  color: #ffffff;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.media-wrapper .media-text.js-active {
+  opacity: 1;
+  visibility: visible;
 }
 
 .collection-count {

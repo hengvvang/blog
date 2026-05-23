@@ -1,7 +1,7 @@
 import { serve } from "bun";
 
 const server = serve({
-  port: 6505, // 修改为固定非 3000 的端口，避免遇到 EADDRINUSE 占用错误
+  port: 6506, // 修改为 6506
   async fetch(req) {
     const url = new URL(req.url);
     const path = url.pathname;
