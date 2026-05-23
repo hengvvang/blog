@@ -232,6 +232,18 @@ function renderArticles() {
 renderNav();
 renderArticles();
 
+function getCategoryColor(cat: string): string {
+  const colors: Record<string, string> = {
+    rust: '#b15b45',
+    rtos: '#3b7a9e',
+    mcu: '#438e68',
+    markup: '#968045',
+    c: '#a84545',
+    toolchain: '#5e4b8b'
+  };
+  return colors[cat] || '#b79773';
+}
+
 // 挂载到 window 供 onclick 调用
 (window as any).viewArticle = (id: number) => {
   const article = ARTICLES.find(a => a.id === id);
@@ -248,27 +260,93 @@ renderArticles();
     document.querySelector('.main-container')?.appendChild(detailView);
   }
 
+  // Get 5 related articles in the same category (excluding the current one)
+  const related = ARTICLES.filter(a => a.category === article.category && a.id !== article.id).slice(0, 5);
+  const relatedArticlesHTML = related.map(rel => `
+    <div class="sidebar-item" onclick="window.viewArticle(${rel.id})">
+      <div class="sidebar-thumb" style="background-color: ${getCategoryColor(rel.category)};">
+        <span class="thumb-text">${rel.category[0].toUpperCase()}</span>
+      </div>
+      <div class="sidebar-item-info">
+        <p class="sidebar-item-title">${rel.title}</p>
+        <p class="sidebar-item-date">${rel.publishTime}</p>
+      </div>
+    </div>
+  `).join('');
+
   detailView.style.display = 'block';
   detailView.innerHTML = `
-    <button class="back-btn" onclick="window.backToList()">
-      <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-      返回列表
-    </button>
-    <div class="detail-header">
-      <h1 class="detail-title">${article.title}</h1>
-      <p class="detail-meta">
-        <span class="detail-cat">${article.category.toUpperCase()}</span>
-        <span>${article.publishTime}</span>
-      </p>
+    <!-- Top Breadcrumbs / Path Bar -->
+    <div class="detail-path-bar">
+      <div class="path-breadcrumbs">
+        <span class="path-item" onclick="window.backToHome()">HOME</span>
+        <span class="path-separator">&gt;</span>
+        <div class="path-category-dropdown">
+          <span class="path-item active-cat">
+            ${article.category.toUpperCase()}
+            <svg class="dropdown-arrow" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none"></path></svg>
+          </span>
+          <div class="dropdown-content">
+            <a onclick="window.selectCategory('rust')">RUST</a>
+            <a onclick="window.selectCategory('rtos')">RTOS</a>
+            <a onclick="window.selectCategory('mcu')">MCU</a>
+            <a onclick="window.selectCategory('markup')">MARKUP</a>
+            <a onclick="window.selectCategory('c')">C</a>
+            <a onclick="window.selectCategory('toolchain')">TOOLCHAIN</a>
+          </div>
+        </div>
+        <span class="path-separator">&gt;</span>
+        <span class="path-item path-title-truncated">${article.title}</span>
+      </div>
+      <button class="return-news-btn" onclick="window.backToList()">
+        Return to News
+      </button>
     </div>
-    <div class="detail-content">
-      <p class="detail-lead">${article.contentSnippet}</p>
-      <div class="detail-body">
-        <p>（这里是文章的详细正文内容。实际项目中可以通过加载具体的 Markdown 文件或请求后端接口获取富文本内容来展示，目前为占位详情文本以展示阅读视图效果。）</p>
-        <p>在这篇教程中，我们详细解析了内部的机制，通过具体的案例和实战代码带你快速入门并掌握高级技巧...</p>
+
+    <!-- Main Layout (Content Column + Sidebar Column) -->
+    <div class="detail-main-layout">
+      <!-- Left: Article Content Card -->
+      <div class="detail-content-card">
+        <div class="detail-header">
+          <h1 class="detail-title">${article.title}</h1>
+          <p class="detail-date">Announcement date: ${article.publishTime}</p>
+        </div>
+        
+        <!-- Decorative Horizontal Category Banner -->
+        <div class="detail-banner" style="background-color: ${getCategoryColor(article.category)};">
+          <span class="banner-text">${article.category.toUpperCase()}</span>
+        </div>
+
+        <div class="detail-body">
+          <p class="detail-lead">${article.contentSnippet}</p>
+          <p>（这里是文章的详细正文内容。实际项目中可以通过加载具体的 Markdown 文件或请求后端接口获取富文本内容来展示，目前为占位详情文本以展示阅读视图效果。）</p>
+          <p>在这篇教程中，我们详细解析了 ${article.category.toUpperCase()} 相关的核心技术与实践机制，通过具体的案例和实战代码带你快速入门并掌握高级技巧。</p>
+          <p>无论是在工程构建还是在底层系统优化中，这些方法都能为你提供强大的思路和实践参考。未来我们还将深入探讨更多进阶特性，结合具体硬件平台或编译器优化选项，实现更加高效、稳健 of 系统架构。敬请期待我们的后续更新！</p>
+        </div>
+      </div>
+
+      <!-- Right: Related Articles Sidebar Card -->
+      <div class="detail-sidebar-card">
+        <div class="sidebar-header">
+          up to date
+        </div>
+        <div class="sidebar-list">
+          ${relatedArticlesHTML.length > 0 ? relatedArticlesHTML : '<p class="sidebar-empty">No other articles in this category.</p>'}
+        </div>
       </div>
     </div>
   `;
+  
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+(window as any).backToHome = () => {
+  currentCategory = 'home';
+  if (navBar) navBar.style.display = 'flex';
+  const detailView = document.getElementById('article-detail-view');
+  if (detailView) detailView.style.display = 'none';
+  renderNav();
+  renderArticles();
 };
 
 (window as any).backToList = () => {
@@ -280,6 +358,9 @@ renderArticles();
 
 (window as any).selectCategory = (cat: string) => {
   currentCategory = cat;
+  if (navBar) navBar.style.display = 'flex';
+  const detailView = document.getElementById('article-detail-view');
+  if (detailView) detailView.style.display = 'none';
   renderNav();
   renderArticles();
 };
