@@ -219,8 +219,8 @@ function renderToolchainPartition() {
     ? `
       <div class="toolchain-featured-section">
         ${featured.map(art => `
-          <div class="card" style="width: auto; flex: 1;">
-              <div class="card-cover-wrapper" style="width: 100%; height: auto; display: flex; flex-direction: column; gap: 8px; padding: 12px 16px;">
+          <div class="card toolchain-horizontal-card" style="width: auto; flex: 1;">
+              <div class="card-cover-wrapper" style="width: auto; flex: 1; height: auto; display: flex; flex-direction: column; gap: 8px; padding: 12px 16px;">
                 <div class="featured-cover" style="background: linear-gradient(135deg, ${getCategoryColor('toolchain')} 0%, #1e222b 100%);">
                   <div class="featured-subcat-badge">${(art.subcategory || 'toolchain').toUpperCase()}</div>
                   <span class="featured-cover-text">${(art.subcategory || 'toolchain').toUpperCase()} 技术精选</span>
@@ -231,7 +231,7 @@ function renderToolchainPartition() {
                   <p class="featured-snippet" style="font-size: 12px; margin: 0; -webkit-line-clamp: 2;">${art.contentSnippet}</p>
               </div>
             </div>
-            <div class="card-content" style="width: 100%;">
+            <div class="card-content">
               <div class="card-title-container">
                 <p class="card-title" style="visibility: hidden;">${art.title}</p>
               </div>

@@ -884,7 +884,7 @@ body {
 /* 1. Featured cards */
 .toolchain-featured-section {
   display: flex;
-  gap: 24px;
+  gap: 0;
   width: 100%;
 }
 
@@ -1180,7 +1180,7 @@ body {
 @media (max-width: 768px) {
   .toolchain-featured-section {
     flex-direction: column;
-    gap: 18px;
+    gap: 0;
   }
   
   .toolchain-featured-card {
@@ -1223,3 +1223,45 @@ body {
   background-color: transparent;
 }
 
+
+/* Toolchain feature card horizontal expansion */
+.toolchain-horizontal-card {
+  flex-direction: row;
+}
+.toolchain-horizontal-card .card-content {
+  width: 0;
+  height: auto;
+  margin: 0;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.toolchain-horizontal-card:hover .card-content {
+  width: 44px;
+  height: auto;
+}
+.toolchain-horizontal-card .card-title-container {
+  display: none;
+}
+.toolchain-horizontal-card .card-btn-container {
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+.toolchain-horizontal-card .card-btn {
+  height: 65%;
+  width: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toolchain-horizontal-card { padding: 12px 12px 12px 24px; }
+
+/* 扩大下方列表卡片的右下角按钮为原来的3倍宽 */
+.toolchain-list-section .card-btn {
+  padding: 0 54px; 
+}
