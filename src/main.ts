@@ -9,6 +9,15 @@ interface Article {
 
 const CATEGORIES = ['rust', 'rtos', 'mcu', 'markup', 'c', 'toolchain'];
 
+
+function formatDate(dateStr: string): string {
+  const parts = dateStr.split(' ')[0].split('-');
+  if (parts.length === 3) {
+    return `${parts[0]}年${parts[1]}月${parts[2]}日`;
+  }
+  return dateStr;
+}
+
 let currentToolchainSubcat = 'all';
 let toolchainPageSize = 5;
 
@@ -378,6 +387,22 @@ function getCategoryColor(cat: string): string {
   return colors[cat] || '#b79773';
 }
 
+// Scroll event listener for Back-to-Top button
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('back-top-btn');
+  if (btn) {
+    if (window.scrollY > 300) {
+      btn.classList.add('show');
+    } else {
+      btn.classList.remove('show');
+    }
+  }
+});
+
+(window as any).scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
 // 挂载到 window 供 onclick 调用
 (window as any).viewArticle = (id: number) => {
   const article = ARTICLES.find(a => a.id === id);
@@ -396,17 +421,51 @@ function getCategoryColor(cat: string): string {
 
   // Get 5 related articles in the same category (excluding the current one)
   const related = ARTICLES.filter(a => a.category === article.category && a.id !== article.id).slice(0, 5);
-  const relatedArticlesHTML = related.map(rel => `
-    <div class="sidebar-item" onclick="window.viewArticle(${rel.id})">
-      <div class="sidebar-thumb" style="background-color: ${getCategoryColor(rel.category)};">
-        <span class="thumb-text">${rel.category[0].toUpperCase()}</span>
+  const relatedArticlesHTML = related.map(rel => {
+    return `
+      <div class="sidebar-item" onclick="window.viewArticle(${rel.id})">
+        <div class="sidebar-thumb" style="background-color: ${getCategoryColor(rel.category)};"></div>
+        <div class="sidebar-item-info">
+          <p class="sidebar-item-title">${rel.title}</p>
+          <p class="sidebar-item-date">${formatDate(rel.publishTime)}</p>
+        </div>
       </div>
-      <div class="sidebar-item-info">
-        <p class="sidebar-item-title">${rel.title}</p>
-        <p class="sidebar-item-date">${rel.publishTime}</p>
+    `;
+  }).join('');
+
+  // Get previous and next articles in the same category
+  const categoryArticles = ARTICLES.filter(a => a.category === article.category);
+  const currIndex = categoryArticles.findIndex(a => a.id === article.id);
+  const prevArticle = currIndex > 0 ? categoryArticles[currIndex - 1] : null;
+  const nextArticle = currIndex < categoryArticles.length - 1 ? categoryArticles[currIndex + 1] : null;
+
+  let bottomBarHTML = '';
+  if (prevArticle || nextArticle) {
+    bottomBarHTML = `
+      <div class="detail-bottom-bar">
+        ${prevArticle 
+          ? `<a class="bottombar-prev" onclick="window.viewArticle(${prevArticle.id})">
+              <svg class="nav-arrow" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              <div class="nav-link-info">
+                <span class="nav-label">PREVIOUS ARTICLE</span>
+                <span class="nav-title">${prevArticle.title}</span>
+              </div>
+             </a>` 
+          : ''
+        }
+        ${nextArticle 
+          ? `<a class="bottombar-next" onclick="window.viewArticle(${nextArticle.id})">
+              <div class="nav-link-info text-right">
+                <span class="nav-label">NEXT ARTICLE</span>
+                <span class="nav-title">${nextArticle.title}</span>
+              </div>
+              <svg class="nav-arrow" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="9 18 15 12 9 6"></polyline></svg>
+             </a>` 
+          : ''
+        }
       </div>
-    </div>
-  `).join('');
+    `;
+  }
 
   detailView.style.display = 'block';
   detailView.innerHTML = `
@@ -443,7 +502,7 @@ function getCategoryColor(cat: string): string {
       <div class="detail-content-card">
         <div class="detail-header">
           <h1 class="detail-title">${article.title}</h1>
-          <p class="detail-date">Announcement date: ${article.publishTime}</p>
+          <p class="detail-date">発表時間 ${formatDate(article.publishTime)}</p>
         </div>
         
         <!-- Decorative Horizontal Category Banner -->
@@ -457,18 +516,26 @@ function getCategoryColor(cat: string): string {
           <p>在这篇教程中，我们详细解析了 ${article.category.toUpperCase()} 相关的核心技术与实践机制，通过具体的案例和实战代码带你快速入门并掌握高级技巧。</p>
           <p>无论是在工程构建还是在底层系统优化中，这些方法都能为你提供强大的思路和实践参考。未来我们还将深入探讨更多进阶特性，结合具体硬件平台或编译器优化选项，实现更加高效、稳健 of 系统架构。敬请期待我们的后续更新！</p>
         </div>
+
+        <!-- Bottom Navigation Links -->
+        ${bottomBarHTML}
       </div>
 
       <!-- Right: Related Articles Sidebar Card -->
       <div class="detail-sidebar-card">
         <div class="sidebar-header">
-          up to date
+          最新
         </div>
         <div class="sidebar-list">
           ${relatedArticlesHTML.length > 0 ? relatedArticlesHTML : '<p class="sidebar-empty">No other articles in this category.</p>'}
         </div>
       </div>
     </div>
+
+    <!-- Floating Back to Top Button -->
+    <button id="back-top-btn" class="back-top-btn" onclick="window.scrollToTop()">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+    </button>
   `;
   
   window.scrollTo({ top: 0, behavior: 'smooth' });
