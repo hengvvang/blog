@@ -907,13 +907,14 @@ body {
 }
 
 .featured-cover {
-  height: 240px;
+  height: 90px;
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #ffffff;
+  border-radius: 4px;
 }
 
 
@@ -928,7 +929,7 @@ body {
 
 .featured-cover-text {
   font-family: 'Outfit', sans-serif;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 700;
   letter-spacing: 0.05em;
   z-index: 2;
@@ -943,13 +944,13 @@ body {
 
 .featured-subcat-badge {
   position: absolute;
-  top: 16px;
-  left: 16px;
+  top: 8px;
+  left: 8px;
   background-color: var(--btn-bg);
   color: #ffffff;
-  padding: 4px 10px;
+  padding: 4px 8px;
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.05em;
   z-index: 2;

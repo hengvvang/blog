@@ -220,15 +220,15 @@ function renderToolchainPartition() {
       <div class="toolchain-featured-section">
         ${featured.map(art => `
           <div class="card" style="width: auto; flex: 1;">
-            <div class="card-cover-wrapper" style="width: 100%; height: auto; display: flex; flex-direction: column; gap: 16px;">
-              <div class="featured-cover" style="background: linear-gradient(135deg, ${getCategoryColor('toolchain')} 0%, #1e222b 100%);">
-                <div class="featured-subcat-badge">${(art.subcategory || 'toolchain').toUpperCase()}</div>
-                <span class="featured-cover-text">${(art.subcategory || 'toolchain').toUpperCase()} 技术精选</span>
-              </div>
-              <div class="featured-info" style="padding: 0;">
-                <span class="featured-date">${art.publishTime}</span>
-                <h4 class="featured-title">${art.title}</h4>
-                <p class="featured-snippet">${art.contentSnippet}</p>
+              <div class="card-cover-wrapper" style="width: 100%; height: auto; display: flex; flex-direction: column; gap: 8px; padding: 12px 16px;">
+                <div class="featured-cover" style="background: linear-gradient(135deg, ${getCategoryColor('toolchain')} 0%, #1e222b 100%);">
+                  <div class="featured-subcat-badge">${(art.subcategory || 'toolchain').toUpperCase()}</div>
+                  <span class="featured-cover-text">${(art.subcategory || 'toolchain').toUpperCase()} 技术精选</span>
+                </div>
+                <div class="featured-info" style="padding: 0;">
+                  <span class="featured-date" style="font-size: 11px;">${art.publishTime}</span>
+                  <h4 class="featured-title" style="margin: 4px 0; font-size: 16px;">${art.title}</h4>
+                  <p class="featured-snippet" style="font-size: 12px; margin: 0; -webkit-line-clamp: 2;">${art.contentSnippet}</p>
               </div>
             </div>
             <div class="card-content" style="width: 100%;">
