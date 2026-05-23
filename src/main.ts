@@ -104,8 +104,19 @@ const slideDirs = [
   { in: 'translate(-150%, -50%)', out: 'translate(150%, -50%)' }  // left to right
 ];
 const categoryDirections: Record<string, typeof slideDirs[0]> = {};
+const categoryOrders: Record<string, number[]> = {};
+
 CATEGORIES.forEach(cat => {
   categoryDirections[cat] = slideDirs[Math.floor(Math.random() * slideDirs.length)];
+  
+  // 0: icon, 1: name, 2: count, 3: media
+  // Icon, name, and count must strictly be in the order 0 -> 1 -> 2.
+  // Media (3) can be randomly inserted at any of the 4 available positions.
+  const order = [0, 1, 2];
+  const mediaPos = Math.floor(Math.random() * 4);
+  order.splice(mediaPos, 0, 3);
+  
+  categoryOrders[cat] = order;
 });
 
 (window as any).onRowEnter = (cat: string) => {
@@ -378,22 +389,9 @@ function renderArticles() {
         </div>
       `;
       
-      let rowContent = '';
-      const patternIndex = index % 4;
-      
-      if (patternIndex === 0) {
-        // Pattern 0 (Urban / Details): Icon -> Name -> Media -> Count
-        rowContent = `${iconHTML}${nameHTML}${mediaHTML}${countHTML}`;
-      } else if (patternIndex === 1) {
-        // Pattern 1 (Nature): Icon -> Media -> Name -> Count
-        rowContent = `${iconHTML}${mediaHTML}${nameHTML}${countHTML}`;
-      } else if (patternIndex === 2) {
-        // Pattern 2 (Golf): Icon -> Name -> Count -> Media
-        rowContent = `${iconHTML}${nameHTML}${countHTML}${mediaHTML}`;
-      } else {
-        // Pattern 3 (RePlastic): Media -> Icon -> Name -> Count
-        rowContent = `${mediaHTML}${iconHTML}${nameHTML}${countHTML}`;
-      }
+      const elements = [iconHTML, nameHTML, countHTML, mediaHTML];
+      const order = categoryOrders[cat] || [0, 1, 3, 2];
+      const rowContent = order.map(idx => elements[idx]).join('');
       
       return `
         <div class="home-collection" onclick="window.selectCategory('${cat}')" onmouseenter="window.onRowEnter('${cat}')" onmouseleave="window.onRowLeave('${cat}')">
