@@ -36,14 +36,126 @@ const generateArticles = (): Article[] => {
 };
 
 const ARTICLES = generateArticles();
-let currentCategory = 'rust';
+let currentCategory = 'home';
 
 const navBar = document.getElementById('nav-bar');
 const articleGrid = document.getElementById('article-grid');
 
+// Category icons
+const ICONS: Record<string, string> = {
+  rust: `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`,
+  rtos: `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`,
+  mcu: `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="15" x2="23" y2="15"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="15" x2="4" y2="15"></line></svg>`,
+  git: `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"></line><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M18 9a9 9 0 0 1-9 9"></path></svg>`,
+  markup: `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`,
+  c: `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`,
+  toolchain: `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>`
+};
+
+// Category preview slideshow images (3 images per category)
+const IMAGES: Record<string, string[]> = {
+  rust: [
+    'https://images.unsplash.com/photo-1597839219216-a773cb2473e4?auto=format&fit=crop&w=300&h=200&q=80',
+    'https://images.unsplash.com/photo-1607799279861-4dd421887fb3?auto=format&fit=crop&w=300&h=200&q=80',
+    'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=300&h=200&q=80'
+  ],
+  rtos: [
+    'https://images.unsplash.com/photo-1508873535684-277a3cbcc4e8?auto=format&fit=crop&w=300&h=200&q=80',
+    'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=300&h=200&q=80',
+    'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=300&h=200&q=80'
+  ],
+  mcu: [
+    'https://images.unsplash.com/photo-1601524909162-be87252be298?auto=format&fit=crop&w=300&h=200&q=80',
+    'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=300&h=200&q=80',
+    'https://images.unsplash.com/photo-1563770660941-20978e870e26?auto=format&fit=crop&w=300&h=200&q=80'
+  ],
+  git: [
+    'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=300&h=200&q=80',
+    'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=300&h=200&q=80',
+    'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=300&h=200&q=80'
+  ],
+  markup: [
+    'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=300&h=200&q=80',
+    'https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=300&h=200&q=80',
+    'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=300&h=200&q=80'
+  ],
+  c: [
+    'https://images.unsplash.com/photo-1542831371-29b0f74f9713?auto=format&fit=crop&w=300&h=200&q=80',
+    'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=300&h=200&q=80',
+    'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=300&h=200&q=80'
+  ],
+  toolchain: [
+    'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=300&h=200&q=80',
+    'https://images.unsplash.com/photo-1537462715879-360eeb61a0bc?auto=format&fit=crop&w=300&h=200&q=80',
+    'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=300&h=200&q=80'
+  ]
+};
+
+let slideshowInterval: any = null;
+
+function startSlideshows() {
+  if (slideshowInterval) clearInterval(slideshowInterval);
+  slideshowInterval = setInterval(() => {
+    CATEGORIES.forEach(cat => {
+      const wrapper = document.querySelector(`.media-wrapper[data-category="${cat}"]`);
+      if (!wrapper) return;
+      const imgs = wrapper.querySelectorAll('.media');
+      if (imgs.length <= 1) return;
+      
+      let activeIndex = -1;
+      for (let i = 0; i < imgs.length; i++) {
+        const img = imgs[i] as HTMLImageElement;
+        if (img.style.opacity === '1') {
+          activeIndex = i;
+          break;
+        }
+      }
+      
+      if (activeIndex !== -1) {
+        const currImg = imgs[activeIndex] as HTMLImageElement;
+        currImg.style.opacity = '0';
+        currImg.style.visibility = 'hidden';
+        
+        const nextIndex = (activeIndex + 1) % imgs.length;
+        const nextImg = imgs[nextIndex] as HTMLImageElement;
+        nextImg.style.opacity = '1';
+        nextImg.style.visibility = 'inherit';
+      }
+    });
+  }, 2500);
+}
+
+function stopSlideshows() {
+  if (slideshowInterval) {
+    clearInterval(slideshowInterval);
+    slideshowInterval = null;
+  }
+}
+
+function getCategoryImagesHTML(cat: string): string {
+  const list = IMAGES[cat] || [];
+  return list.map((src, index) => {
+    const style = index === 0 
+      ? 'opacity: 1; visibility: inherit; position: relative;' 
+      : 'opacity: 0; visibility: hidden; position: absolute; top: 0; left: 0; width: 100%; height: 100%;';
+    return `<img class="media" src="${src}" alt="${cat} preview ${index}" style="${style}">`;
+  }).join('');
+}
+
 function renderNav() {
   if (!navBar) return;
   navBar.innerHTML = '';
+  
+  // Add Home option
+  const homeBtn = document.createElement('button');
+  homeBtn.className = `nav-item ${currentCategory === 'home' ? 'active' : ''}`;
+  homeBtn.textContent = '首页';
+  homeBtn.onclick = () => {
+    currentCategory = 'home';
+    renderNav();
+    renderArticles();
+  };
+  navBar.appendChild(homeBtn);
   
   CATEGORIES.forEach(cat => {
     const btn = document.createElement('button');
@@ -61,26 +173,77 @@ function renderNav() {
 function renderArticles() {
   if (!articleGrid) return;
   
-  const filtered = ARTICLES.filter(a => a.category === currentCategory);
+  // Ensure the element is visible
+  articleGrid.style.display = '';
   
-  articleGrid.innerHTML = filtered.map(article => `
-        <div class="card">
-          <div class="card-cover-wrapper">
-            <div class="card-cover-text">${article.contentSnippet}</div>
+  if (currentCategory === 'home') {
+    articleGrid.className = 'home-collections-wrapper';
+    
+    articleGrid.innerHTML = CATEGORIES.map((cat, index) => {
+      const count = ARTICLES.filter(a => a.category === cat).length;
+      const formattedCount = String(count).padStart(2, '0');
+      const iconSVG = ICONS[cat] || '';
+      
+      const iconHTML = `<div class="collection-icon">${iconSVG}</div>`;
+      const nameHTML = `<h3 class="collection-name">${cat.toUpperCase()}</h3>`;
+      const countHTML = `<h3 class="collection-count">(${formattedCount})</h3>`;
+      const mediaHTML = `
+        <div class="media-wrapper" data-category="${cat}">
+          ${getCategoryImagesHTML(cat)}
+        </div>
+      `;
+      
+      let rowContent = '';
+      const patternIndex = index % 4;
+      
+      if (patternIndex === 0) {
+        // Pattern 0 (Urban / Details): Icon -> Name -> Media -> Count
+        rowContent = `${iconHTML}${nameHTML}${mediaHTML}${countHTML}`;
+      } else if (patternIndex === 1) {
+        // Pattern 1 (Nature): Icon -> Media -> Name -> Count
+        rowContent = `${iconHTML}${mediaHTML}${nameHTML}${countHTML}`;
+      } else if (patternIndex === 2) {
+        // Pattern 2 (Golf): Icon -> Name -> Count -> Media
+        rowContent = `${iconHTML}${nameHTML}${countHTML}${mediaHTML}`;
+      } else {
+        // Pattern 3 (RePlastic): Media -> Icon -> Name -> Count
+        rowContent = `${mediaHTML}${iconHTML}${nameHTML}${countHTML}`;
+      }
+      
+      return `
+        <div class="home-collection" onclick="window.selectCategory('${cat}')">
+          <div class="collection-inner">
+            ${rowContent}
           </div>
-          <div class="card-content">
-            <div class="card-title-container">
-              <p class="card-title">${article.title}</p>
-              <p class="card-date">${article.publishTime}</p>
-            </div>
-            <div class="card-btn-container">
-              <div class="card-btn" onclick="window.viewArticle(${article.id})">
-                <img src="https://fastcdn.hoyoverse.com/static-resource-v2/2024/03/21/882dcd6829a489afda8ba322eb982e7d_2051193489758981573.png" alt="arrow" />
-              </div>
+        </div>
+      `;
+    }).join('');
+    
+    startSlideshows();
+  } else {
+    stopSlideshows();
+    articleGrid.className = 'article-grid';
+    const filtered = ARTICLES.filter(a => a.category === currentCategory);
+    
+    articleGrid.innerHTML = filtered.map(article => `
+      <div class="card">
+        <div class="card-cover-wrapper">
+          <div class="card-cover-text">${article.contentSnippet}</div>
+        </div>
+        <div class="card-content">
+          <div class="card-title-container">
+            <p class="card-title">${article.title}</p>
+            <p class="card-date">${article.publishTime}</p>
+          </div>
+          <div class="card-btn-container">
+            <div class="card-btn" onclick="window.viewArticle(${article.id})">
+              <img src="https://fastcdn.hoyoverse.com/static-resource-v2/2024/03/21/882dcd6829a489afda8ba322eb982e7d_2051193489758981573.png" alt="arrow" />
             </div>
           </div>
         </div>
-      `).join('');
+      </div>
+    `).join('');
+  }
 }
 
 // 首次渲染
@@ -128,7 +291,13 @@ renderArticles();
 
 (window as any).backToList = () => {
   if (navBar) navBar.style.display = 'flex';
-  if (articleGrid) articleGrid.style.display = 'grid';
   const detailView = document.getElementById('article-detail-view');
   if (detailView) detailView.style.display = 'none';
+  renderArticles();
+};
+
+(window as any).selectCategory = (cat: string) => {
+  currentCategory = cat;
+  renderNav();
+  renderArticles();
 };

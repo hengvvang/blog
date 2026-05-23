@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap');
+
 :root {
   --bg-color: #f3efe9; /* 接近原神样式图表的淡米黄色背景 */
   --nav-bg: #ffffff;
@@ -14,7 +16,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--bg-color);
   color: var(--text-dark);
 }
@@ -73,7 +75,7 @@ body {
 /* 页面主容器 */
 .main-container {
   max-width: 1500px;
-  margin: 30px auto;
+  margin: 0 auto 30px auto;
   padding: 0 20px;
 }
 
@@ -82,7 +84,7 @@ body {
   column-width: 464px;
   column-gap: 20px;
   max-width: 1432px;
-  margin: 0 auto;
+  margin: 30px auto 0 auto;
 }
 
 /* ======== 原神卡片真实悬浮展开样式 ======== */
@@ -183,7 +185,7 @@ body {
 ================================== */
 .article-detail-view {
   max-width: 900px;
-  margin: 0 auto;
+  margin: 30px auto;
   background: #ffffff;
   padding: 40px;
   border-radius: 8px;
@@ -304,5 +306,153 @@ body {
   }
   .card, .card-content, .card-cover-wrapper {
     width: 100%;
+  }
+}
+
+/* ======== Floema-inspired Vertical Category List on Homepage ======== */
+.home-collections-wrapper {
+  position: relative;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  margin: 0 0 60px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.home-collection {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  padding: 22px 0;
+  background: transparent;
+  transition: background 0.35s cubic-bezier(0.215, 0.61, 0.355, 1);
+  user-select: none;
+}
+
+.home-collection:hover {
+  background: rgba(228, 223, 217, 0.4);
+}
+
+.collection-inner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 40px;
+  gap: clamp(10px, 2.2vw, 25px);
+}
+
+.collection-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-light);
+  width: clamp(24px, 3.5vw, 36px);
+  height: clamp(24px, 3.5vw, 36px);
+  opacity: 0.5;
+  transition: color 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.home-collection:hover .collection-icon {
+  color: var(--text-dark);
+  opacity: 0.9;
+  transform: scale(1.1);
+}
+
+.collection-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke-width: 1.5;
+}
+
+.collection-name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(32px, 5vw, 64px);
+  font-weight: 400;
+  color: var(--text-light);
+  opacity: 0.55;
+  transition: color 0.4s ease, opacity 0.4s ease;
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.home-collection:hover .collection-name {
+  color: var(--text-dark);
+  opacity: 1;
+}
+
+/* Expanding media container */
+.media-wrapper {
+  position: relative;
+  height: clamp(76px, 10vw, 110px);
+  width: clamp(140px, 18vw, 180px); /* default compact width */
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: width 0.45s cubic-bezier(0.215, 0.61, 0.355, 1), box-shadow 0.45s ease;
+  will-change: width;
+  flex-shrink: 0;
+}
+
+.home-collection:hover .media-wrapper {
+  width: clamp(280px, 34vw, 380px); /* expands on hover */
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Slideshow images styling */
+.media-wrapper .media {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+  border-radius: 8px;
+}
+
+.collection-count {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(24px, 4vw, 44px);
+  font-weight: 300;
+  color: var(--text-light);
+  opacity: 0.4;
+  transition: color 0.4s ease, opacity 0.4s ease;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.home-collection:hover .collection-count {
+  color: var(--text-dark);
+  opacity: 0.8;
+}
+
+/* Responsive adjustment for collections list */
+@media (max-width: 600px) {
+  .home-collections-wrapper {
+    margin: 35px 0;
+  }
+  
+  .home-collection {
+    padding: 16px 0;
+  }
+  
+  .collection-inner {
+    padding: 0 20px;
+    gap: 12px;
+  }
+  
+  .media-wrapper {
+    height: 48px;
+    width: 48px;
+  }
+  
+  .home-collection:hover .media-wrapper {
+    width: 110px; /* smaller hover width on mobile */
   }
 }
