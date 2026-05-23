@@ -1,0 +1,16 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "A simple blog using bun, ts, html and css",
+  "scripts": {
+    "dev": "bun run server.ts",
+    "build": "bun build ./src/main.ts --outdir ./public"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "puppeteer": "^25.0.4"
+  }
+}

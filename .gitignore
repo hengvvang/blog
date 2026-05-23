@@ -1,0 +1,6 @@
+node_modules/
+dist/
+public/main.js
+.bun
+.DS_Store
+Thumbs.db

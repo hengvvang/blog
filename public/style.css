@@ -1,0 +1,308 @@
+:root {
+  --bg-color: #f3efe9; /* 接近原神样式图表的淡米黄色背景 */
+  --nav-bg: #ffffff;
+  --text-dark: #40485a; /* 卡片标题使用的较深蓝灰 */
+  --text-light: #7b7b7b;
+  --btn-bg: #b79773; /* 截图使用的土豪金 */
+  --btn-hover: #664d33;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+}
+
+/* 窄选项栏 */
+.top-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  background-color: var(--nav-bg);
+  height: 44px; /* 极窄 */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.nav-item {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 0 5px;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.nav-item:hover {
+  color: var(--text-dark);
+}
+
+.nav-item.active {
+  color: var(--text-dark);
+  font-weight: bold;
+}
+
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--text-dark);
+  border-radius: 2px 2px 0 0;
+}
+
+/* 页面主容器 */
+.main-container {
+  max-width: 1500px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+/* 三列表格排布：将容器设计为三列且定宽 */
+.article-grid {
+  column-width: 464px;
+  column-gap: 20px;
+  max-width: 1432px;
+  margin: 0 auto;
+}
+
+/* ======== 原神卡片真实悬浮展开样式 ======== */
+.card {
+  width: 464px;
+  box-sizing: border-box;
+  padding: 7px 13px; /* 官方使用 7px 13px 的内衬 */
+  transition: 0.6s;
+  background: rgb(245, 243, 238); /* 默认外皮颜色 */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 0; 
+  break-inside: avoid; /* 防止卡片被跨列截断 */
+}
+
+/* 卡片容器变色 */
+.card:hover {
+  background: rgb(228, 223, 217); /* 激活时颜色变深 */
+}
+
+/* 封面修改为真正的文章预览文本区块 */
+.card-cover-wrapper {
+  border-radius: 4px;
+  width: 438px; /* 官方固定尺寸 */
+  height: 146px;
+  z-index: 2; /* 确保上方不会被掩盖 */
+  overflow: hidden;
+  background-color: #ffffff; /* 更适合大段文字阅读的底色 */
+  padding: 16px 20px;
+  box-sizing: border-box;
+  border: 1px solid #e2ded5;
+}
+
+.card-cover-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #666;
+  margin: 0;
+}
+
+/* ===== 核心：卡片底部内容的 Accordion 展开交互 ===== */
+.card-content {
+  overflow: hidden;
+  transition: 0.6s; /* 完美的 0.6s 官方过渡 */
+  display: flex;
+  box-sizing: border-box;
+  width: 438px; /* 内部内容宽度锁定 438px */
+  margin: 0 auto;
+  height: 0px; /* 默认高度是0 */
+}
+
+.card:hover .card-content {
+  height: 50px; /* 官方 1:1 卡片信息栏高度 50px */
+}
+
+/* 两侧内容上方增加间距，避免与上方图片贴得太近 */
+.card-title-container {
+  padding-top: 7px;
+  flex: 1 1 0%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.card-title {
+  /* 使用 Webkit box 设置限制显示 (根据官方CSS) */
+  line-height: 18px;
+  color: rgb(64, 72, 90);
+  font-size: 14px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* 为了在50px内容纳日期，标题限制为1行 */
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+/* 撰写时间在悬浮时跟随父容器高度展开呈现 */
+.card-date {
+  font-size: 12px;
+  color: #999;
+  margin-top: 4px;
+  margin-bottom: 0;
+  line-height: 14px;
+}
+
+/* ==================================
+   文章详情页样式
+================================== */
+.article-detail-view {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.back-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-light);
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 8px 12px;
+  margin-left: -12px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.back-btn:hover {
+  background: #f0f0f0;
+  color: var(--text-dark);
+}
+
+.detail-header {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.detail-title {
+  font-size: 32px;
+  color: var(--text-dark);
+  margin-bottom: 16px;
+  line-height: 1.3;
+}
+
+.detail-meta {
+  color: var(--text-light);
+  font-size: 14px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.detail-cat {
+  background: var(--btn-bg);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.detail-content {
+  line-height: 1.8;
+  color: #444;
+  font-size: 16px;
+}
+
+.detail-lead {
+  font-size: 18px;
+  color: #555;
+  background: #f9f9f9;
+  padding: 20px;
+  border-left: 4px solid var(--btn-bg);
+  margin-bottom: 30px;
+  border-radius: 0 4px 4px 0;
+}
+
+.detail-body p {
+  margin-bottom: 20px;
+}
+
+.card-btn-container {
+  padding-top: 7px;
+  box-sizing: border-box;
+  padding-left: 8px; /* 和文本拉开一点间距 */
+}
+
+/* 按钮样式完全吻合官方 */
+.card-btn {
+  height: 36px;
+  background: rgb(183, 151, 115);
+  padding: 0px 18px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.3s;
+  cursor: pointer;
+}
+
+.card-btn:hover {
+  background: rgb(102, 77, 51);
+}
+
+.card-btn img {
+  height: 12px;
+  display: block;
+  position: relative;
+  left: 2px;
+}
+
+/* 响应式，支持窄屏缩放 */
+@media (max-width: 500px) {
+  .article-grid {
+    column-width: 100%;
+  }
+  .card, .card-content, .card-cover-wrapper {
+    width: 100%;
+  }
+}

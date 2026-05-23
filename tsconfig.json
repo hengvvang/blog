@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "lib": ["DOM", "ESNext"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*", "server.ts"]
+}
