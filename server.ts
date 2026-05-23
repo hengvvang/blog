@@ -1,7 +1,7 @@
 import { serve } from "bun";
 
 const server = serve({
-  port: 6506, // 修改为 6506
+  port: 9191, // 修改为 6506
   async fetch(req) {
     const url = new URL(req.url);
     const path = url.pathname;

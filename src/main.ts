@@ -18,8 +18,8 @@ function formatDate(dateStr: string): string {
   return dateStr;
 }
 
-let currentToolchainSubcat = 'all';
-let toolchainPageSize = 5;
+let currentSubcat = 'all';
+let pageSize = 5;
 
 // 生成带有真实文章内容的详细占位数据
 const generateArticles = (): Article[] => {
@@ -171,10 +171,8 @@ function renderNav() {
     btn.textContent = cat;
     btn.onclick = () => {
       currentCategory = cat;
-      if (cat === 'toolchain') {
-        currentToolchainSubcat = 'all';
-        toolchainPageSize = 5;
-      }
+      currentSubcat = 'all';
+      pageSize = 5;
       renderNav();
       renderArticles();
     };
@@ -182,115 +180,113 @@ function renderNav() {
   });
 }
 
-function renderToolchainPartition() {
+function renderPartition() {
   if (!articleGrid) return;
   stopAllSlideshows();
   
-  // Set class for toolchain page layout
   articleGrid.className = 'toolchain-partition-wrapper';
   
-  // Get all toolchain articles
-  const allToolchain = ARTICLES.filter(a => a.category === 'toolchain');
+  const allArticles = ARTICLES.filter(a => a.category === currentCategory);
   
-  // Filter by subcategory
-  const filtered = currentToolchainSubcat === 'all'
-    ? allToolchain
-    : allToolchain.filter(a => a.subcategory === currentToolchainSubcat);
+  const subcatsSet = new Set<string>();
+  allArticles.forEach(a => { if (a.subcategory) subcatsSet.add(a.subcategory); });
+  const hasSubcats = subcatsSet.size > 0;
+  
+  const filtered = (!hasSubcats || currentSubcat === 'all')
+    ? allArticles
+    : allArticles.filter(a => a.subcategory === currentSubcat);
     
-  // Featured articles (first 3)
   const featured = filtered.slice(0, 3);
-  // Main list articles (remaining)
   const listArticles = filtered.slice(3);
   
-  // Render subcategory tabs
-  const subcats = ['all', 'cmake', 'gcc', 'gdb', 'git'];
-  const tabsHTML = `
-    <div class="toolchain-tabs">
-      ${subcats.map(sub => `
-        <button class="toolchain-tab ${currentToolchainSubcat === sub ? 'active' : ''}" onclick="window.selectToolchainSubcat('${sub}')">
-          ${sub === 'all' ? '全部' : sub.toUpperCase()}
-        </button>
-      `).join('')}
-    </div>
-  `;
+  let tabsHTML = '';
+  if (hasSubcats) {
+    const subcats = ['all', ...Array.from(subcatsSet).sort()];
+    tabsHTML = `<div class="toolchain-tabs">` + 
+      subcats.map(sub => `
+        <button class="toolchain-tab ${currentSubcat === sub ? 'active' : ''}" onclick="window.selectSubcat('${sub}')">` +
+          (sub === 'all' ? '全部' : sub.toUpperCase()) +
+        `</button>
+      `).join('') +
+    `</div>`;
+  }
   
-  // Render featured section
   const featuredHTML = featured.length > 0 
-    ? `
-      <div class="toolchain-featured-section">
-        ${featured.map(art => `
-          <div class="card toolchain-horizontal-card" style="width: auto; flex: 1;">
-              <div class="card-cover-wrapper" style="width: auto; flex: 1; height: auto; display: flex; flex-direction: column; gap: 8px; padding: 12px 16px;">
-                <div class="featured-cover" style="background: linear-gradient(135deg, ${getCategoryColor('toolchain')} 0%, #1e222b 100%);">
-                  <div class="featured-subcat-badge">${(art.subcategory || 'toolchain').toUpperCase()}</div>
-                  <span class="featured-cover-text">${(art.subcategory || 'toolchain').toUpperCase()} 技术精选</span>
-                </div>
-                <div class="featured-info" style="padding: 0;">
-                  <span class="featured-date" style="font-size: 11px;">${art.publishTime}</span>
-                  <h4 class="featured-title" style="margin: 4px 0; font-size: 16px;">${art.title}</h4>
-                  <p class="featured-snippet" style="font-size: 12px; margin: 0; -webkit-line-clamp: 2;">${art.contentSnippet}</p>
-              </div>
-            </div>
-            <div class="card-content">
-              <div class="card-title-container">
-                <p class="card-title" style="visibility: hidden;">${art.title}</p>
-              </div>
-              <div class="card-btn-container">
-                <div class="card-btn" onclick="window.viewArticle(${art.id})">
-                  <img src="https://fastcdn.hoyoverse.com/static-resource-v2/2024/03/21/882dcd6829a489afda8ba322eb982e7d_2051193489758981573.png" alt="arrow" />
+    ? `<div class="toolchain-featured-section">` +
+        featured.map(art => {
+          const badgeText = (art.subcategory || currentCategory).toUpperCase();
+          return `
+            <div class="card toolchain-horizontal-card" style="width: auto; flex: 1;">
+                <div class="card-cover-wrapper" style="width: auto; flex: 1; height: auto; display: flex; flex-direction: column; gap: 8px; padding: 8px 16px 12px 16px;">
+                  <div style="text-align: right; width: 100%; margin-bottom: 0px; line-height: 1;">
+                    <span class="featured-date" style="font-size: 12px; color: var(--text-light, #888);">${art.publishTime}</span>
+                  </div>
+                  <div class="featured-cover" style="background: linear-gradient(135deg, ${getCategoryColor(currentCategory)} 0%, #1e222b 100%);">
+                    <div class="featured-subcat-badge">${badgeText}</div>
+                    <span class="featured-cover-text">${badgeText} 技术精选</span>
+                  </div>
+                  <div class="featured-info" style="padding: 0;">
+                    <h4 class="featured-title" style="margin: 4px 0; font-size: 16px;">${art.title}</h4>
+                    <p class="featured-snippet" style="font-size: 12px; margin: 0; -webkit-line-clamp: 2;">${art.contentSnippet}</p>
                 </div>
               </div>
+              <div class="card-content">
+                <div class="card-title-container">
+                  <p class="card-title" style="visibility: hidden;">${art.title}</p>
+                </div>
+                <div class="card-btn-container">
+                  <div class="card-btn" onclick="window.viewArticle(${art.id})">
+                    <img src="https://fastcdn.hoyoverse.com/static-resource-v2/2024/03/21/882dcd6829a489afda8ba322eb982e7d_2051193489758981573.png" alt="arrow" />
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        `).join('')}
-      </div>
-    `
+          `;
+        }).join('') +
+      `</div>`
     : '';
     
-  // Render main list of articles (visible up to toolchainPageSize)
-  const visibleList = listArticles.slice(0, toolchainPageSize);
+  const visibleList = listArticles.slice(0, pageSize);
   const listHTML = visibleList.length > 0
-    ? `
-      <div class="toolchain-list-section">
-        ${visibleList.map(art => `
-          <div class="card" style="width: 100%;">
-            <div class="card-cover-wrapper" style="width: 100%; height: auto; display: flex; gap: 24px;">
-              <div class="list-card-cover" style="background: linear-gradient(135deg, ${getCategoryColor('toolchain')} 0%, #2e3440 100%);">
-                <span class="list-cover-badge">${(art.subcategory || 'toolchain').toUpperCase()}</span>
-              </div>
-              <div class="list-card-info" style="padding: 0; flex-grow: 1;">
-                <div class="list-card-header">
-                  <span class="list-card-badge">${(art.subcategory || 'toolchain').toUpperCase()}</span>
-                  <span class="list-card-date">${art.publishTime}</span>
+    ? `<div class="toolchain-list-section">` +
+        visibleList.map(art => {
+          const badgeText = (art.subcategory || currentCategory).toUpperCase();
+          return `
+            <div class="card" style="width: 100%;">
+              <div class="card-cover-wrapper" style="width: 100%; height: auto; display: flex; gap: 24px;">
+                <div class="list-card-cover" style="background: linear-gradient(135deg, ${getCategoryColor(currentCategory)} 0%, #2e3440 100%);">
+                  <span class="list-cover-badge">${badgeText}</span>
                 </div>
-                <h4 class="list-card-title">${art.title}</h4>
-                <p class="list-card-snippet">${art.contentSnippet}</p>
-              </div>
-            </div>
-            <div class="card-content" style="width: 100%;">
-              <div class="card-title-container">
-                <p class="card-title" style="visibility: hidden;">${art.title}</p>
-              </div>
-              <div class="card-btn-container">
-                <div class="card-btn" onclick="window.viewArticle(${art.id})">
-                  <img src="https://fastcdn.hoyoverse.com/static-resource-v2/2024/03/21/882dcd6829a489afda8ba322eb982e7d_2051193489758981573.png" alt="arrow" />
+                <div class="list-card-info" style="padding: 0; flex-grow: 1;">
+                  <div class="list-card-header">
+                    <span class="list-card-badge">${badgeText}</span>
+                    <span class="list-card-date">${art.publishTime}</span>
+                  </div>
+                  <h4 class="list-card-title">${art.title}</h4>
+                  <p class="list-card-snippet">${art.contentSnippet}</p>
                 </div>
               </div>
+              <div class="card-content" style="width: 100%;">
+                <div class="card-title-container">
+                  <p class="card-title" style="visibility: hidden;">${art.title}</p>
+                </div>
+                <div class="card-btn-container">
+                  <div class="card-btn" onclick="window.viewArticle(${art.id})">
+                    <img src="https://fastcdn.hoyoverse.com/static-resource-v2/2024/03/21/882dcd6829a489afda8ba322eb982e7d_2051193489758981573.png" alt="arrow" />
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        `).join('')}
-      </div>
-    `
+          `;
+        }).join('') +
+      `</div>`
     : (featured.length === 0 ? '<div class="toolchain-empty">没有找到相关文章。</div>' : '');
     
-  // Render Load More button if there are more articles to load
-  const hasMore = listArticles.length > toolchainPageSize;
+  const hasMore = listArticles.length > pageSize;
   const loadMoreHTML = hasMore
-    ? `
-      <div class="toolchain-loadmore-container">
-        <button class="toolchain-loadmore-btn" onclick="window.loadMoreToolchain()">更多 (もっと)</button>
-      </div>
-    `
+    ? `<div class="toolchain-loadmore-container">
+        <button class="toolchain-loadmore-btn" onclick="window.loadMore()">更多</button>
+      </div>`
     : '';
     
   articleGrid.innerHTML = `
@@ -308,15 +304,15 @@ function renderToolchainPartition() {
   `;
 }
 
-(window as any).selectToolchainSubcat = (sub: string) => {
-  currentToolchainSubcat = sub;
-  toolchainPageSize = 5;
-  renderToolchainPartition();
+(window as any).selectSubcat = (sub: string) => {
+  currentSubcat = sub;
+  pageSize = 5;
+  renderPartition();
 };
 
-(window as any).loadMoreToolchain = () => {
-  toolchainPageSize += 5;
-  renderToolchainPartition();
+(window as any).loadMore = () => {
+  pageSize += 5;
+  renderPartition();
 };
 
 function renderArticles() {
@@ -367,31 +363,8 @@ function renderArticles() {
         </div>
       `;
     }).join('');
-  } else if (currentCategory === 'toolchain') {
-    renderToolchainPartition();
   } else {
-    stopAllSlideshows();
-    articleGrid.className = 'article-grid';
-    const filtered = ARTICLES.filter(a => a.category === currentCategory);
-    
-    articleGrid.innerHTML = filtered.map(article => `
-      <div class="card">
-        <div class="card-cover-wrapper">
-          <div class="card-cover-text">${article.contentSnippet}</div>
-        </div>
-        <div class="card-content">
-          <div class="card-title-container">
-            <p class="card-title">${article.title}</p>
-            <p class="card-date">${article.publishTime}</p>
-          </div>
-          <div class="card-btn-container">
-            <div class="card-btn" onclick="window.viewArticle(${article.id})">
-              <img src="https://fastcdn.hoyoverse.com/static-resource-v2/2024/03/21/882dcd6829a489afda8ba322eb982e7d_2051193489758981573.png" alt="arrow" />
-            </div>
-          </div>
-        </div>
-      </div>
-    `).join('');
+    renderPartition();
   }
 }
 
@@ -597,10 +570,8 @@ window.addEventListener('scroll', () => {
 
 (window as any).selectCategory = (cat: string) => {
   currentCategory = cat;
-  if (cat === 'toolchain') {
-    currentToolchainSubcat = 'all';
-    toolchainPageSize = 5;
-  }
+  currentSubcat = 'all';
+  pageSize = 5;
   if (navBar) navBar.style.display = 'flex';
   const detailView = document.getElementById('article-detail-view');
   if (detailView) detailView.style.display = 'none';
