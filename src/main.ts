@@ -2,11 +2,15 @@ interface Article {
   id: number;
   title: string;
   category: string;
+  subcategory?: string;
   contentSnippet: string;
   publishTime: string;
 }
 
 const CATEGORIES = ['rust', 'rtos', 'mcu', 'markup', 'c', 'toolchain'];
+
+let currentToolchainSubcat = 'all';
+let toolchainPageSize = 5;
 
 // 生成带有真实文章内容的详细占位数据
 const generateArticles = (): Article[] => {
@@ -24,10 +28,21 @@ const generateArticles = (): Article[] => {
   Object.keys(snippets).forEach((catKey, index) => {
     const targetCat = catKey === 'git' ? 'toolchain' : catKey;
     for(let i = 0; i < 9; i++) {
+        let subcat: string | undefined;
+        if (targetCat === 'toolchain') {
+          if (catKey === 'git') {
+            subcat = 'git';
+          } else {
+            const subcats = ['cmake', 'gcc', 'gdb'];
+            subcat = subcats[i % 3];
+          }
+        }
+
         articles.push({
             id: index * 10 + i,
             title: `深入浅出 ${catKey.toUpperCase()} 核心技术指南 - 深度解析 第 ${i + 1} 卷`,
             category: targetCat,
+            subcategory: subcat,
             contentSnippet: snippets[catKey],
             publishTime: `2026-05-${String(20 + i).padStart(2, '0')} 14:${String(i * 15).padStart(2, '0')}`
         });
@@ -147,12 +162,129 @@ function renderNav() {
     btn.textContent = cat;
     btn.onclick = () => {
       currentCategory = cat;
+      if (cat === 'toolchain') {
+        currentToolchainSubcat = 'all';
+        toolchainPageSize = 5;
+      }
       renderNav();
       renderArticles();
     };
     navBar.appendChild(btn);
   });
 }
+
+function renderToolchainPartition() {
+  if (!articleGrid) return;
+  stopAllSlideshows();
+  
+  // Set class for toolchain page layout
+  articleGrid.className = 'toolchain-partition-wrapper';
+  
+  // Get all toolchain articles
+  const allToolchain = ARTICLES.filter(a => a.category === 'toolchain');
+  
+  // Filter by subcategory
+  const filtered = currentToolchainSubcat === 'all'
+    ? allToolchain
+    : allToolchain.filter(a => a.subcategory === currentToolchainSubcat);
+    
+  // Featured articles (first 2)
+  const featured = filtered.slice(0, 2);
+  // Main list articles (remaining)
+  const listArticles = filtered.slice(2);
+  
+  // Render subcategory tabs
+  const subcats = ['all', 'cmake', 'gcc', 'gdb', 'git'];
+  const tabsHTML = `
+    <div class="toolchain-tabs">
+      ${subcats.map(sub => `
+        <button class="toolchain-tab ${currentToolchainSubcat === sub ? 'active' : ''}" onclick="window.selectToolchainSubcat('${sub}')">
+          ${sub === 'all' ? '全部' : sub.toUpperCase()}
+        </button>
+      `).join('')}
+    </div>
+  `;
+  
+  // Render featured section
+  const featuredHTML = featured.length > 0 
+    ? `
+      <div class="toolchain-featured-section">
+        ${featured.map(art => `
+          <div class="toolchain-featured-card" onclick="window.viewArticle(${art.id})">
+            <div class="featured-cover" style="background: linear-gradient(135deg, ${getCategoryColor('toolchain')} 0%, #1e222b 100%);">
+              <div class="featured-subcat-badge">${(art.subcategory || 'toolchain').toUpperCase()}</div>
+              <span class="featured-cover-text">${(art.subcategory || 'toolchain').toUpperCase()} 技术精选</span>
+            </div>
+            <div class="featured-info">
+              <span class="featured-date">${art.publishTime}</span>
+              <h4 class="featured-title">${art.title}</h4>
+              <p class="featured-snippet">${art.contentSnippet}</p>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `
+    : '';
+    
+  // Render main list of articles (visible up to toolchainPageSize)
+  const visibleList = listArticles.slice(0, toolchainPageSize);
+  const listHTML = visibleList.length > 0
+    ? `
+      <div class="toolchain-list-section">
+        ${visibleList.map(art => `
+          <div class="toolchain-list-card" onclick="window.viewArticle(${art.id})">
+            <div class="list-card-cover" style="background: linear-gradient(135deg, ${getCategoryColor('toolchain')} 0%, #2e3440 100%);">
+              <span class="list-cover-badge">${(art.subcategory || 'toolchain').toUpperCase()}</span>
+            </div>
+            <div class="list-card-info">
+              <div class="list-card-header">
+                <span class="list-card-badge">${(art.subcategory || 'toolchain').toUpperCase()}</span>
+                <span class="list-card-date">${art.publishTime}</span>
+              </div>
+              <h4 class="list-card-title">${art.title}</h4>
+              <p class="list-card-snippet">${art.contentSnippet}</p>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `
+    : (featured.length === 0 ? '<div class="toolchain-empty">没有找到相关文章。</div>' : '');
+    
+  // Render Load More button if there are more articles to load
+  const hasMore = listArticles.length > toolchainPageSize;
+  const loadMoreHTML = hasMore
+    ? `
+      <div class="toolchain-loadmore-container">
+        <button class="toolchain-loadmore-btn" onclick="window.loadMoreToolchain()">更多 (もっと)</button>
+      </div>
+    `
+    : '';
+    
+  articleGrid.innerHTML = `
+    <!-- Top Featured section -->
+    ${featuredHTML}
+    
+    <!-- Subcategory Tabs -->
+    ${tabsHTML}
+    
+    <!-- Vertical List of regular cards -->
+    ${listHTML}
+    
+    <!-- Load more button -->
+    ${loadMoreHTML}
+  `;
+}
+
+(window as any).selectToolchainSubcat = (sub: string) => {
+  currentToolchainSubcat = sub;
+  toolchainPageSize = 5;
+  renderToolchainPartition();
+};
+
+(window as any).loadMoreToolchain = () => {
+  toolchainPageSize += 5;
+  renderToolchainPartition();
+};
 
 function renderArticles() {
   if (!articleGrid) return;
@@ -202,6 +334,8 @@ function renderArticles() {
         </div>
       `;
     }).join('');
+  } else if (currentCategory === 'toolchain') {
+    renderToolchainPartition();
   } else {
     stopAllSlideshows();
     articleGrid.className = 'article-grid';
@@ -358,6 +492,10 @@ function getCategoryColor(cat: string): string {
 
 (window as any).selectCategory = (cat: string) => {
   currentCategory = cat;
+  if (cat === 'toolchain') {
+    currentToolchainSubcat = 'all';
+    toolchainPageSize = 5;
+  }
   if (navBar) navBar.style.display = 'flex';
   const detailView = document.getElementById('article-detail-view');
   if (detailView) detailView.style.display = 'none';
