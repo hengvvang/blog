@@ -4,11 +4,14 @@
   "description": "A simple blog using bun, ts, html and css",
   "scripts": {
     "dev": "bun run server.ts",
-    "build": "bun build ./src/main.ts --outdir ./public"
+    "build": "bun build ./src/main.ts --outdir ./public",
+    "deploy": "wrangler deploy",
+    "preview": "wrangler dev"
   },
   "devDependencies": {
     "bun-types": "latest",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "wrangler": "^4.94.0"
   },
   "dependencies": {
     "puppeteer": "^25.0.4",
