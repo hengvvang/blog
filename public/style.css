@@ -1034,7 +1034,7 @@ body {
 .toolchain-list-section {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 0;
 }
 
 .toolchain-list-card {
