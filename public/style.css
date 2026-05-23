@@ -818,18 +818,23 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
+  /* Default position (bottom), though JS overrides this rapidly */
+  transform: translate(-50%, 150%);
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
   text-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
 
 .media-wrapper .media-text.js-active {
   opacity: 1;
   visibility: visible;
+  /* Always centered when active */
+  transform: translate(-50%, -50%) !important;
 }
+
+/* Removed .js-slide-out since it's handled by inline JS styles now */
 
 .collection-count {
   font-family: 'Cormorant Garamond', Georgia, serif;
@@ -1156,7 +1161,7 @@ body {
   background-color: rgb(57, 59, 64);
   color: #ffffff;
   border: none;
-  padding: 12px 54px;
+  padding: 8px 162px;
   border-radius: 4px;
   font-family: 'Outfit', sans-serif;
   font-size: 14px;

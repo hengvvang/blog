@@ -33,17 +33,26 @@ const generateArticles = (): Article[] => {
     toolchain: "一套好用的构建工具链可以大幅提升软件开发生产力。从 GCC 链接器脚本（.ld）的自定义语法分配，到 CMake 构建宏编写与自动化 CI/CD 环境的结合运用..."
   };
 
+  const subcatsMap: Record<string, string[]> = {
+    rust: ['lifetime', 'ownership', 'reference'],
+    rtos: ['freertos', 'zephyr', 'rt-thread'],
+    mcu: ['stm32', 'esp32', 'gd32'],
+    markup: ['markdown', 'html', 'css'],
+    c: ['pointers', 'memory', 'volatile'],
+    toolchain: ['cmake', 'gcc', 'gdb']
+  };
+
   const articles: Article[] = [];
   Object.keys(snippets).forEach((catKey, index) => {
     const targetCat = catKey === 'git' ? 'toolchain' : catKey;
     for(let i = 0; i < 9; i++) {
         let subcat: string | undefined;
-        if (targetCat === 'toolchain') {
-          if (catKey === 'git') {
-            subcat = 'git';
-          } else {
-            const subcats = ['cmake', 'gcc', 'gdb'];
-            subcat = subcats[i % 3];
+        if (catKey === 'git') {
+          subcat = 'git';
+        } else {
+          const subcats = subcatsMap[targetCat] || [];
+          if (subcats.length > 0) {
+            subcat = subcats[i % subcats.length];
           }
         }
 
@@ -88,6 +97,17 @@ const KEYWORDS: Record<string, string[]> = {
 
 const slideshowTimers: Record<string, any> = {};
 
+const slideDirs = [
+  { in: 'translate(-50%, 150%)', out: 'translate(-50%, -150%)' }, // bottom to top
+  { in: 'translate(-50%, -150%)', out: 'translate(-50%, 150%)' }, // top to bottom
+  { in: 'translate(150%, -50%)', out: 'translate(-150%, -50%)' }, // right to left
+  { in: 'translate(-150%, -50%)', out: 'translate(150%, -50%)' }  // left to right
+];
+const categoryDirections: Record<string, typeof slideDirs[0]> = {};
+CATEGORIES.forEach(cat => {
+  categoryDirections[cat] = slideDirs[Math.floor(Math.random() * slideDirs.length)];
+});
+
 (window as any).onRowEnter = (cat: string) => {
   if (slideshowTimers[cat]) clearInterval(slideshowTimers[cat]);
   
@@ -96,30 +116,57 @@ const slideshowTimers: Record<string, any> = {};
   const texts = wrapper.querySelectorAll('.media-text');
   if (texts.length === 0) return;
   
-  let activeIndex = 0;
-  texts.forEach((el, i) => {
-    if (i === activeIndex) {
-      el.classList.add('js-active');
-    } else {
-      el.classList.remove('js-active');
+  let currActive = -1;
+  for (let i = 0; i < texts.length; i++) {
+    if (texts[i].classList.contains('js-active')) {
+      currActive = i;
+      break;
     }
-  });
+  }
+  if (currActive === -1) {
+    currActive = 0;
+    const el = texts[currActive] as HTMLElement;
+    el.classList.add('js-active');
+    el.style.transform = 'translate(-50%, -50%)';
+  }
   
   if (texts.length > 1) {
+    const fixedDir = categoryDirections[cat] || slideDirs[0];
+    
     slideshowTimers[cat] = setInterval(() => {
-      let currActive = -1;
+      let curr = -1;
       for (let i = 0; i < texts.length; i++) {
         if (texts[i].classList.contains('js-active')) {
-          currActive = i;
+          curr = i;
           break;
         }
       }
-      if (currActive !== -1) {
-        texts[currActive].classList.remove('js-active');
-        const nextActive = (currActive + 1) % texts.length;
-        texts[nextActive].classList.add('js-active');
+      
+      if (curr !== -1) {
+        const nextActive = (curr + 1) % texts.length;
+        const rnd = fixedDir;
+        const currEl = texts[curr] as HTMLElement;
+        const nextEl = texts[nextActive] as HTMLElement;
+        
+        // Pre-position next element WITHOUT transition
+        nextEl.style.transition = 'none';
+        nextEl.style.transform = rnd.in;
+        
+        // Force layout so browser registers the new start position
+        void nextEl.offsetWidth;
+        
+        // Restore transition
+        nextEl.style.transition = '';
+        currEl.style.transition = '';
+        
+        // Execute switch
+        currEl.classList.remove('js-active');
+        currEl.style.transform = rnd.out;
+        
+        nextEl.classList.add('js-active');
+        nextEl.style.transform = 'translate(-50%, -50%)';
       }
-    }, 1500); // 1.5s interval is perfect for text keyword cycling!
+    }, 600); // Faster interval for hover!
   }
 };
 
@@ -127,14 +174,6 @@ const slideshowTimers: Record<string, any> = {};
   if (slideshowTimers[cat]) {
     clearInterval(slideshowTimers[cat]);
     delete slideshowTimers[cat];
-  }
-  
-  const wrapper = document.querySelector(`.media-wrapper[data-category="${cat}"]`);
-  if (wrapper) {
-    const texts = wrapper.querySelectorAll('.media-text');
-    texts.forEach(el => {
-      el.classList.remove('js-active');
-    });
   }
 };
 
@@ -147,7 +186,8 @@ function stopAllSlideshows() {
 
 function getCategoryKeywordsHTML(cat: string): string {
   const list = KEYWORDS[cat] || [];
-  return list.map(word => `<span class="media-text">${word}</span>`).join('');
+  const initialIndex = Math.floor(Math.random() * list.length);
+  return list.map((word, i) => `<span class="media-text ${i === initialIndex ? 'js-active' : ''}">${word}</span>`).join('');
 }
 
 function renderNav() {
