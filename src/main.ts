@@ -197,10 +197,10 @@ function renderToolchainPartition() {
     ? allToolchain
     : allToolchain.filter(a => a.subcategory === currentToolchainSubcat);
     
-  // Featured articles (first 2)
-  const featured = filtered.slice(0, 2);
+  // Featured articles (first 3)
+  const featured = filtered.slice(0, 3);
   // Main list articles (remaining)
-  const listArticles = filtered.slice(2);
+  const listArticles = filtered.slice(3);
   
   // Render subcategory tabs
   const subcats = ['all', 'cmake', 'gcc', 'gdb', 'git'];
