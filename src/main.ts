@@ -447,11 +447,25 @@ window.addEventListener('scroll', () => {
   const related = ARTICLES.filter(a => a.category === article.category && a.id !== article.id).slice(0, 5);
   const relatedArticlesHTML = related.map(rel => {
     return `
-      <div class="sidebar-item" onclick="window.viewArticle(${rel.id})">
-        <div class="sidebar-thumb" style="background-color: ${getCategoryColor(rel.category)};"></div>
-        <div class="sidebar-item-info">
-          <p class="sidebar-item-title">${rel.title}</p>
-          <p class="sidebar-item-date">${formatDate(rel.publishTime)}</p>
+      <div class="card sidebar-item-card">
+        <div class="card-cover-wrapper" style="border: none;">
+          <div class="sidebar-item-inner">
+            <div class="sidebar-thumb" style="background-color: ${getCategoryColor(rel.category)};"></div>
+            <div class="sidebar-item-info">
+              <p class="sidebar-item-title">${rel.title}</p>
+              <p class="sidebar-item-date">${formatDate(rel.publishTime)}</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="card-title-container">
+            <p class="card-title" style="visibility: hidden;">${rel.title}</p>
+          </div>
+          <div class="card-btn-container">
+            <div class="card-btn" onclick="window.viewArticle(${rel.id})">
+              <img src="https://fastcdn.hoyoverse.com/static-resource-v2/2024/03/21/882dcd6829a489afda8ba322eb982e7d_2051193489758981573.png" alt="arrow" />
+            </div>
+          </div>
         </div>
       </div>
     `;

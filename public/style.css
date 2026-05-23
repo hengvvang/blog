@@ -1201,3 +1201,24 @@ body {
     font-size: 13px;
   }
 }
+
+/* Overrides for sidebar item to act as a rust card */
+.sidebar-item-card {
+  width: 100%;
+}
+.sidebar-item-card .card-cover-wrapper {
+  width: 100%;
+  height: auto;
+  min-height: 100px;
+  padding: 10px 14px;
+}
+.sidebar-item-card .card-content {
+  width: 100%;
+}
+/* Ensure the sidebar item wrapper displays nicely */
+.sidebar-item-inner {
+  display: flex;
+  width: 100%;
+  background-color: transparent;
+}
+
