@@ -24,21 +24,23 @@ function formatDate(dateStr: string): string {
 function formatEnglishDate(dateStr: string): string {
   const parts = dateStr.split(' ');
   const [year, monthStr, dayStr] = parts[0].split('-');
-  if (!year || !monthStr || !dayStr) return dateStr;
+  if (!year || !monthStr || !dayStr) return `<span style="font-weight: 600; color: var(--text-dark, #333);">${dateStr}</span>`;
   
   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const month = monthNames[parseInt(monthStr, 10) - 1];
   const day = parseInt(dayStr, 10);
+  
+  const dateFormatted = `<span style="font-weight: 600; color: var(--text-dark, #333);">${month} ${day}, ${year}</span>`;
   
   if (parts[1]) {
     const [hrStr, minStr] = parts[1].split(':');
     let hour = parseInt(hrStr, 10);
     const ampm = hour >= 12 ? 'PM' : 'AM';
     hour = hour % 12 || 12;
-    return `${month} ${day}, ${year} at ${hour}:${minStr} ${ampm}`;
+    return `${dateFormatted} at <span style="font-weight: 600; color: var(--text-dark, #333);">${hour}:${minStr} ${ampm}</span>`;
   }
   
-  return `${month} ${day}, ${year}`;
+  return dateFormatted;
 }
 
 // Category icons
@@ -549,12 +551,11 @@ async function loadAndShowArticle(id: number) {
     const bodyEl = detailView.querySelector('.detail-body');
     if (bodyEl) {
       const pTime = data.publishTime || article.publishTime;
-      const dateStr = formatEnglishDate(pTime);
-      const dateHtml = `<span style="font-weight: 600; color: var(--text-dark, #333);">${dateStr}</span>`;
+      const dateHtml = formatEnglishDate(pTime);
       const authorStr = data.author ? `by <span style="font-weight: 600; color: var(--text-dark, #333);">${data.author}</span> on ` : `on `;
       bodyEl.innerHTML = `
         <div class="markdown-body">${data.html}</div>
-        <div class="article-footer" style="margin-top: 40px; padding-top: 16px; border-top: 1px solid rgba(136, 136, 136, 0.2); color: var(--text-light, #888); font-size: 14px; text-align: right;">
+        <div class="article-footer" style="margin-top: 20px; margin-bottom: -60px; padding-bottom: 0; color: var(--text-light, #888); font-size: 14px; text-align: right; position: relative; z-index: 1;">
           ${authorStr}${dateHtml}
         </div>
       `;
