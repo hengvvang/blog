@@ -7,8 +7,11 @@ interface Article {
   publishTime: string;
 }
 
-const CATEGORIES = ['rust', 'rtos', 'mcu', 'markup', 'c', 'toolchain'];
-
+let CATEGORIES: string[] = ['rust', 'rtos', 'mcu', 'markup', 'c', 'toolchain'];
+let ARTICLES: Article[] = [];
+let currentCategory = 'home';
+let currentSubcat = 'all';
+let pageSize = 5;
 
 function formatDate(dateStr: string): string {
   const parts = dateStr.split(' ')[0].split('-');
@@ -17,63 +20,6 @@ function formatDate(dateStr: string): string {
   }
   return dateStr;
 }
-
-let currentSubcat = 'all';
-let pageSize = 5;
-
-// 生成带有真实文章内容的详细占位数据
-const generateArticles = (): Article[] => {
-  const snippets: Record<string, string> = {
-    rust: "Rust 语言的所有权模型为开发带来了极大的内存安全保证。本文深入探讨如何在实际工程中处理生命周期约束，以及在并发场景下如何规避数据竞争问题，打造零分配的高性能系统...",
-    rtos: "实时操作系统（RTOS）的核心在于其确定性的任务调度机制。本文将带领大家实战剖析底层的上下文切换汇编过程，并展示如何使用互斥量解决优先级翻转难题...",
-    mcu: "物联网设备对功耗极度敏感，现代MCU提供了多种低功耗模式。文章以真实实验数据展示关闭外围设备时钟、配置LDO降压模块对全局底电流的显著改善幅度...",
-    git: "杂乱无章的提交流程总是让人头疼。利用 git rebase -i 变基操作...",
-    markup: "Markdown 让各种技术排版变得像写代码一样自然。如何深度定制化你的文档预设样式，结合现代解析引擎渲染出一套属于自己的特色UI外观？本文有全套配置细节...",
-    c: "尽管现代语言层出不穷，C语言在底层系统中依然不可替代。详细讨论双指针高级操作、内存对齐导致的总线陷阱，以及 volatile 关键字在嵌入式硬件寄存器编程中的真正含义...",
-    toolchain: "一套好用的构建工具链可以大幅提升软件开发生产力。从 GCC 链接器脚本（.ld）的自定义语法分配，到 CMake 构建宏编写与自动化 CI/CD 环境的结合运用..."
-  };
-
-  const subcatsMap: Record<string, string[]> = {
-    rust: ['lifetime', 'ownership', 'reference'],
-    rtos: ['freertos', 'zephyr', 'rt-thread'],
-    mcu: ['stm32', 'esp32', 'gd32'],
-    markup: ['markdown', 'html', 'css'],
-    c: ['pointers', 'memory', 'volatile'],
-    toolchain: ['cmake', 'gcc', 'gdb']
-  };
-
-  const articles: Article[] = [];
-  Object.keys(snippets).forEach((catKey, index) => {
-    const targetCat = catKey === 'git' ? 'toolchain' : catKey;
-    for(let i = 0; i < 9; i++) {
-        let subcat: string | undefined;
-        if (catKey === 'git') {
-          subcat = 'git';
-        } else {
-          const subcats = subcatsMap[targetCat] || [];
-          if (subcats.length > 0) {
-            subcat = subcats[i % subcats.length];
-          }
-        }
-
-        articles.push({
-            id: index * 10 + i,
-            title: `深入浅出 ${catKey.toUpperCase()} 核心技术指南 - 深度解析 第 ${i + 1} 卷`,
-            category: targetCat,
-            subcategory: subcat,
-            contentSnippet: snippets[catKey],
-            publishTime: `2026-05-${String(20 + i).padStart(2, '0')} 14:${String(i * 15).padStart(2, '0')}`
-        });
-    }
-  });
-  return articles;
-};
-
-const ARTICLES = generateArticles();
-let currentCategory = 'home';
-
-const navBar = document.getElementById('nav-bar');
-const articleGrid = document.getElementById('article-grid');
 
 // Category icons
 const ICONS: Record<string, string> = {
@@ -85,7 +31,9 @@ const ICONS: Record<string, string> = {
   toolchain: `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>`
 };
 
-// Category preview slideshow text keywords (slideshow of text words instead of photos)
+const DEFAULT_ICON = `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
+
+// Category preview slideshow text keywords
 const KEYWORDS: Record<string, string[]> = {
   rust: ['Cargo', 'Rustc', 'Clippy', 'Tokio', 'Wasm'],
   rtos: ['FreeRTOS', 'RT-Thread', 'Zephyr', 'uCOS', 'ThreadX'],
@@ -106,18 +54,8 @@ const slideDirs = [
 const categoryDirections: Record<string, typeof slideDirs[0]> = {};
 const categoryOrders: Record<string, number[]> = {};
 
-CATEGORIES.forEach(cat => {
-  categoryDirections[cat] = slideDirs[Math.floor(Math.random() * slideDirs.length)];
-  
-  // 0: icon, 1: name, 2: count, 3: media
-  // Icon, name, and count must strictly be in the order 0 -> 1 -> 2.
-  // Media (3) can be randomly inserted at any of the 4 available positions.
-  const order = [0, 1, 2];
-  const mediaPos = Math.floor(Math.random() * 4);
-  order.splice(mediaPos, 0, 3);
-  
-  categoryOrders[cat] = order;
-});
+const navBar = document.getElementById('nav-bar');
+const articleGrid = document.getElementById('article-grid');
 
 (window as any).onRowEnter = (cat: string) => {
   if (slideshowTimers[cat]) clearInterval(slideshowTimers[cat]);
@@ -159,25 +97,21 @@ CATEGORIES.forEach(cat => {
         const currEl = texts[curr] as HTMLElement;
         const nextEl = texts[nextActive] as HTMLElement;
         
-        // Pre-position next element WITHOUT transition
         nextEl.style.transition = 'none';
         nextEl.style.transform = rnd.in;
         
-        // Force layout so browser registers the new start position
         void nextEl.offsetWidth;
         
-        // Restore transition
         nextEl.style.transition = '';
         currEl.style.transition = '';
         
-        // Execute switch
         currEl.classList.remove('js-active');
         currEl.style.transform = rnd.out;
         
         nextEl.classList.add('js-active');
         nextEl.style.transform = 'translate(-50%, -50%)';
       }
-    }, 600); // Faster interval for hover!
+    }, 600);
   }
 };
 
@@ -196,7 +130,7 @@ function stopAllSlideshows() {
 }
 
 function getCategoryKeywordsHTML(cat: string): string {
-  const list = KEYWORDS[cat] || [];
+  const list = KEYWORDS[cat] || ['Code', 'Tech', 'Doc', 'Dev', 'System'];
   const initialIndex = Math.floor(Math.random() * list.length);
   return list.map((word, i) => `<span class="media-text ${i === initialIndex ? 'js-active' : ''}">${word}</span>`).join('');
 }
@@ -210,9 +144,7 @@ function renderNav() {
   homeBtn.className = `nav-item ${currentCategory === 'home' ? 'active' : ''}`;
   homeBtn.textContent = '首页';
   homeBtn.onclick = () => {
-    currentCategory = 'home';
-    renderNav();
-    renderArticles();
+    window.location.hash = "#/";
   };
   navBar.appendChild(homeBtn);
   
@@ -221,11 +153,7 @@ function renderNav() {
     btn.className = `nav-item ${cat === currentCategory ? 'active' : ''}`;
     btn.textContent = cat;
     btn.onclick = () => {
-      currentCategory = cat;
-      currentSubcat = 'all';
-      pageSize = 5;
-      renderNav();
-      renderArticles();
+      window.location.hash = `#/category/${cat}`;
     };
     navBar.appendChild(btn);
   });
@@ -243,12 +171,18 @@ function renderPartition() {
   allArticles.forEach(a => { if (a.subcategory) subcatsSet.add(a.subcategory); });
   const hasSubcats = subcatsSet.size > 0;
   
-  const filtered = (!hasSubcats || currentSubcat === 'all')
+  // Filter articles based on subcategory first, and make sure they are sorted by time (newest first)
+  const filteredArticles = (currentSubcat === 'all')
     ? allArticles
     : allArticles.filter(a => a.subcategory === currentSubcat);
-    
-  const featured = filtered.slice(0, 3);
-  const listArticles = filtered.slice(3);
+  
+  filteredArticles.sort((a, b) => new Date(b.publishTime).getTime() - new Date(a.publishTime).getTime());
+  
+  // Featured is the top 3 newest of the filtered articles
+  const featured = filteredArticles.slice(0, 3);
+  
+  // The list below displays ALL filtered articles sorted by time
+  const listArticles = filteredArticles;
   
   let tabsHTML = '';
   if (hasSubcats) {
@@ -267,8 +201,8 @@ function renderPartition() {
         featured.map(art => {
           const badgeText = (art.subcategory || currentCategory).toUpperCase();
           return `
-            <div class="card toolchain-horizontal-card" style="width: auto; flex: 1;">
-                <div class="card-cover-wrapper" style="width: auto; flex: 1; height: auto; display: flex; flex-direction: column; gap: 8px; padding: 8px 16px 12px 16px;">
+            <div class="card toolchain-horizontal-card" onclick="window.viewArticle(${art.id})">
+                <div class="card-cover-wrapper" style="height: auto; display: flex; flex-direction: column; gap: 8px; padding: 8px 16px 12px 16px;">
                   <div style="text-align: right; width: 100%; margin-bottom: 0px; line-height: 1;">
                     <span class="featured-date" style="font-size: 12px; color: var(--text-light, #888);">${art.publishTime}</span>
                   </div>
@@ -286,7 +220,7 @@ function renderPartition() {
                   <p class="card-title" style="visibility: hidden;">${art.title}</p>
                 </div>
                 <div class="card-btn-container">
-                  <div class="card-btn" onclick="window.viewArticle(${art.id})">
+                  <div class="card-btn">
                     <img src="https://fastcdn.hoyoverse.com/static-resource-v2/2024/03/21/882dcd6829a489afda8ba322eb982e7d_2051193489758981573.png" alt="arrow" />
                   </div>
                 </div>
@@ -303,7 +237,7 @@ function renderPartition() {
         visibleList.map(art => {
           const badgeText = (art.subcategory || currentCategory).toUpperCase();
           return `
-            <div class="card" style="width: 100%;">
+            <div class="card" style="width: 100%;" onclick="window.viewArticle(${art.id})">
               <div class="card-cover-wrapper" style="width: 100%; height: auto; display: flex; gap: 24px;">
                 <div class="list-card-cover" style="background: linear-gradient(135deg, ${getCategoryColor(currentCategory)} 0%, #2e3440 100%);">
                   <span class="list-cover-badge">${badgeText}</span>
@@ -322,7 +256,7 @@ function renderPartition() {
                   <p class="card-title" style="visibility: hidden;">${art.title}</p>
                 </div>
                 <div class="card-btn-container">
-                  <div class="card-btn" onclick="window.viewArticle(${art.id})">
+                  <div class="card-btn">
                     <img src="https://fastcdn.hoyoverse.com/static-resource-v2/2024/03/21/882dcd6829a489afda8ba322eb982e7d_2051193489758981573.png" alt="arrow" />
                   </div>
                 </div>
@@ -356,9 +290,7 @@ function renderPartition() {
 }
 
 (window as any).selectSubcat = (sub: string) => {
-  currentSubcat = sub;
-  pageSize = 5;
-  renderPartition();
+  window.location.hash = `#/category/${currentCategory}?subcat=${sub}`;
 };
 
 (window as any).loadMore = () => {
@@ -369,7 +301,6 @@ function renderPartition() {
 function renderArticles() {
   if (!articleGrid) return;
   
-  // Ensure the element is visible
   articleGrid.style.display = '';
   
   if (currentCategory === 'home') {
@@ -378,13 +309,13 @@ function renderArticles() {
     articleGrid.innerHTML = CATEGORIES.map((cat, index) => {
       const count = ARTICLES.filter(a => a.category === cat).length;
       const formattedCount = String(count).padStart(2, '0');
-      const iconSVG = ICONS[cat] || '';
+      const iconSVG = ICONS[cat] || DEFAULT_ICON;
       
       const iconHTML = `<div class="collection-icon">${iconSVG}</div>`;
       const nameHTML = `<h3 class="collection-name">${cat.toUpperCase()}</h3>`;
       const countHTML = `<h3 class="collection-count">(${formattedCount})</h3>`;
       const mediaHTML = `
-        <div class="media-wrapper" data-category="${cat}">
+        <div class="media-wrapper" data-category="${cat}" style="background-color: ${getCategoryColor(cat)};">
           ${getCategoryKeywordsHTML(cat)}
         </div>
       `;
@@ -406,20 +337,17 @@ function renderArticles() {
   }
 }
 
-// 首次渲染
-renderNav();
-renderArticles();
+const categoryColors: Record<string, string> = {};
 
 function getCategoryColor(cat: string): string {
-  const colors: Record<string, string> = {
-    rust: '#b15b45',
-    rtos: '#3b7a9e',
-    mcu: '#438e68',
-    markup: '#968045',
-    c: '#a84545',
-    toolchain: '#5e4b8b'
-  };
-  return colors[cat] || '#b79773';
+  if (!categoryColors[cat]) {
+    // Generate a random high-quality muted HSL color
+    const h = Math.floor(Math.random() * 360);
+    const s = Math.floor(Math.random() * 20) + 40; // 40% - 60% saturation (soft, premium)
+    const l = Math.floor(Math.random() * 15) + 35; // 35% - 50% lightness (good contrast)
+    categoryColors[cat] = `hsl(${h}, ${s}%, ${l}%)`;
+  }
+  return categoryColors[cat];
 }
 
 // Scroll event listener for Back-to-Top button
@@ -438,10 +366,12 @@ window.addEventListener('scroll', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-// 挂载到 window 供 onclick 调用
-(window as any).viewArticle = (id: number) => {
+async function loadAndShowArticle(id: number) {
   const article = ARTICLES.find(a => a.id === id);
-  if (!article) return;
+  if (!article) {
+    window.location.hash = "#/";
+    return;
+  }
 
   if (navBar) navBar.style.display = 'none';
   if (articleGrid) articleGrid.style.display = 'none';
@@ -454,26 +384,38 @@ window.addEventListener('scroll', () => {
     document.querySelector('.main-container')?.appendChild(detailView);
   }
 
-  // Get 5 related articles in the same category (excluding the current one)
+  document.title = `${article.title} | Developer Blog`;
+
+  // Get 5 related articles in the same category (excluding current)
   const related = ARTICLES.filter(a => a.category === article.category && a.id !== article.id).slice(0, 5);
   const relatedArticlesHTML = related.map(rel => {
     return `
-      <div class="card sidebar-item-card">
-        <div class="card-cover-wrapper" style="border: none;">
-          <div class="sidebar-item-inner">
-            <div class="sidebar-thumb" style="background-color: ${getCategoryColor(rel.category)};"></div>
-            <div class="sidebar-item-info">
-              <p class="sidebar-item-title">${rel.title}</p>
-              <p class="sidebar-item-date">${formatDate(rel.publishTime)}</p>
+      <div class="card sidebar-item-card" onclick="window.viewArticle(${rel.id})" style="margin-bottom: 8px;">
+        <div class="card-cover-wrapper" style="border: none; padding: 0; height: auto; min-height: auto; width: 100%;">
+          <div class="sidebar-item-inner" style="display: flex; align-items: center; gap: 12px; padding: 10px 10px 22px 10px;">
+            <!-- Thumbnail on the left -->
+            <div class="sidebar-thumb" style="background-color: ${getCategoryColor(rel.category)}; width: 80px; height: 52px; flex-shrink: 0; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; box-shadow: inset 0 0 8px rgba(0,0,0,0.12);">
+              <span style="font-family: 'Outfit', sans-serif; font-size: 9px; font-weight: 700; color: #ffffff; letter-spacing: 0.05em; text-transform: uppercase;">
+                ${rel.category}
+              </span>
+            </div>
+            <!-- Text Content on the right -->
+            <div class="sidebar-item-info" style="margin: 0; flex-grow: 1; display: flex; flex-direction: column; gap: 2px; overflow: hidden; width: auto; min-width: 0;">
+              <!-- Date in the upper right -->
+              <div style="display: flex; justify-content: flex-end; width: 100%; margin-bottom: 2px;">
+                <span style="font-size: 10px; color: var(--text-light, #888); line-height: 1;">${rel.publishTime}</span>
+              </div>
+              <!-- Title -->
+              <p class="sidebar-item-title" style="font-size: 13px; line-height: 1.3; color: var(--text-dark); margin: 0; font-weight: 600; text-align: left; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${rel.title}</p>
             </div>
           </div>
         </div>
-        <div class="card-content">
+        <div class="card-content" style="width: 100%;">
           <div class="card-title-container">
             <p class="card-title" style="visibility: hidden;">${rel.title}</p>
           </div>
           <div class="card-btn-container">
-            <div class="card-btn" onclick="window.viewArticle(${rel.id})">
+            <div class="card-btn">
               <img src="https://fastcdn.hoyoverse.com/static-resource-v2/2024/03/21/882dcd6829a489afda8ba322eb982e7d_2051193489758981573.png" alt="arrow" />
             </div>
           </div>
@@ -529,19 +471,14 @@ window.addEventListener('scroll', () => {
             <svg class="dropdown-arrow" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none"></path></svg>
           </span>
           <div class="dropdown-content">
-            <a onclick="window.selectCategory('rust')">RUST</a>
-            <a onclick="window.selectCategory('rtos')">RTOS</a>
-            <a onclick="window.selectCategory('mcu')">MCU</a>
-            <a onclick="window.selectCategory('markup')">MARKUP</a>
-            <a onclick="window.selectCategory('c')">C</a>
-            <a onclick="window.selectCategory('toolchain')">TOOLCHAIN</a>
+            ${CATEGORIES.map(cat => `<a onclick="window.selectCategory('${cat}')">${cat.toUpperCase()}</a>`).join('')}
           </div>
         </div>
         <span class="path-separator">&gt;</span>
         <span class="path-item path-title-truncated">${article.title}</span>
       </div>
       <button class="return-news-btn" onclick="window.backToList()">
-        Return to News
+        Return to List
       </button>
     </div>
 
@@ -551,7 +488,7 @@ window.addEventListener('scroll', () => {
       <div class="detail-content-card">
         <div class="detail-header">
           <h1 class="detail-title">${article.title}</h1>
-          <p class="detail-date">発表時間 ${formatDate(article.publishTime)}</p>
+          <p class="detail-date">发布时间 ${formatDate(article.publishTime)}</p>
         </div>
         
         <!-- Decorative Horizontal Category Banner -->
@@ -560,10 +497,10 @@ window.addEventListener('scroll', () => {
         </div>
 
         <div class="detail-body">
-          <p class="detail-lead">${article.contentSnippet}</p>
-          <p>（这里是文章的详细正文内容。实际项目中可以通过加载具体的 Markdown 文件或请求后端接口获取富文本内容来展示，目前为占位详情文本以展示阅读视图效果。）</p>
-          <p>在这篇教程中，我们详细解析了 ${article.category.toUpperCase()} 相关的核心技术与实践机制，通过具体的案例和实战代码带你快速入门并掌握高级技巧。</p>
-          <p>无论是在工程构建还是在底层系统优化中，这些方法都能为你提供强大的思路和实践参考。未来我们还将深入探讨更多进阶特性，结合具体硬件平台或编译器优化选项，实现更加高效、稳健 of 系统架构。敬请期待我们的后续更新！</p>
+          <div class="loading-container" style="text-align: center; padding: 40px 0; color: var(--text-light);">
+            <div class="spinner" style="display: inline-block; width: 30px; height: 30px; border: 3px solid rgba(183,151,115,0.2); border-top-color: var(--btn-bg); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 12px;"></div>
+            <div>正在加载内容...</div>
+          </div>
         </div>
 
         <!-- Bottom Navigation Links -->
@@ -573,10 +510,10 @@ window.addEventListener('scroll', () => {
       <!-- Right: Related Articles Sidebar Card -->
       <div class="detail-sidebar-card">
         <div class="sidebar-header">
-          最新
+          最新推荐
         </div>
         <div class="sidebar-list">
-          ${relatedArticlesHTML.length > 0 ? relatedArticlesHTML : '<p class="sidebar-empty">No other articles in this category.</p>'}
+          ${relatedArticlesHTML.length > 0 ? relatedArticlesHTML : '<p class="sidebar-empty">该分类下无其他文章。</p>'}
         </div>
       </div>
     </div>
@@ -588,31 +525,138 @@ window.addEventListener('scroll', () => {
   `;
   
   window.scrollTo({ top: 0, behavior: 'smooth' });
-};
+
+  // Load content from API
+  try {
+    const res = await fetch(`/api/article-content?id=${article.id}`);
+    if (!res.ok) throw new Error("Load content failed");
+    const data = await res.json();
+    
+    const bodyEl = detailView.querySelector('.detail-body');
+    if (bodyEl) {
+      bodyEl.innerHTML = `
+        <p class="detail-lead">${article.contentSnippet}</p>
+        <div class="markdown-body">${data.html}</div>
+      `;
+    }
+  } catch (err) {
+    console.error(err);
+    const bodyEl = detailView.querySelector('.detail-body');
+    if (bodyEl) {
+      bodyEl.innerHTML = `
+        <div class="error-container" style="color: #a84545; padding: 20px; border: 1px solid #a84545; background-color: rgba(168,69,69,0.05); border-radius: 4px; text-align: center;">
+          <p>加载文章内容失败，请稍后重试。</p>
+        </div>
+      `;
+    }
+  }
+}
+
+// Route handler
+function handleRouting() {
+  const hash = window.location.hash || "#/";
+  
+  if (hash === "#/" || hash === "#") {
+    currentCategory = "home";
+    currentSubcat = "all";
+    if (navBar) navBar.style.display = "flex";
+    const detailView = document.getElementById("article-detail-view");
+    if (detailView) detailView.style.display = "none";
+    
+    document.title = "Developer Blog | Home";
+    renderNav();
+    renderArticles();
+  } else if (hash.startsWith("#/category/")) {
+    const parts = hash.substring(11).split("?");
+    const category = parts[0];
+    let subcat = "all";
+    
+    if (parts[1] && parts[1].startsWith("subcat=")) {
+      subcat = parts[1].substring(7);
+    }
+    
+    currentCategory = category;
+    currentSubcat = subcat;
+    pageSize = 5;
+    
+    if (navBar) navBar.style.display = "flex";
+    const detailView = document.getElementById("article-detail-view");
+    if (detailView) detailView.style.display = "none";
+    
+    document.title = `${category.toUpperCase()} | Developer Blog`;
+    renderNav();
+    renderArticles();
+  } else if (hash.startsWith("#/article/")) {
+    const articleIdStr = hash.substring(10);
+    const id = parseInt(articleIdStr, 10);
+    loadAndShowArticle(id);
+  }
+}
 
 (window as any).backToHome = () => {
-  currentCategory = 'home';
-  if (navBar) navBar.style.display = 'flex';
-  const detailView = document.getElementById('article-detail-view');
-  if (detailView) detailView.style.display = 'none';
-  renderNav();
-  renderArticles();
+  window.location.hash = "#/";
 };
 
 (window as any).backToList = () => {
-  if (navBar) navBar.style.display = 'flex';
-  const detailView = document.getElementById('article-detail-view');
-  if (detailView) detailView.style.display = 'none';
-  renderArticles();
+  window.location.hash = `#/category/${currentCategory}`;
 };
 
 (window as any).selectCategory = (cat: string) => {
-  currentCategory = cat;
-  currentSubcat = 'all';
-  pageSize = 5;
-  if (navBar) navBar.style.display = 'flex';
-  const detailView = document.getElementById('article-detail-view');
-  if (detailView) detailView.style.display = 'none';
-  renderNav();
-  renderArticles();
+  window.location.hash = `#/category/${cat}`;
 };
+
+(window as any).viewArticle = (id: number) => {
+  window.location.hash = `#/article/${id}`;
+};
+
+// Main Initialization
+async function initBlog() {
+  try {
+    const res = await fetch("/api/articles");
+    if (!res.ok) throw new Error("Fetch articles failed");
+    ARTICLES = await res.json();
+    
+    // Dynamically compile categories that have articles
+    const scannedCats = new Set<string>();
+    ARTICLES.forEach(a => {
+      if (a.category) scannedCats.add(a.category);
+    });
+    
+    const defaultCats = ['rust', 'rtos', 'mcu', 'markup', 'c', 'toolchain'];
+    const allCats = new Set([...defaultCats, ...Array.from(scannedCats)]);
+    CATEGORIES = Array.from(allCats).filter(cat => ARTICLES.some(a => a.category === cat));
+    if (CATEGORIES.length === 0) {
+      CATEGORIES = defaultCats;
+    }
+    
+    // Dynamic initialization of slideshow params for discovered categories
+    CATEGORIES.forEach(cat => {
+      if (!categoryDirections[cat]) {
+        categoryDirections[cat] = slideDirs[Math.floor(Math.random() * slideDirs.length)];
+      }
+      if (!categoryOrders[cat]) {
+        const order = [0, 1, 2];
+        const mediaPos = Math.floor(Math.random() * 4);
+        order.splice(mediaPos, 0, 3);
+        categoryOrders[cat] = order;
+      }
+    });
+    
+    // Set up router and process initial route
+    window.addEventListener("hashchange", handleRouting);
+    handleRouting();
+    
+  } catch (err) {
+    console.error("Initialization failed", err);
+    if (articleGrid) {
+      articleGrid.innerHTML = `
+        <div style="color: #a84545; padding: 40px; text-align: center; font-size: 16px;">
+          加载博客数据失败，请确保后端服务已启动并正常运行。
+        </div>
+      `;
+    }
+  }
+}
+
+// Start
+initBlog();

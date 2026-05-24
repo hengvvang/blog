@@ -19,6 +19,7 @@ body {
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--bg-color);
   color: var(--text-dark);
+  overflow-x: hidden;
 }
 
 /* 窄选项栏 */
@@ -797,12 +798,7 @@ body {
 }
 
 /* Category solid background colors */
-.media-wrapper[data-category="rust"] { background-color: #b15b45; }
-.media-wrapper[data-category="rtos"] { background-color: #3b7a9e; }
-.media-wrapper[data-category="mcu"] { background-color: #438e68; }
-.media-wrapper[data-category="markup"] { background-color: #968045; }
-.media-wrapper[data-category="c"] { background-color: #a84545; }
-.media-wrapper[data-category="toolchain"] { background-color: #5e4b8b; }
+/* Background colors are now dynamically generated in main.ts on page load */
 
 .home-collection:hover .media-wrapper {
   width: clamp(280px, 34vw, 380px); /* expands on hover */
@@ -891,25 +887,9 @@ body {
   display: flex;
   gap: 0;
   width: 100%;
+  justify-content: flex-start;
 }
 
-.toolchain-featured-card {
-  flex: 1;
-  background: #ffffff;
-  border-radius: 6px;
-  overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.03);
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease;
-  border: 1px solid rgba(0,0,0,0.02);
-}
-
-.toolchain-featured-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.08);
-}
 
 .featured-cover {
   height: 160px;
@@ -1043,24 +1023,6 @@ body {
   gap: 0;
 }
 
-.toolchain-list-card {
-  display: flex;
-  gap: 24px;
-  background: #fbfbfb;
-  border-radius: 6px;
-  overflow: hidden;
-  cursor: pointer;
-  padding: 14px;
-  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-  border: 2.67px solid transparent;
-  position: relative;
-}
-
-.toolchain-list-card:hover {
-  background-color: #ffffff;
-  border-color: rgba(57, 59, 64, 0.15);
-  transform: translateX(4px);
-}
 
 .list-card-cover {
   width: 180px;
@@ -1232,6 +1194,13 @@ body {
 /* Toolchain feature card horizontal expansion */
 .toolchain-horizontal-card {
   flex-direction: row;
+  overflow: hidden;
+  width: 100%;
+}
+.toolchain-horizontal-card .card-cover-wrapper {
+  flex: 1;
+  width: auto;
+  flex-shrink: 0;
 }
 .toolchain-horizontal-card .card-content {
   width: 0;
@@ -1243,6 +1212,22 @@ body {
 .toolchain-horizontal-card:hover .card-content {
   width: 44px;
   height: auto;
+}
+
+@media (min-width: 769px) {
+  .toolchain-horizontal-card {
+    flex: 0 0 auto !important;
+    width: 33.3333% !important;
+  }
+  .toolchain-horizontal-card:hover {
+    width: calc(33.3333% + 44px) !important;
+  }
+  .toolchain-horizontal-card .card-cover-wrapper {
+    flex: 1 !important;
+    width: auto !important;
+    flex-shrink: 0 !important;
+    flex-grow: 1 !important;
+  }
 }
 .toolchain-horizontal-card .card-title-container {
   display: none;
@@ -1275,3 +1260,174 @@ body {
 .sidebar-item-card .card-btn {
   padding: 0 36px;
 }
+
+/* Spinner Animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ======== Markdown Body Styles ======== */
+.markdown-body {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #3b4252;
+  font-size: 16px;
+  line-height: 1.8;
+  word-wrap: break-word;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  font-family: 'Outfit', sans-serif;
+  color: #2e3440;
+  margin-top: 30px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.markdown-body h1 {
+  font-size: 26px;
+  border-bottom: 1px solid #e2ded5;
+  padding-bottom: 8px;
+}
+
+.markdown-body h2 {
+  font-size: 22px;
+  border-bottom: 1px solid #e5e9f0;
+  padding-bottom: 6px;
+}
+
+.markdown-body h3 {
+  font-size: 18px;
+}
+
+.markdown-body p {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body a {
+  color: var(--btn-bg);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--btn-bg);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.markdown-body a:hover {
+  color: var(--btn-hover);
+  border-bottom-style: solid;
+}
+
+.markdown-body blockquote {
+  margin: 1.5em 0;
+  padding: 12px 24px;
+  border-left: 4px solid var(--btn-bg, #b79773);
+  background-color: rgba(183, 151, 115, 0.08);
+  color: #5e6573;
+  font-style: italic;
+  border-radius: 0 4px 4px 0;
+}
+
+.markdown-body blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Code styling */
+.markdown-body code {
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  padding: 0.2em 0.4em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+  color: #c05b46;
+}
+
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 20px;
+  padding: 18px;
+  overflow: auto;
+  font-size: 88%;
+  line-height: 1.55;
+  background-color: #1e222b;
+  border-radius: 6px;
+  border: 1px solid #2e3440;
+}
+
+.markdown-body pre code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+  color: #e5e9f0;
+}
+
+/* Lists */
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body li {
+  margin-top: 0.25em;
+}
+
+.markdown-body li > p {
+  margin-top: 8px;
+}
+
+.markdown-body li + li {
+  margin-top: 0.25em;
+}
+
+/* Table styling */
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  margin-top: 0;
+  margin-bottom: 16px;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+.markdown-body table th {
+  font-weight: 600;
+  background-color: #f5f3ee;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 8px 13px;
+  border: 1px solid #d3ccbe;
+}
+
+.markdown-body table tr {
+  background-color: #ffffff;
+  border-top: 1px solid #d3ccbe;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #faf9f6;
+}
+
+/* Divider */
+.markdown-body hr {
+  height: 2px;
+  padding: 0;
+  margin: 24px 0;
+  background-color: #e2ded5;
+  border: 0;
+}
+
