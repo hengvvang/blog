@@ -2,8 +2,10 @@
 title: "Python 带参数的高阶装饰器与类装饰器"
 publishTime: "2026-05-24 18:35"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 PYTHON / DECORATORS 的技术分享，核心探讨了《Python 带参数的高阶装饰器与类装饰器》的实现细节与核心概念。"
+summary: "超越常规无参装饰器，深入探讨类级包装器与带配置参数闭包的三层嵌套实现原理。"
 ---
+
+
 
 
 # Python 带参数的高阶装饰器与类装饰器

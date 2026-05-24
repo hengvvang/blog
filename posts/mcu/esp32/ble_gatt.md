@@ -2,8 +2,10 @@
 title: "ESP32 蓝牙 BLE GATT 服务器开发流程与原理"
 publishTime: "2026-05-24 15:10"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 MCU / ESP32 的技术分享，核心探讨了《ESP32 蓝牙 BLE GATT 服务器开发流程与原理》的实现细节与核心概念。"
+summary: "使用 ESP-IDF 建立 GATT 结构，演示如何定义服务与特征，实现主机与从机间的高效蓝牙数据传输。"
 ---
+
+
 
 
 # ESP32 蓝牙 BLE GATT 服务器开发流程与原理

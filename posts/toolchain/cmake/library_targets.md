@@ -2,8 +2,10 @@
 title: "CMake 生成静态库与动态库目标规范管理"
 publishTime: "2026-05-24 17:00"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 TOOLCHAIN / CMAKE 的技术分享，核心探讨了《CMake 生成静态库与动态库目标规范管理》的实现细节与核心概念。"
+summary: "演示如何使用 target_link_libraries 进行现代 CMake 构建，精确管理目标之间的头文件及库链接关系。"
 ---
+
+
 
 
 # CMake 生成静态库与动态库目标规范管理

@@ -2,8 +2,10 @@
 title: "Git Reflog 误删分支与未提交代码灾难恢复"
 publishTime: "2026-05-24 18:25"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 GIT / INTERNALS 的技术分享，核心探讨了《Git Reflog 误删分支与未提交代码灾难恢复》的实现细节与核心概念。"
+summary: "教你使用引用日志来拯救那些被意外重置或强制删除的提交，是日常开发中必不可少的急救手册。"
 ---
+
+
 
 
 # Git Reflog 误删分支与未提交代码灾难恢复

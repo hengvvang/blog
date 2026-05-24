@@ -3,6 +3,7 @@ dist/
 public/main.js
 public/api/
 .bun
+.gemini/
 .DS_Store
 Thumbs.db
 

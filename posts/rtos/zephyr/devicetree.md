@@ -2,8 +2,10 @@
 title: "Zephyr RTOS 设备树 (Devicetree) 架构精讲"
 publishTime: "2026-05-24 17:45"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 RTOS / ZEPHYR 的技术分享，核心探讨了《Zephyr RTOS 设备树 (Devicetree) 架构精讲》的实现细节与核心概念。"
+summary: "解读 DTS 设备树的树状继承与属性定义，展示 Zephyr 编译阶段如何根据设备树生成相应的外设驱动宏定义。"
 ---
+
+
 
 
 # Zephyr RTOS 设备树 (Devicetree) 架构精讲

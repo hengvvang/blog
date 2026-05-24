@@ -2,8 +2,10 @@
 title: "Python 装饰器基础与函数运行时计时器"
 publishTime: "2026-05-24 18:30"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 PYTHON / DECORATORS 的技术分享，核心探讨了《Python 装饰器基础与函数运行时计时器》的实现细节与核心概念。"
+summary: "从函数是一等公民的性质出发，分析 Python 闭包的变量绑定机制，掌握装饰器简化横切关注点的基础。"
 ---
+
+
 
 
 # Python 装饰器基础与函数运行时计时器

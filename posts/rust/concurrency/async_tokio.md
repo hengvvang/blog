@@ -2,8 +2,10 @@
 title: "Rust Tokio 异步运行时入门与任务调度"
 publishTime: "2026-05-24 14:10"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 RUST / CONCURRENCY 的技术分享，核心探讨了《Rust Tokio 异步运行时入门与任务调度》的实现细节与核心概念。"
+summary: "详细剖析 Tokio 内部的多线程调度队列、工作窃取（Work-Stealing）算法与异步 IO 事件监听核心。"
 ---
+
+
 
 
 # Rust Tokio 异步运行时入门与任务调度

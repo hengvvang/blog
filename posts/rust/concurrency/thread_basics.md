@@ -2,8 +2,10 @@
 title: "Rust 多线程并发编程与通道机制"
 publishTime: "2026-05-24 14:00"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 RUST / CONCURRENCY 的技术分享，核心探讨了《Rust 多线程并发编程与通道机制》的实现细节与核心概念。"
+summary: "从 OS 线程创建说起，精讲 Rust 的 Send/Sync 特质，以及如何通过 mpsc 通道在线程间安全传输消息。"
 ---
+
+
 
 
 # Rust 多线程并发编程与通道机制

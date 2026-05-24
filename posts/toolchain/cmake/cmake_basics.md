@@ -2,8 +2,10 @@
 title: "CMake 构建宏编写与自动化 CI/CD 环境结合运用"
 publishTime: "2026-05-24 12:15"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 TOOLCHAIN / CMAKE 的技术分享，核心探讨了《CMake 构建宏编写与自动化 CI/CD 环境结合运用》的实现细节与核心概念。"
+summary: "从 CMakeLists.txt 的基础指令开始，构建一个从单文件编译到多层目录结构项目的工程范本。"
 ---
+
+
 
 
 # CMake 构建宏编写与自动化 CI/CD 环境结合运用

@@ -2,8 +2,10 @@
 title: "实时操作系统 RTOS 任务调度与优先级翻转"
 publishTime: "2026-05-24 13:40"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 RTOS / FREERTOS 的技术分享，核心探讨了《实时操作系统 RTOS 任务调度与优先级翻转》的实现细节与核心概念。"
+summary: "从 PendSV 中断与堆栈恢复的角度，层层剥离汇编代码，还原 FreeRTOS 任务调度器在 CPU 寄存器上的保存流程。"
 ---
+
+
 
 
 # 实时操作系统 RTOS 任务调度与优先级翻转

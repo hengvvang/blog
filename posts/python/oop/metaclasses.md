@@ -2,8 +2,10 @@
 title: "Python 元类 Metaclasses 与动态类创建原理"
 publishTime: "2026-05-24 18:45"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 PYTHON / OOP 的技术分享，核心探讨了《Python 元类 Metaclasses 与动态类创建原理》的实现细节与核心概念。"
+summary: "剖析 Python 的 __new__ 与 __init__，了解如何拦截类创建过程并在类实例化之前修改其属性与行为。"
 ---
+
+
 
 
 # Python 元类 Metaclasses 与动态类创建原理

@@ -2,8 +2,10 @@
 title: "Git 底层原理：三类核心对象 blob, tree, commit"
 publishTime: "2026-05-24 18:20"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 GIT / INTERNALS 的技术分享，核心探讨了《Git 底层原理：三类核心对象 blob, tree, commit》的实现细节与核心概念。"
+summary: "从底层文件数据库的视角拆解 blob、tree 和 commit 等核心概念，揭秘 Git 追踪文件版本变化的秘诀。"
 ---
+
+
 
 
 # Git 底层原理：三类核心对象 blob, tree, commit

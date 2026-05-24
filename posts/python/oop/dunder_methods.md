@@ -2,8 +2,10 @@
 title: "Python 常见双下魔术方法与运算符重载"
 publishTime: "2026-05-24 18:40"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 PYTHON / OOP 的技术分享，核心探讨了《Python 常见双下魔术方法与运算符重载》的实现细节与核心概念。"
+summary: "总结 Python 内部的各种双下划线特殊成员，揭示如何通过重载它们使自定义类具备运算符、迭代器等原生能力。"
 ---
+
+
 
 
 # Python 常见双下魔术方法与运算符重载

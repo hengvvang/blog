@@ -2,8 +2,10 @@
 title: "Rust 高级生命周期约束与 HRTB 详解"
 publishTime: "2026-05-24 14:20"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 RUST / LIFETIME 的技术分享，核心探讨了《Rust 高级生命周期约束与 HRTB 详解》的实现细节与核心概念。"
+summary: "探究生命周期的子类型关系、型变特征以及 for<'a> 高阶生命周期边界在复杂泛型函数中的限制。"
 ---
+
+
 
 
 # Rust 高级生命周期约束与 HRTB 详解

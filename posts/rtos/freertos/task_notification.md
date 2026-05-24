@@ -2,8 +2,10 @@
 title: "FreeRTOS 任务通知替代信号量之高性能优化"
 publishTime: "2026-05-24 14:50"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 RTOS / FREERTOS 的技术分享，核心探讨了《FreeRTOS 任务通知替代信号量之高性能优化》的实现细节与核心概念。"
+summary: "展示如何直接通过任务控制块（TCB）中的通知值，实现零内存开销的高速单向唤醒，避免创建多余的信号量。"
 ---
+
+
 
 
 # FreeRTOS 任务通知替代信号量之高性能优化

@@ -2,8 +2,10 @@
 title: "CSS 关键帧动画 Keyframes 与微交互设计优化"
 publishTime: "2026-05-24 15:40"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 MARKUP / CSS 的技术分享，核心探讨了《CSS 关键帧动画 Keyframes 与微交互设计优化》的实现细节与核心概念。"
+summary: "结合丰富的动效实例，精讲 @keyframes 的时间步长分配以及 transition 在交互状态下的平滑演变控制。"
 ---
+
+
 
 
 # CSS 关键帧动画 Keyframes 与微交互设计优化

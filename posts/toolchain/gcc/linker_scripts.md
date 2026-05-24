@@ -2,8 +2,10 @@
 title: "链接器脚本高级命令与自定义 Section 分配"
 publishTime: "2026-05-24 16:50"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 TOOLCHAIN / GCC 的技术分享，核心探讨了《链接器脚本高级命令与自定义 Section 分配》的实现细节与核心概念。"
+summary: "从 MEMORY 和 SECTIONS 指令入手，解析如何定义 Flash 与 RAM 的边界，以及如何安排代码段与数据段的存放位置。"
 ---
+
+
 
 
 # 链接器脚本高级命令与自定义 Section 分配

@@ -2,8 +2,10 @@
 title: "STM32 DMA 搬运 ADC 多通道高速采样机制"
 publishTime: "2026-05-24 15:00"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 MCU / STM32 的技术分享，核心探讨了《STM32 DMA 搬运 ADC 多通道高速采样机制》的实现细节与核心概念。"
+summary: "利用 DMA 通道在不占用 CPU 的情况下将多路模拟信号的模数转换结果直接搬运到内存，提升采集频率。"
 ---
+
+
 
 
 # STM32 DMA 搬运 ADC 多通道高速采样机制

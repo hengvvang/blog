@@ -2,8 +2,10 @@
 title: "Markdown 深度实践：使用 Mermaid 绘制流程图"
 publishTime: "2026-05-24 15:50"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 MARKUP / MARKDOWN 的技术分享，核心探讨了《Markdown 深度实践：使用 Mermaid 绘制流程图》的实现细节与核心概念。"
+summary: "讲解如何在 Markdown 中直接渲染甘特图、流程图和序列图，极大地提高技术文档中的图形表达效率。"
 ---
+
+
 
 
 # Markdown 深度实践：使用 Mermaid 绘制流程图

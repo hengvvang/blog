@@ -2,8 +2,10 @@
 title: "Python Asyncio 异步协程并发编程实战"
 publishTime: "2026-05-24 16:20"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 PYTHON / CONCURRENCY 的技术分享，核心探讨了《Python Asyncio 异步协程并发编程实战》的实现细节与核心概念。"
+summary: "深入协程的事件循环模型，分析 yield、async/await 在底层任务切换与高并发网络 IO 中的表现。"
 ---
+
+
 
 
 # Python Asyncio 异步协程并发编程实战

@@ -2,8 +2,10 @@
 title: "Markdown 深度定制与现代排版引擎实践"
 publishTime: "2026-05-24 15:10"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 MARKUP / MARKDOWN 的技术分享，核心探讨了《Markdown 深度定制与现代排版引擎实践》的实现细节与核心概念。"
+summary: "整理出一套通用的 Markdown 书写格式指引，包括空行标准、标点符号规范和中英文混排美化细节。"
 ---
+
+
 
 
 # Markdown 深度定制与现代排版引擎实践

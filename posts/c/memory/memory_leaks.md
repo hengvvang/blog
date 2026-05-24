@@ -2,8 +2,10 @@
 title: "C语言动态内存分配、内存泄漏与 Valgrind 排查"
 publishTime: "2026-05-24 17:30"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 C / MEMORY 的技术分享，核心探讨了《C语言动态内存分配、内存泄漏与 Valgrind 排查》的实现细节与核心概念。"
+summary: "介绍如何利用 Valgrind 检测 C 代码中的内存开辟与释放不配对问题，保障堆内存的安全管理。"
 ---
+
+
 
 
 # C语言动态内存分配、内存泄漏与 Valgrind 排查

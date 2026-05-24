@@ -2,8 +2,10 @@
 title: "CMake 交叉编译配置与 Toolchain 工具链声明"
 publishTime: "2026-05-24 17:10"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 TOOLCHAIN / CMAKE 的技术分享，核心探讨了《CMake 交叉编译配置与 Toolchain 工具链声明》的实现细节与核心概念。"
+summary: "配置工具链描述文件，指定 MCU 目标架构、交叉编译器路径以及系统库包含目录，实现单片机工程的快捷构建。"
 ---
+
+
 
 
 # CMake 交叉编译配置与 Toolchain 工具链声明

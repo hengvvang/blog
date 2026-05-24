@@ -2,8 +2,10 @@
 title: "深入探讨 Rust 借用检查器与所有权模型"
 publishTime: "2026-05-24 17:10"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 RUST / OWNERSHIP 的技术分享，核心探讨了《深入探讨 Rust 借用检查器与所有权模型》的实现细节与核心概念。"
+summary: "深入研究 Rust 编译器如何在编译期验证数据存活周期，以无 GC 方式杜绝悬空引用与内存并发竞争。"
 ---
+
+
 
 
 # 深入探讨 Rust 借用检查器与所有权模型

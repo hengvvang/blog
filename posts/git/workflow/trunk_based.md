@@ -2,8 +2,10 @@
 title: "Trunk-Based 主干开发模式与 CI/CD 契合"
 publishTime: "2026-05-24 18:15"
 author: "hengvvang"
-summary: "【摘要测试】这是一篇关于 GIT / WORKFLOW 的技术分享，核心探讨了《Trunk-Based 主干开发模式与 CI/CD 契合》的实现细节与核心概念。"
+summary: "探究一种追求高频合并与持续集成的单主干开发流模式，分析其相较于传统分支开发流的优劣。"
 ---
+
+
 
 
 # Trunk-Based 主干开发模式与 CI/CD 契合
