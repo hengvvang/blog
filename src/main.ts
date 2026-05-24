@@ -544,7 +544,7 @@ async function loadAndShowArticle(id: number) {
 
   // Load content from API
   try {
-    const res = await fetch(`/api/article-content?id=${article.id}`);
+    const res = await fetch(`/api/article-content/${article.id}.json`);
     if (!res.ok) throw new Error("Load content failed");
     const data = await res.json();
     
@@ -633,7 +633,7 @@ function handleRouting() {
 // Main Initialization
 async function initBlog() {
   try {
-    const res = await fetch("/api/articles");
+    const res = await fetch("/api/articles.json");
     if (!res.ok) throw new Error("Fetch articles failed");
     ARTICLES = await res.json();
     

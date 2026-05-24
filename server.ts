@@ -154,7 +154,7 @@ const server = serve({
     }
 
     // API: articles list
-    if (path === "/api/articles") {
+    if (path === "/api/articles" || path === "/api/articles.json") {
       const list = await loadArticles();
       const clientList = list.map(({ filePath, ...rest }) => rest);
       return new Response(JSON.stringify(clientList), {
@@ -166,8 +166,13 @@ const server = serve({
     }
 
     // API: article content rendering
-    if (path === "/api/article-content") {
-      const idStr = url.searchParams.get("id");
+    if (path === "/api/article-content" || (path.startsWith("/api/article-content/") && path.endsWith(".json"))) {
+      let idStr: string | null = null;
+      if (path.startsWith("/api/article-content/")) {
+        idStr = path.substring(21).replace(".json", "");
+      } else {
+        idStr = url.searchParams.get("id");
+      }
       if (!idStr) {
         return new Response("Missing id parameter", { status: 400 });
       }
