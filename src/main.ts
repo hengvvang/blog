@@ -490,11 +490,6 @@ async function loadAndShowArticle(id: number) {
           <h1 class="detail-title">${article.title}</h1>
           <p class="detail-date">发布时间 ${formatDate(article.publishTime)}</p>
         </div>
-        
-        <!-- Decorative Horizontal Category Banner -->
-        <div class="detail-banner" style="background-color: ${getCategoryColor(article.category)};">
-          <span class="banner-text">${article.category.toUpperCase()}</span>
-        </div>
 
         <div class="detail-body">
           <div class="loading-container" style="text-align: center; padding: 40px 0; color: var(--text-light);">
@@ -535,7 +530,6 @@ async function loadAndShowArticle(id: number) {
     const bodyEl = detailView.querySelector('.detail-body');
     if (bodyEl) {
       bodyEl.innerHTML = `
-        <p class="detail-lead">${article.contentSnippet}</p>
         <div class="markdown-body">${data.html}</div>
       `;
     }
