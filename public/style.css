@@ -222,13 +222,13 @@ body {
 
 .path-item {
   font-size: 16px;
-  color: #7b7b7b;
+  color: var(--text-dark);
   cursor: pointer;
   transition: color 0.2s ease;
 }
 
 .path-item:hover {
-  color: #000000;
+  color: var(--btn-bg);
 }
 
 .path-separator {
@@ -239,6 +239,7 @@ body {
 }
 
 .path-title-truncated {
+  font-size: 16px;
   max-width: 550px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -259,13 +260,13 @@ body {
   align-items: center;
   gap: 4px;
   font-size: 16px;
-  color: #7b7b7b;
+  color: var(--text-dark);
   font-weight: 400;
   transition: color 0.2s ease;
 }
 
 .path-item.active-cat:hover {
-  color: #000000;
+  color: var(--btn-bg);
 }
 
 .dropdown-arrow {
@@ -311,7 +312,7 @@ body {
 }
 
 .dropdown-content a {
-  color: #7b7b7b; /* grey, matching home breadcrumb */
+  color: var(--text-dark);
   padding: 8px 12px;
   text-decoration: none;
   display: block;
@@ -332,14 +333,13 @@ body {
 }
 
 .dropdown-content a:hover {
-  background-color: rgba(0, 0, 0, 0.06); /* highly transparent grey hover background */
-  color: #000000; /* black, matching home breadcrumb hover */
+  color: var(--btn-bg);
 }
 
 .return-news-btn {
   background: transparent;
   border: none;
-  color: #cccccc;
+  color: var(--text-dark);
   font-size: 16px;
   cursor: pointer;
   transition: color 0.2s ease;
@@ -349,7 +349,7 @@ body {
 }
 
 .return-news-btn:hover {
-  color: #000000;
+  color: var(--btn-bg);
 }
 
 /* Main Layout (Left Content Card + Right Sidebar Card) */
@@ -478,7 +478,6 @@ body {
 
 .bottombar-prev:hover, .bottombar-next:hover {
   opacity: 1;
-  color: var(--btn-bg);
 }
 
 .bottombar-prev:hover .nav-title, .bottombar-next:hover .nav-title {
@@ -488,6 +487,9 @@ body {
 .nav-arrow {
   color: var(--text-light);
   flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  transition: color 0.2s ease;
 }
 
 .nav-link-info {
@@ -507,6 +509,7 @@ body {
   font-weight: 700;
   color: var(--text-light);
   letter-spacing: 0.05em;
+  transition: color 0.2s ease;
 }
 
 .nav-title {
@@ -733,13 +736,13 @@ body {
 /* Scroll to top button */
 .back-top-btn {
   position: fixed;
-  right: 54px;
+  right: 20px; /* Aligns with detail-view container padding on small screens */
   bottom: 108px;
   width: 60px;
   height: 60px;
   border-radius: 4px;
   background-color: #ffffff;
-  border: 1px solid rgba(0,0,0,0.06);
+  border: 1px solid #d3ccbe; /* Theme border color */
   box-shadow: 0 4px 16px rgba(0,0,0,0.05);
   display: flex;
   align-items: center;
@@ -748,8 +751,16 @@ body {
   color: var(--text-dark);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.2s ease, color 0.2s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   z-index: 100;
+}
+
+@media (min-width: 1281px) {
+  .back-top-btn {
+    left: 50%;
+    margin-left: 560px; /* Aligns right edge of 60px button with right edge of 1240px content area: (1280/2) - 20 (padding) - 60 (width) = 560 */
+    right: auto;
+  }
 }
 
 .back-top-btn.show {
@@ -758,8 +769,9 @@ body {
 }
 
 .back-top-btn:hover {
-  background-color: var(--bg-color);
-  color: var(--btn-bg);
+  background-color: var(--btn-bg); /* Gold background on hover */
+  border-color: var(--btn-bg);
+  color: #ffffff; /* White arrow on hover */
 }
 
 .card-btn-container {
