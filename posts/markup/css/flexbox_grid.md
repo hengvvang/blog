@@ -2,8 +2,9 @@
 title: "现代 CSS 页面排版：Flexbox 与 Grid 综合实践"
 publishTime: "2026-05-24 15:30"
 author: "hengvvang"
-description: "在现代网页构建中，Flexbox（弹性盒子）与 Grid（网格）是处理响应式排版的黄金组合。它们分别擅长一维线性布局和二维平面网格布局。"
+summary: "【摘要测试】这是一篇关于 MARKUP / CSS 的技术分享，核心探讨了《现代 CSS 页面排版：Flexbox 与 Grid 综合实践》的实现细节与核心概念。"
 ---
+
 
 # 现代 CSS 页面排版：Flexbox 与 Grid 综合实践
 

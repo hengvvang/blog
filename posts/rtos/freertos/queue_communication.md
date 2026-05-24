@@ -2,8 +2,9 @@
 title: "FreeRTOS 队列通信机制与数据拷贝深度剖析"
 publishTime: "2026-05-24 14:30"
 author: "hengvvang"
-description: "队列是 FreeRTOS 中任务间传递数据的主要手段。与传递指针相比，FreeRTOS 队列默认采用数据拷贝（By Value）而非引用传递，这带来了优良的线程安全性。"
+summary: "【摘要测试】这是一篇关于 RTOS / FREERTOS 的技术分享，核心探讨了《FreeRTOS 队列通信机制与数据拷贝深度剖析》的实现细节与核心概念。"
 ---
+
 
 # FreeRTOS 队列通信机制与数据拷贝深度剖析
 

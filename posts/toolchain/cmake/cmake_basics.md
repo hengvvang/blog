@@ -2,8 +2,9 @@
 title: "CMake 构建宏编写与自动化 CI/CD 环境结合运用"
 publishTime: "2026-05-24 12:15"
 author: "hengvvang"
-description: "一套好用的构建工具链可以大幅提升软件开发生产力。本文从 GCC 链接器脚本（.ld）的自定义语法分配出发，讨论 CMake 构建宏的编写，以及如何将它们与现代 CI/CD 自动化流水线结合。"
+summary: "【摘要测试】这是一篇关于 TOOLCHAIN / CMAKE 的技术分享，核心探讨了《CMake 构建宏编写与自动化 CI/CD 环境结合运用》的实现细节与核心概念。"
 ---
+
 
 # CMake 构建宏编写与自动化 CI/CD 环境结合运用
 

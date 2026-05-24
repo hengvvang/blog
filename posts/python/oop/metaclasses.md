@@ -2,8 +2,9 @@
 title: "Python 元类 Metaclasses 与动态类创建原理"
 publishTime: "2026-05-24 18:45"
 author: "hengvvang"
-description: "在绝大多数面向对象语言中，类是用来创建对象的模板。但在 Python 中，类本身也是一个对象，它是由“元类”（Metaclass）创建出来的。"
+summary: "【摘要测试】这是一篇关于 PYTHON / OOP 的技术分享，核心探讨了《Python 元类 Metaclasses 与动态类创建原理》的实现细节与核心概念。"
 ---
+
 
 # Python 元类 Metaclasses 与动态类创建原理
 

@@ -2,8 +2,9 @@
 title: "链接器脚本高级命令与自定义 Section 分配"
 publishTime: "2026-05-24 16:50"
 author: "hengvvang"
-description: "链接器脚本（Linker Script）控制着最终二进制文件每一部分代码在芯片物理存储中的位置。"
+summary: "【摘要测试】这是一篇关于 TOOLCHAIN / GCC 的技术分享，核心探讨了《链接器脚本高级命令与自定义 Section 分配》的实现细节与核心概念。"
 ---
+
 
 # 链接器脚本高级命令与自定义 Section 分配
 

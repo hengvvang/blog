@@ -2,7 +2,9 @@
 title: "静态博客 Front Matter 头部数据段语法指南"
 publishTime: "2026-05-24 16:00"
 author: "hengvvang"
-description: "Front Matter 是位于 Markdown 文档最顶部的一块 YAML 或 JSON 格式的元数据定义区块，使用三个短横线 --- 作为起始和结束的分界标识。"
+summary: "【摘要测试】这是一篇关于 MARKUP / MARKDOWN 的技术分享，核心探讨了《静态博客 Front Matter 头部数据段语法指南》的实现细节与核心概念。"
+---
+ 作为起始和结束的分界标识。"
 ---
 
 # 静态博客 Front Matter 头部数据段语法指南

@@ -2,8 +2,9 @@
 title: "Trunk-Based 主干开发模式与 CI/CD 契合"
 publishTime: "2026-05-24 18:15"
 author: "hengvvang"
-description: "相比于繁重的 Git Flow，主干开发（Trunk-Based Development）是现代 DevOps 和持续集成（CI/CD）极其推崇的一种轻量级分支模式。"
+summary: "【摘要测试】这是一篇关于 GIT / WORKFLOW 的技术分享，核心探讨了《Trunk-Based 主干开发模式与 CI/CD 契合》的实现细节与核心概念。"
 ---
+
 
 # Trunk-Based 主干开发模式与 CI/CD 契合
 

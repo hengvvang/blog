@@ -2,8 +2,9 @@
 title: "Python Asyncio 异步协程并发编程实战"
 publishTime: "2026-05-24 16:20"
 author: "hengvvang"
-description: "在处理高并发 I/O 密集型任务时，传统的线程和进程模型往往会带来高额的内存开销与上下文切换损耗。Python 3.4 引入的 asyncio 模块，通过单线程事件循环（Event Loop）与协程协同式调度，为编写超大规模并发网络应用提供了原生支持。"
+summary: "【摘要测试】这是一篇关于 PYTHON / CONCURRENCY 的技术分享，核心探讨了《Python Asyncio 异步协程并发编程实战》的实现细节与核心概念。"
 ---
+
 
 # Python Asyncio 异步协程并发编程实战
 

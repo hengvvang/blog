@@ -2,8 +2,9 @@
 title: "Python 带参数的高阶装饰器与类装饰器"
 publishTime: "2026-05-24 18:35"
 author: "hengvvang"
-description: "当基础装饰器无法满足传递定制化配置参数的需求时，我们需要编写带参数的“三层嵌套”高阶装饰器，或是使用类（Class）来封装装饰器逻辑。"
+summary: "【摘要测试】这是一篇关于 PYTHON / DECORATORS 的技术分享，核心探讨了《Python 带参数的高阶装饰器与类装饰器》的实现细节与核心概念。"
 ---
+
 
 # Python 带参数的高阶装饰器与类装饰器
 

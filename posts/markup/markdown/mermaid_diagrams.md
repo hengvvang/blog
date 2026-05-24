@@ -2,8 +2,9 @@
 title: "Markdown 深度实践：使用 Mermaid 绘制流程图"
 publishTime: "2026-05-24 15:50"
 author: "hengvvang"
-description: "Mermaid 是一款基于 JavaScript 的图表渲染工具，它允许你在 Markdown 中直接使用文本代码编写流程图、时序图、甘特图等多种图表。"
+summary: "【摘要测试】这是一篇关于 MARKUP / MARKDOWN 的技术分享，核心探讨了《Markdown 深度实践：使用 Mermaid 绘制流程图》的实现细节与核心概念。"
 ---
+
 
 # Markdown 深度实践：使用 Mermaid 绘制流程图
 

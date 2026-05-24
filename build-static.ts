@@ -91,7 +91,7 @@ async function loadArticles(): Promise<ArticleMetadata[]> {
       publishTime = fileStat.mtime.toISOString().replace("T", " ").substring(0, 16);
     }
     
-    const snippet = meta.description || meta.summary || "";
+    const snippet = meta.summary || meta.description || "";
     
     articles.push({
       id: getNumericId(relPath),

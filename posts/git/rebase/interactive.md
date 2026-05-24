@@ -2,8 +2,9 @@
 title: "Git Rebase 交互式变基精讲"
 publishTime: "2026-05-24 16:45"
 author: "hengvvang"
-description: "在团队协作开发中，杂乱无章的 Git 提交历史会大大增加代码审查与回滚的难度。利用 git rebase -i 交互式变基操作，我们可以在将分支合并到主干前，对本地多次琐碎的提交进行整理、合并与重构，从而维护一条干净漂亮的“单线型”提交日志。"
+summary: "【摘要测试】这是一篇关于 GIT / REBASE 的技术分享，核心探讨了《Git Rebase 交互式变基精讲》的实现细节与核心概念。"
 ---
+
 
 # Git Rebase 交互式变基精讲
 

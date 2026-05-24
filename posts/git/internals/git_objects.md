@@ -2,8 +2,9 @@
 title: "Git 底层原理：三类核心对象 blob, tree, commit"
 publishTime: "2026-05-24 18:20"
 author: "hengvvang"
-description: "Git 绝非简单的差异备份工具，而是一个优雅的“内容寻址文件系统”。在 .git/objects/ 目录中，Git 将所有版本数据存储为由哈希值索引的三个核心对象。"
+summary: "【摘要测试】这是一篇关于 GIT / INTERNALS 的技术分享，核心探讨了《Git 底层原理：三类核心对象 blob, tree, commit》的实现细节与核心概念。"
 ---
+
 
 # Git 底层原理：三类核心对象 blob, tree, commit
 

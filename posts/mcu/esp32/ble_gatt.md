@@ -2,8 +2,9 @@
 title: "ESP32 蓝牙 BLE GATT 服务器开发流程与原理"
 publishTime: "2026-05-24 15:10"
 author: "hengvvang"
-description: "ESP32 集成了低功耗蓝牙（BLE）功能，这为近距离无线控制提供了低成本、低功耗的解决方案。本文将拆解 BLE GATT 服务器的内部逻辑。"
+summary: "【摘要测试】这是一篇关于 MCU / ESP32 的技术分享，核心探讨了《ESP32 蓝牙 BLE GATT 服务器开发流程与原理》的实现细节与核心概念。"
 ---
+
 
 # ESP32 蓝牙 BLE GATT 服务器开发流程与原理
 

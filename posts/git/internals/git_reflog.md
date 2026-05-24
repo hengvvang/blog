@@ -2,8 +2,9 @@
 title: "Git Reflog 误删分支与未提交代码灾难恢复"
 publishTime: "2026-05-24 18:25"
 author: "hengvvang"
-description: "在开发中，不小心误执行了 git reset --hard 或是删除了未合并的本地分支，往往会让人冷汗直流。实际上，只要该代码曾经被 commit 提交过，就可以用 git reflog 轻易找回。"
+summary: "【摘要测试】这是一篇关于 GIT / INTERNALS 的技术分享，核心探讨了《Git Reflog 误删分支与未提交代码灾难恢复》的实现细节与核心概念。"
 ---
+
 
 # Git Reflog 误删分支与未提交代码灾难恢复
 

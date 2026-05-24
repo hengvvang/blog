@@ -2,8 +2,9 @@
 title: "Git Flow 分支管理工作流最佳实践"
 publishTime: "2026-05-24 18:10"
 author: "hengvvang"
-description: "Git Flow 是一种非常经典且规范的分支管理工作流模型，适用于具有固定发布周期、多版本并存的团队项目开发。"
+summary: "【摘要测试】这是一篇关于 GIT / WORKFLOW 的技术分享，核心探讨了《Git Flow 分支管理工作流最佳实践》的实现细节与核心概念。"
 ---
+
 
 # Git Flow 分支管理工作流最佳实践
 

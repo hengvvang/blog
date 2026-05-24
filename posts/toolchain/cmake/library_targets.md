@@ -2,8 +2,9 @@
 title: "CMake 生成静态库与动态库目标规范管理"
 publishTime: "2026-05-24 17:00"
 author: "hengvvang"
-description: "现代 CMake 的核心思想是基于目标（Target-based）的架构。不要使用全局的命令，而应该把每个编译产物定义为一个独立 Target。"
+summary: "【摘要测试】这是一篇关于 TOOLCHAIN / CMAKE 的技术分享，核心探讨了《CMake 生成静态库与动态库目标规范管理》的实现细节与核心概念。"
 ---
+
 
 # CMake 生成静态库与动态库目标规范管理
 

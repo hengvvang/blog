@@ -2,8 +2,9 @@
 title: "Python 装饰器基础与函数运行时计时器"
 publishTime: "2026-05-24 18:30"
 author: "hengvvang"
-description: "装饰器（Decorators）是 Python 中极其优雅的语法糖，允许你在不修改原函数代码的前提下，动态地为函数织入额外的行为逻辑（如日志打印、耗时统计、权限校验）。"
+summary: "【摘要测试】这是一篇关于 PYTHON / DECORATORS 的技术分享，核心探讨了《Python 装饰器基础与函数运行时计时器》的实现细节与核心概念。"
 ---
+
 
 # Python 装饰器基础与函数运行时计时器
 

@@ -2,8 +2,9 @@
 title: "深入探讨 Rust 借用检查器与所有权模型"
 publishTime: "2026-05-24 17:10"
 author: "hengvvang"
-description: "Rust 的所有权（Ownership）和借用检查器（Borrow Checker）是它不需要垃圾回收（GC）就能保证内存安全的核心基石。本文将深度解析这套模型的工作原理，并分析开发中常见的借用冲突及其解决方法。"
+summary: "【摘要测试】这是一篇关于 RUST / OWNERSHIP 的技术分享，核心探讨了《深入探讨 Rust 借用检查器与所有权模型》的实现细节与核心概念。"
 ---
+
 
 # 深入探讨 Rust 借用检查器与所有权模型
 

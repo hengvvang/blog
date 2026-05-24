@@ -2,8 +2,9 @@
 title: "Markdown 深度定制与现代排版引擎实践"
 publishTime: "2026-05-24 15:10"
 author: "hengvvang"
-description: "Markdown 让技术排版变得像写代码一样自然。如何深度定制化你的文档预设样式，结合现代解析引擎渲染出一套属于自己的特色 UI 外观？本文有全套配置细节。"
+summary: "【摘要测试】这是一篇关于 MARKUP / MARKDOWN 的技术分享，核心探讨了《Markdown 深度定制与现代排版引擎实践》的实现细节与核心概念。"
 ---
+
 
 # Markdown 深度定制与现代排版引擎实践
 
