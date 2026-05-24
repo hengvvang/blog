@@ -2,7 +2,9 @@
 title: "Zephyr RTOS 设备树 (Devicetree) 架构精讲"
 publishTime: "2026-05-24 17:45"
 author: "hengvvang"
+description: "Zephyr 作为 Linux 基金会主导的现代嵌入式实时操作系统，吸取了 Linux 内核的许多先进设计，其中最核心的便是设备树（Devicetree, DT）机制。本文将带大家通俗易懂地理解设备树的语法架构以及它在硬件描述与代码解耦中的作用。"
 ---
+
 # Zephyr RTOS 设备树 (Devicetree) 架构精讲
 
 Zephyr 作为 Linux 基金会主导的现代嵌入式实时操作系统，吸取了 Linux 内核的许多先进设计，其中最核心的便是**设备树**（Devicetree, DT）机制。本文将带大家通俗易懂地理解设备树的语法架构以及它在硬件描述与代码解耦中的作用。

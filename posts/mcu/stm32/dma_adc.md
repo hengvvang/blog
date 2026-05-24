@@ -2,7 +2,9 @@
 title: "STM32 DMA 搬运 ADC 多通道高速采样机制"
 publishTime: "2026-05-24 15:00"
 author: "hengvvang"
+description: "在高速数据采集系统中，如果单纯用 CPU 中断读取 ADC 寄存器，会占用大量的 CPU 计算周期。借助于直接内存访问（DMA），ADC 转换结果可以直接在硬件层面被搬运到 SRAM 缓冲区中。"
 ---
+
 # STM32 DMA 搬运 ADC 多通道高速采样机制
 
 在高速数据采集系统中，如果单纯用 CPU 中断读取 ADC 寄存器，会占用大量的 CPU 计算周期。借助于直接内存访问（DMA），ADC 转换结果可以直接在硬件层面被搬运到 SRAM 缓冲区中。

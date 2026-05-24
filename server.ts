@@ -99,14 +99,7 @@ async function loadArticles(): Promise<ArticleMetadata[]> {
       publishTime = fileStat.mtime.toISOString().replace("T", " ").substring(0, 16);
     }
     
-    let snippet = meta.description || "";
-    if (!snippet) {
-      const textOnly = markdown
-        .replace(/[#*`_\[\]()]/g, "") // strip simple formatting
-        .replace(/\n+/g, " ")
-        .trim();
-      snippet = textOnly.substring(0, 150) + (textOnly.length > 150 ? "..." : "");
-    }
+    const snippet = meta.description || meta.summary || "";
     
     const author = meta.author;
 

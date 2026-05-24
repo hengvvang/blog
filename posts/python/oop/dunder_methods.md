@@ -2,7 +2,9 @@
 title: "Python 常见双下魔术方法与运算符重载"
 publishTime: "2026-05-24 18:40"
 author: "hengvvang"
+description: "Python 的类中包含许多以双下划线开头和结尾的方法，被称为“魔术方法”（Magic Methods）或“双下方法”（Dunder Methods）。它们是 Python 协议式设计的核心。"
 ---
+
 # Python 常见双下魔术方法与运算符重载
 
 Python 的类中包含许多以双下划线开头和结尾的方法，被称为“魔术方法”（Magic Methods）或“双下方法”（Dunder Methods）。它们是 Python 协议式设计的核心。

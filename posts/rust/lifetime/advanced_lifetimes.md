@@ -2,7 +2,9 @@
 title: "Rust 高级生命周期约束与 HRTB 详解"
 publishTime: "2026-05-24 14:20"
 author: "hengvvang"
+description: "当我们在 Rust 中编写高度通用的泛型代码、闭包或 trait 约束时，普通的生命周期标记可能无法满足需求。"
 ---
+
 # Rust 高级生命周期约束与 HRTB 详解
 
 当我们在 Rust 中编写高度通用的泛型代码、闭包或 trait 约束时，普通的生命周期标记可能无法满足需求。

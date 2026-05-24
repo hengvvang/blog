@@ -2,7 +2,9 @@
 title: "ESP32 Wi-Fi 站模式 STA 连接管理与事件驱动机制"
 publishTime: "2026-05-24 18:00"
 author: "hengvvang"
+description: "ESP32 作为极具性价比的物联网开发芯片，其内置的 Wi-Fi 协议栈功能非常强大。本文将介绍如何使用 ESP-IDF 框架将 ESP32 配置为 Station（站）模式连接路由器，并分析基于事件循环（Event Loop）的状态通知机制。"
 ---
+
 # ESP32 Wi-Fi 站模式 STA 连接管理与事件驱动机制
 
 ESP32 作为极具性价比的物联网开发芯片，其内置的 Wi-Fi 协议栈功能非常强大。本文将介绍如何使用 ESP-IDF 框架将 ESP32 配置为 Station（站）模式连接路由器，并分析基于事件循环（Event Loop）的状态通知机制。

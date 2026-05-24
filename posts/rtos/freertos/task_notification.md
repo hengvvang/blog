@@ -2,7 +2,9 @@
 title: "FreeRTOS 任务通知替代信号量之高性能优化"
 publishTime: "2026-05-24 14:50"
 author: "hengvvang"
+description: "在 FreeRTOS 中，普通的信号量和事件组需要额外的控制块（TCB 以外的内存），且读写时有多次上下文开销。任务通知（Task Notifications）是 FreeRTOS V8.2 引入的高效轻量级事件机制。"
 ---
+
 # FreeRTOS 任务通知替代信号量之高性能优化
 
 在 FreeRTOS 中，普通的信号量和事件组需要额外的控制块（TCB 以外的内存），且读写时有多次上下文开销。任务通知（Task Notifications）是 FreeRTOS V8.2 引入的高效轻量级事件机制。

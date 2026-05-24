@@ -2,7 +2,9 @@
 title: "Rust 多线程并发编程与通道机制"
 publishTime: "2026-05-24 14:00"
 author: "hengvvang"
+description: "在 Rust 中，并发被视为“无畏并发”（Fearless Concurrency）。借助于所有权系统与借用检查，Rust 能够在编译期消除常见的多线程 Bug（如数据竞争）。"
 ---
+
 # Rust 多线程并发编程与通道机制
 
 在 Rust 中，并发被视为“无畏并发”（Fearless Concurrency）。借助于所有权系统与借用检查，Rust 能够在编译期消除常见的多线程 Bug（如数据竞争）。

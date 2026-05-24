@@ -2,7 +2,9 @@
 title: "CSS 关键帧动画 Keyframes 与微交互设计优化"
 publishTime: "2026-05-24 15:40"
 author: "hengvvang"
+description: "微交互动画（Micro-interactions）能够极大地拉近产品与用户的心理距离。本文将剖析如何使用纯 CSS 关键帧控制复杂的页面过渡。"
 ---
+
 # CSS 关键帧动画 Keyframes 与微交互设计优化
 
 微交互动画（Micro-interactions）能够极大地拉近产品与用户的心理距离。本文将剖析如何使用纯 CSS 关键帧控制复杂的页面过渡。

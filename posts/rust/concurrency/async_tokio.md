@@ -2,7 +2,9 @@
 title: "Rust Tokio 异步运行时入门与任务调度"
 publishTime: "2026-05-24 14:10"
 author: "hengvvang"
+description: "Tokio 是 Rust 生态中最流行的异步运行时环境，专为编写高并发、非阻塞的网络应用程序而设计。"
 ---
+
 # Rust Tokio 异步运行时入门与任务调度
 
 Tokio 是 Rust 生态中最流行的异步运行时环境，专为编写高并发、非阻塞的网络应用程序而设计。

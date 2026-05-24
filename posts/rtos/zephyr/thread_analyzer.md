@@ -2,7 +2,9 @@
 title: "Zephyr 线程栈分析器与内存泄漏调试指南"
 publishTime: "2026-05-24 14:40"
 author: "hengvvang"
+description: "在嵌入式开发中，栈溢出（Stack Overflow）是极难排查的 Bug 之一。Zephyr 提供了原生的线程栈分析器（Thread Analyzer），能够实时检测各个线程的栈水位。"
 ---
+
 # Zephyr 线程栈分析器与内存泄漏调试指南
 
 在嵌入式开发中，栈溢出（Stack Overflow）是极难排查的 Bug 之一。Zephyr 提供了原生的线程栈分析器（Thread Analyzer），能够实时检测各个线程的栈水位。

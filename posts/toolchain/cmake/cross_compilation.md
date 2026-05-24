@@ -2,7 +2,9 @@
 title: "CMake 交叉编译配置与 Toolchain 工具链声明"
 publishTime: "2026-05-24 17:10"
 author: "hengvvang"
+description: "在宿主机（如 x86 PC）上开发嵌入式固件并期望编译输出能在目标机（如 ARM Cortex-M 单片机）上运行，这种构建过程被称为交叉编译。"
 ---
+
 # CMake 交叉编译配置与 Toolchain 工具链声明
 
 在宿主机（如 x86 PC）上开发嵌入式固件并期望编译输出能在目标机（如 ARM Cortex-M 单片机）上运行，这种构建过程被称为**交叉编译**。
