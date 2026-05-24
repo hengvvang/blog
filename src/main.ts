@@ -550,11 +550,12 @@ async function loadAndShowArticle(id: number) {
     if (bodyEl) {
       const pTime = data.publishTime || article.publishTime;
       const dateStr = formatEnglishDate(pTime);
-      const authorStr = data.author ? `by <span style="font-weight: 600; color: var(--text-dark, #333); font-style: normal;">${data.author}</span> on ` : `on `;
+      const dateHtml = `<span style="font-weight: 600; color: var(--text-dark, #333);">${dateStr}</span>`;
+      const authorStr = data.author ? `by <span style="font-weight: 600; color: var(--text-dark, #333);">${data.author}</span> on ` : `on `;
       bodyEl.innerHTML = `
         <div class="markdown-body">${data.html}</div>
-        <div class="article-footer" style="margin-top: 40px; padding-top: 16px; border-top: 1px solid rgba(136, 136, 136, 0.2); color: var(--text-light, #888); font-size: 14px; text-align: right; font-style: italic; font-family: Georgia, serif;">
-          ${authorStr}${dateStr}
+        <div class="article-footer" style="margin-top: 40px; padding-top: 16px; border-top: 1px solid rgba(136, 136, 136, 0.2); color: var(--text-light, #888); font-size: 14px; text-align: right;">
+          ${authorStr}${dateHtml}
         </div>
       `;
     }
