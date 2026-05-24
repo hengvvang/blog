@@ -488,7 +488,6 @@ async function loadAndShowArticle(id: number) {
       <div class="detail-content-card">
         <div class="detail-header">
           <h1 class="detail-title">${article.title}</h1>
-          <p class="detail-date">发布时间 ${formatDate(article.publishTime)}</p>
         </div>
 
         <div class="detail-body">
@@ -529,8 +528,14 @@ async function loadAndShowArticle(id: number) {
     
     const bodyEl = detailView.querySelector('.detail-body');
     if (bodyEl) {
+      const authorHtml = data.author ? `<span>作者：${data.author}</span>` : '';
+      const timeHtml = `<span>发布时间：${formatDate(data.publishTime || article.publishTime)}</span>`;
       bodyEl.innerHTML = `
         <div class="markdown-body">${data.html}</div>
+        <div class="article-footer" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(136, 136, 136, 0.2); color: var(--text-light, #888); font-size: 14px; display: flex; justify-content: flex-end; gap: 20px;">
+          ${authorHtml}
+          ${timeHtml}
+        </div>
       `;
     }
   } catch (err) {

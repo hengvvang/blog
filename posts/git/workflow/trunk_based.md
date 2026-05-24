@@ -1,6 +1,7 @@
 ---
 title: "Trunk-Based 主干开发模式与 CI/CD 契合"
 publishTime: "2026-05-24 18:15"
+author: "hengvvang"
 ---
 # Trunk-Based 主干开发模式与 CI/CD 契合
 

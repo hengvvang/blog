@@ -1,6 +1,7 @@
 ---
 title: "Git Reflog 误删分支与未提交代码灾难恢复"
 publishTime: "2026-05-24 18:25"
+author: "hengvvang"
 ---
 # Git Reflog 误删分支与未提交代码灾难恢复
 

@@ -1,6 +1,7 @@
 ---
 title: "ESP32 蓝牙 BLE GATT 服务器开发流程与原理"
 publishTime: "2026-05-24 15:10"
+author: "hengvvang"
 ---
 # ESP32 蓝牙 BLE GATT 服务器开发流程与原理
 

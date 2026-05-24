@@ -1,6 +1,7 @@
 ---
 title: "Git Rebase 交互式变基精讲"
 publishTime: "2026-05-24 16:45"
+author: "hengvvang"
 ---
 # Git Rebase 交互式变基精讲
 

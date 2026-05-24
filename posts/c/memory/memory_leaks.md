@@ -1,6 +1,7 @@
 ---
 title: "C语言动态内存分配、内存泄漏与 Valgrind 排查"
 publishTime: "2026-05-24 17:30"
+author: "hengvvang"
 ---
 # C语言动态内存分配、内存泄漏与 Valgrind 排查
 

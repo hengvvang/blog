@@ -1,6 +1,7 @@
 ---
 title: "CMake 生成静态库与动态库目标规范管理"
 publishTime: "2026-05-24 17:00"
+author: "hengvvang"
 ---
 # CMake 生成静态库与动态库目标规范管理
 

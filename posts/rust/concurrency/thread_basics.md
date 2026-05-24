@@ -1,6 +1,7 @@
 ---
 title: "Rust 多线程并发编程与通道机制"
 publishTime: "2026-05-24 14:00"
+author: "hengvvang"
 ---
 # Rust 多线程并发编程与通道机制
 

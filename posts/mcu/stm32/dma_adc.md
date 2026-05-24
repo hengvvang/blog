@@ -1,6 +1,7 @@
 ---
 title: "STM32 DMA 搬运 ADC 多通道高速采样机制"
 publishTime: "2026-05-24 15:00"
+author: "hengvvang"
 ---
 # STM32 DMA 搬运 ADC 多通道高速采样机制
 

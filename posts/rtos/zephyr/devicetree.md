@@ -1,6 +1,7 @@
 ---
 title: "Zephyr RTOS 设备树 (Devicetree) 架构精讲"
 publishTime: "2026-05-24 17:45"
+author: "hengvvang"
 ---
 # Zephyr RTOS 设备树 (Devicetree) 架构精讲
 

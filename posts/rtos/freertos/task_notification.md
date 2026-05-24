@@ -1,6 +1,7 @@
 ---
 title: "FreeRTOS 任务通知替代信号量之高性能优化"
 publishTime: "2026-05-24 14:50"
+author: "hengvvang"
 ---
 # FreeRTOS 任务通知替代信号量之高性能优化
 

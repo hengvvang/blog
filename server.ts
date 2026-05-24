@@ -10,6 +10,7 @@ interface ArticleMetadata {
   subcategory?: string;
   contentSnippet: string;
   publishTime: string;
+  author?: string;
   filePath: string;
 }
 
@@ -107,6 +108,8 @@ async function loadArticles(): Promise<ArticleMetadata[]> {
       snippet = textOnly.substring(0, 150) + (textOnly.length > 150 ? "..." : "");
     }
     
+    const author = meta.author;
+
     articles.push({
       id: getNumericId(relPath),
       title,
@@ -114,6 +117,7 @@ async function loadArticles(): Promise<ArticleMetadata[]> {
       subcategory: subcategory ? subcategory.toLowerCase() : undefined,
       contentSnippet: snippet,
       publishTime,
+      author,
       filePath: file
     });
   }
@@ -183,7 +187,8 @@ const server = serve({
         title: article.title,
         publishTime: article.publishTime,
         category: article.category,
-        subcategory: article.subcategory
+        subcategory: article.subcategory,
+        author: article.author
       }), {
         headers: {
           "Content-Type": "application/json",

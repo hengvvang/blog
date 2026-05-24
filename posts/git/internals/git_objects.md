@@ -1,6 +1,7 @@
 ---
 title: "Git 底层原理：三类核心对象 blob, tree, commit"
 publishTime: "2026-05-24 18:20"
+author: "hengvvang"
 ---
 # Git 底层原理：三类核心对象 blob, tree, commit
 

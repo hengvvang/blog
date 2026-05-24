@@ -1,6 +1,7 @@
 ---
 title: "Rust 高级生命周期约束与 HRTB 详解"
 publishTime: "2026-05-24 14:20"
+author: "hengvvang"
 ---
 # Rust 高级生命周期约束与 HRTB 详解
 

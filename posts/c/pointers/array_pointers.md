@@ -1,6 +1,7 @@
 ---
 title: "C语言数组指针与指针数组概念辨析"
 publishTime: "2026-05-24 16:30"
+author: "hengvvang"
 ---
 # C语言数组指针与指针数组概念辨析
 

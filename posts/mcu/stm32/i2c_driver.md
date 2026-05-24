@@ -1,6 +1,7 @@
 ---
 title: "STM32 软件模拟 I2C 驱动与总线时序实现"
 publishTime: "2026-05-24 15:20"
+author: "hengvvang"
 ---
 # STM32 软件模拟 I2C 驱动与总线时序实现
 

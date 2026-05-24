@@ -1,6 +1,7 @@
 ---
 title: "Python 元类 Metaclasses 与动态类创建原理"
 publishTime: "2026-05-24 18:45"
+author: "hengvvang"
 ---
 # Python 元类 Metaclasses 与动态类创建原理
 

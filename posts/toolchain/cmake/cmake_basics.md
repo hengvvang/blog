@@ -1,6 +1,7 @@
 ---
 title: "CMake 构建宏编写与自动化 CI/CD 环境结合运用"
 publishTime: "2026-05-24 12:15"
+author: "hengvvang"
 ---
 # CMake 构建宏编写与自动化 CI/CD 环境结合运用
 

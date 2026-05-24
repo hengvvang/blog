@@ -1,6 +1,7 @@
 ---
 title: "深入探讨 Rust 借用检查器与所有权模型"
 publishTime: "2026-05-24 17:10"
+author: "hengvvang"
 ---
 # 深入探讨 Rust 借用检查器与所有权模型
 

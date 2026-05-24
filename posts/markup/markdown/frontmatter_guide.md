@@ -1,6 +1,7 @@
 ---
 title: "静态博客 Front Matter 头部数据段语法指南"
 publishTime: "2026-05-24 16:00"
+author: "hengvvang"
 ---
 # 静态博客 Front Matter 头部数据段语法指南
 

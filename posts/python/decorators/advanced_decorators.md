@@ -1,6 +1,7 @@
 ---
 title: "Python 带参数的高阶装饰器与类装饰器"
 publishTime: "2026-05-24 18:35"
+author: "hengvvang"
 ---
 # Python 带参数的高阶装饰器与类装饰器
 

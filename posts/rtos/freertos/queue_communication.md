@@ -1,6 +1,7 @@
 ---
 title: "FreeRTOS 队列通信机制与数据拷贝深度剖析"
 publishTime: "2026-05-24 14:30"
+author: "hengvvang"
 ---
 # FreeRTOS 队列通信机制与数据拷贝深度剖析
 

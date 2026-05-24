@@ -1,6 +1,7 @@
 ---
 title: "Python 常见双下魔术方法与运算符重载"
 publishTime: "2026-05-24 18:40"
+author: "hengvvang"
 ---
 # Python 常见双下魔术方法与运算符重载
 

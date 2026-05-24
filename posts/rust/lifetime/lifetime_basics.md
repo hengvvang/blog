@@ -1,6 +1,7 @@
 ---
 title: "深入浅出 Rust 生命周期核心技术指南"
 publishTime: "2026-05-24 10:00"
+author: "hengvvang"
 ---
 # 深入浅出 Rust 生命周期核心技术指南
 

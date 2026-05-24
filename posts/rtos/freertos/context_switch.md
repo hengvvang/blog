@@ -1,6 +1,7 @@
 ---
 title: "实时操作系统 RTOS 任务调度与优先级翻转"
 publishTime: "2026-05-24 13:40"
+author: "hengvvang"
 ---
 # 实时操作系统 RTOS 任务调度与优先级翻转
 

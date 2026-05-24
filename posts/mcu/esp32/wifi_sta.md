@@ -1,6 +1,7 @@
 ---
 title: "ESP32 Wi-Fi 站模式 STA 连接管理与事件驱动机制"
 publishTime: "2026-05-24 18:00"
+author: "hengvvang"
 ---
 # ESP32 Wi-Fi 站模式 STA 连接管理与事件驱动机制
 

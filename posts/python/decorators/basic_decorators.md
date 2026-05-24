@@ -1,6 +1,7 @@
 ---
 title: "Python 装饰器基础与函数运行时计时器"
 publishTime: "2026-05-24 18:30"
+author: "hengvvang"
 ---
 # Python 装饰器基础与函数运行时计时器
 

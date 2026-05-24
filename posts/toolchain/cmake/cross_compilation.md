@@ -1,6 +1,7 @@
 ---
 title: "CMake 交叉编译配置与 Toolchain 工具链声明"
 publishTime: "2026-05-24 17:10"
+author: "hengvvang"
 ---
 # CMake 交叉编译配置与 Toolchain 工具链声明
 

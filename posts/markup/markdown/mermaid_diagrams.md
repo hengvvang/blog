@@ -1,6 +1,7 @@
 ---
 title: "Markdown 深度实践：使用 Mermaid 绘制流程图"
 publishTime: "2026-05-24 15:50"
+author: "hengvvang"
 ---
 # Markdown 深度实践：使用 Mermaid 绘制流程图
 
