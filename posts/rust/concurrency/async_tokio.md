@@ -3,7 +3,12 @@ title: "Rust Tokio 异步运行时入门与任务调度"
 publishTime: "2026-05-24 14:10"
 author: "hengvvang"
 summary: "详细剖析 Tokio 内部的多线程调度队列、工作窃取（Work-Stealing）算法与异步 IO 事件监听核心。"
+readingTime: "1 min"
+tags: ["RUST","CONCURRENCY","System","Safety"]
+lastUpdated: "2026-05-25 02:30"
 ---
+
+
 
 
 

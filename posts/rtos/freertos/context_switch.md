@@ -3,7 +3,12 @@ title: "实时操作系统 RTOS 任务调度与优先级翻转"
 publishTime: "2026-05-24 13:40"
 author: "hengvvang"
 summary: "从 PendSV 中断与堆栈恢复的角度，层层剥离汇编代码，还原 FreeRTOS 任务调度器在 CPU 寄存器上的保存流程。"
+readingTime: "3 min"
+tags: ["RTOS","FREERTOS","Real-Time","Kernel"]
+lastUpdated: "2026-05-25 02:30"
 ---
+
+
 
 
 

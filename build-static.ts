@@ -45,6 +45,27 @@ function parseFrontMatter(content: string) {
   return { meta, markdown };
 }
 
+function calculateWordCount(markdown: string): number {
+  const cleanText = markdown
+    .replace(/[#*`_\[\]()\n\r]/g, " ")
+    .trim();
+  const cnChars = (cleanText.match(/[\u4e00-\u9fa5]/g) || []).length;
+  const enWords = cleanText.replace(/[\u4e00-\u9fa5]/g, "").split(/\s+/).filter(Boolean).length;
+  return cnChars + enWords;
+}
+
+function parseTags(tagsValue?: string): string[] {
+  if (!tagsValue) return [];
+  try {
+    if (tagsValue.startsWith("[") && tagsValue.endsWith("]")) {
+      return JSON.parse(tagsValue);
+    }
+    return tagsValue.split(",").map(t => t.trim().replace(/^['"]|['"]$/g, "")).filter(Boolean);
+  } catch (e) {
+    return [];
+  }
+}
+
 async function scanDirectory(dir: string, fileList: string[] = []) {
   try {
     const files = await readdir(dir);
@@ -125,13 +146,23 @@ async function buildStatic() {
     const content = await Bun.file(article.filePath).text();
     const { meta, markdown } = parseFrontMatter(content);
     const html = await marked.parse(markdown);
+    const wordCount = calculateWordCount(markdown);
+    const tags = parseTags(meta.tags);
+    const author = meta.author || "hengvvang";
+    const readingTime = meta.readingTime || "10 min";
+    const lastUpdated = meta.lastUpdated || "";
     
     const articleData = {
       html,
       title: article.title,
       publishTime: article.publishTime,
       category: article.category,
-      subcategory: article.subcategory
+      subcategory: article.subcategory,
+      author,
+      readingTime,
+      wordCount,
+      tags,
+      lastUpdated
     };
     
     const outputPath = `./public/api/article-content/${article.id}.json`;

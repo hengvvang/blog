@@ -3,7 +3,12 @@ title: "Markdown 深度实践：使用 Mermaid 绘制流程图"
 publishTime: "2026-05-24 15:50"
 author: "hengvvang"
 summary: "讲解如何在 Markdown 中直接渲染甘特图、流程图和序列图，极大地提高技术文档中的图形表达效率。"
+readingTime: "1 min"
+tags: ["MARKUP","MARKDOWN"]
+lastUpdated: "2026-05-25 02:30"
 ---
+
+
 
 
 

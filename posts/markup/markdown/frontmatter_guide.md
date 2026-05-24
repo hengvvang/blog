@@ -3,7 +3,12 @@ title: "静态博客 Front Matter 头部数据段语法指南"
 publishTime: "2026-05-24 16:00"
 author: "hengvvang"
 summary: "规范阐述如何在 Markdown 顶部配置 YAML 参数，实现主题样式、发布日期和自定义分类信息的结构化管理。"
+readingTime: "1 min"
+tags: ["MARKUP","MARKDOWN"]
+lastUpdated: "2026-05-25 02:30"
 ---
+
+
 
 
  作为起始和结束的分界标识。"

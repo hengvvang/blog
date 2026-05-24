@@ -3,7 +3,12 @@ title: "Git 底层原理：三类核心对象 blob, tree, commit"
 publishTime: "2026-05-24 18:20"
 author: "hengvvang"
 summary: "从底层文件数据库的视角拆解 blob、tree 和 commit 等核心概念，揭秘 Git 追踪文件版本变化的秘诀。"
+readingTime: "2 min"
+tags: ["GIT","INTERNALS","VCS","Workflow"]
+lastUpdated: "2026-05-25 02:30"
 ---
+
+
 
 
 

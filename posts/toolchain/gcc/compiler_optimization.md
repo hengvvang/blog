@@ -3,7 +3,12 @@ title: "GCC 编译器三级优化选项与内联汇编详解"
 publishTime: "2026-05-24 16:40"
 author: "hengvvang"
 summary: "全方位对比 GCC 的各类编译优化等级，分析其在循环展开、死代码消除、函数内联及二进制体积上的抉择。"
+readingTime: "1 min"
+tags: ["TOOLCHAIN","GCC","Build","Compiler"]
+lastUpdated: "2026-05-25 02:30"
 ---
+
+
 
 
 

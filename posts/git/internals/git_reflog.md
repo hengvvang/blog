@@ -3,7 +3,12 @@ title: "Git Reflog 误删分支与未提交代码灾难恢复"
 publishTime: "2026-05-24 18:25"
 author: "hengvvang"
 summary: "教你使用引用日志来拯救那些被意外重置或强制删除的提交，是日常开发中必不可少的急救手册。"
+readingTime: "2 min"
+tags: ["GIT","INTERNALS","VCS","Workflow"]
+lastUpdated: "2026-05-25 02:30"
 ---
+
+
 
 
 

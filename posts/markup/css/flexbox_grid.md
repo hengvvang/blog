@@ -3,7 +3,12 @@ title: "现代 CSS 页面排版：Flexbox 与 Grid 综合实践"
 publishTime: "2026-05-24 15:30"
 author: "hengvvang"
 summary: "通过具体的页面布局案例，全方位对比一维弹性盒与二维网格系统在不同业务场景下的排版选型原则。"
+readingTime: "1 min"
+tags: ["MARKUP","CSS"]
+lastUpdated: "2026-05-25 02:30"
 ---
+
+
 
 
 

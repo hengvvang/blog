@@ -3,7 +3,12 @@ title: "Python 元类 Metaclasses 与动态类创建原理"
 publishTime: "2026-05-24 18:45"
 author: "hengvvang"
 summary: "剖析 Python 的 __new__ 与 __init__，了解如何拦截类创建过程并在类实例化之前修改其属性与行为。"
+readingTime: "2 min"
+tags: ["PYTHON","OOP","Scripting"]
+lastUpdated: "2026-05-25 02:30"
 ---
+
+
 
 
 

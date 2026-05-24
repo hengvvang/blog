@@ -3,7 +3,12 @@ title: "Git Rebase 交互式变基精讲"
 publishTime: "2026-05-24 16:45"
 author: "hengvvang"
 summary: "演示如何利用交互式变基对历史提交记录进行合并、重写、拆分与清理，打造清爽优雅的项目历史树。"
+readingTime: "3 min"
+tags: ["GIT","REBASE","VCS","Workflow"]
+lastUpdated: "2026-05-25 02:30"
 ---
+
+
 
 
 

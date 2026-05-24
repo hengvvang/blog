@@ -3,7 +3,12 @@ title: "深入探讨 Rust 借用检查器与所有权模型"
 publishTime: "2026-05-24 17:10"
 author: "hengvvang"
 summary: "深入研究 Rust 编译器如何在编译期验证数据存活周期，以无 GC 方式杜绝悬空引用与内存并发竞争。"
+readingTime: "3 min"
+tags: ["RUST","OWNERSHIP","System","Safety"]
+lastUpdated: "2026-05-25 02:30"
 ---
+
+
 
 
 

@@ -3,7 +3,12 @@ title: "Zephyr RTOS 设备树 (Devicetree) 架构精讲"
 publishTime: "2026-05-24 17:45"
 author: "hengvvang"
 summary: "解读 DTS 设备树的树状继承与属性定义，展示 Zephyr 编译阶段如何根据设备树生成相应的外设驱动宏定义。"
+readingTime: "3 min"
+tags: ["RTOS","ZEPHYR","Real-Time","Kernel"]
+lastUpdated: "2026-05-25 02:30"
 ---
+
+
 
 
 

@@ -3,7 +3,12 @@ title: "C语言双指针高级操作与内存对齐总线陷阱"
 publishTime: "2026-05-24 11:30"
 author: "hengvvang"
 summary: "分析二级指针的多重间接寻址原理，探讨其在动态分配多维数组与修改传入指针时的作用。"
+readingTime: "3 min"
+tags: ["C","POINTERS","Pointers","Low-Level"]
+lastUpdated: "2026-05-25 02:30"
 ---
+
+
 
 
 

@@ -285,9 +285,12 @@ body {
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
-  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.85); /* highly transparent white */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   min-width: 120px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 4px;
   z-index: 10;
   margin-top: 0;
@@ -308,7 +311,7 @@ body {
 }
 
 .dropdown-content a {
-  color: var(--text-dark);
+  color: #7b7b7b; /* grey, matching home breadcrumb */
   padding: 8px 12px;
   text-decoration: none;
   display: block;
@@ -329,8 +332,8 @@ body {
 }
 
 .dropdown-content a:hover {
-  background-color: var(--bg-color);
-  color: var(--btn-bg);
+  background-color: rgba(0, 0, 0, 0.06); /* highly transparent grey hover background */
+  color: #000000; /* black, matching home breadcrumb hover */
 }
 
 .return-news-btn {
@@ -522,19 +525,114 @@ body {
 }
 
 /* Right Sidebar Card */
-.detail-sidebar-card {
+/* Right Sidebar Column Wrapper */
+.detail-sidebar-column {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
   width: 355px;
-  margin-top: 130px;
+  margin-top: 0;
   margin-left: 25px;
-  padding-bottom: 60px;
-  background-color: rgb(240, 240, 240); /* F0F0F0 */
-  border-top: 6px solid rgb(232, 203, 167); /* light gold/beige border */
+  flex-shrink: 0;
+}
+
+.sidebar-meta-card {
+  width: 100%;
+  padding: 25px 20px;
+  background-color: #ffffff;
+  border-top: 4px solid var(--btn-bg);
   border-left: none;
   border-right: none;
   border-bottom: none;
   border-radius: 1px;
   box-shadow: none;
-  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.detail-sidebar-card {
+  width: 100%;
+  padding-bottom: 0px;
+  background-color: #ffffff;
+  border-top: 4px solid var(--btn-bg);
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  border-radius: 1px;
+  box-shadow: none;
+  box-sizing: border-box;
+}
+
+/* Sidebar Metadata Card Styles */
+.sidebar-meta-card .meta-row {
+  font-size: 13px;
+  color: var(--text-light, #7b7b7b);
+  line-height: 1.6;
+  text-align: left;
+}
+
+.sidebar-meta-card .meta-row:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+/* Row 1: Tags */
+.sidebar-meta-card .meta-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.sidebar-meta-card .tag-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  background-color: rgba(183, 151, 115, 0.08);
+  color: rgb(141, 110, 75);
+  border: 1px solid rgba(183, 151, 115, 0.18);
+  border-radius: 2px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+/* Row 2: Metrics */
+.sidebar-meta-card .meta-metrics {
+  color: var(--text-light, #7b7b7b);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sidebar-meta-card .meta-value {
+  font-weight: 600;
+  color: var(--text-dark, #40485a);
+}
+
+.sidebar-meta-card .meta-divider {
+  color: rgb(180, 180, 180);
+  font-weight: bold;
+  user-select: none;
+}
+
+/* Row 3: Publish Date */
+.sidebar-meta-card .meta-pubdate {
+  color: var(--text-light, #7b7b7b);
+}
+
+/* Row 4: Last Updated */
+.sidebar-meta-card .meta-updated {
+  color: var(--text-light, #7b7b7b);
+}
+
+/* Row 5: Author */
+.sidebar-meta-card .meta-author {
+  color: var(--text-light, #7b7b7b);
+}
+
+.sidebar-meta-card .meta-author-name {
+  font-weight: 600;
+  color: var(--text-dark, #40485a);
 }
 
 .sidebar-header {

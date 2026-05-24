@@ -412,27 +412,17 @@ async function loadAndShowArticle(id: number) {
   const related = ARTICLES.filter(a => a.category === article.category && a.id !== article.id).slice(0, 5);
   const relatedArticlesHTML = related.map(rel => {
     return `
-      <div class="card sidebar-item-card" onclick="window.viewArticle(${rel.id})" style="margin-bottom: 8px;">
-        <div class="card-cover-wrapper" style="border: none; padding: 0; height: auto; min-height: auto; width: 100%;">
-          <div class="sidebar-item-inner" style="display: flex; align-items: center; gap: 12px; padding: 10px 10px 22px 10px;">
-            <!-- Thumbnail on the left -->
-            <div class="sidebar-thumb" style="background-color: ${getCategoryColor(rel.category)}; width: 80px; height: 52px; flex-shrink: 0; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; box-shadow: inset 0 0 8px rgba(0,0,0,0.12);">
-              <span style="font-family: 'Outfit', sans-serif; font-size: 9px; font-weight: 700; color: #ffffff; letter-spacing: 0.05em; text-transform: uppercase;">
-                ${rel.category}
-              </span>
-            </div>
-            <!-- Text Content on the right -->
-            <div class="sidebar-item-info" style="margin: 0; flex-grow: 1; display: flex; flex-direction: column; gap: 2px; overflow: hidden; width: auto; min-width: 0;">
-              <!-- Date in the upper right -->
-              <div style="display: flex; justify-content: flex-end; width: 100%; margin-bottom: 2px;">
-                <span style="font-size: 10px; color: var(--text-light, #888); line-height: 1;">${rel.publishTime}</span>
-              </div>
-              <!-- Title -->
-              <p class="sidebar-item-title" style="font-size: 13px; line-height: 1.3; color: var(--text-dark); margin: 0; font-weight: 600; text-align: left; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${rel.title}</p>
+      <div class="card sidebar-item-card" onclick="window.viewArticle(${rel.id})">
+        <div class="card-cover-wrapper" style="border: none;">
+          <div class="sidebar-item-inner">
+            <div class="sidebar-thumb" style="background-color: ${getCategoryColor(rel.category)};"></div>
+            <div class="sidebar-item-info">
+              <p class="sidebar-item-title">${rel.title}</p>
+              <p class="sidebar-item-date">${formatDate(rel.publishTime)}</p>
             </div>
           </div>
         </div>
-        <div class="card-content" style="width: 100%;">
+        <div class="card-content">
           <div class="card-title-container">
             <p class="card-title" style="visibility: hidden;">${rel.title}</p>
           </div>
@@ -523,13 +513,23 @@ async function loadAndShowArticle(id: number) {
         ${bottomBarHTML}
       </div>
 
-      <!-- Right: Related Articles Sidebar Card -->
-      <div class="detail-sidebar-card">
-        <div class="sidebar-header">
-          最新推荐
+      <!-- Right: Sidebar Column containing Metadata Card and Related Articles Card -->
+      <div class="detail-sidebar-column">
+        <!-- Sidebar Metadata Card -->
+        <div id="sidebar-meta-box" class="sidebar-meta-card">
+          <div class="loading-meta" style="color: var(--text-light, #888); font-size: 13px; text-align: center; padding: 20px 0;">
+            Loading metadata...
+          </div>
         </div>
-        <div class="sidebar-list">
-          ${relatedArticlesHTML.length > 0 ? relatedArticlesHTML : '<p class="sidebar-empty">该分类下无其他文章。</p>'}
+
+        <!-- Related Articles Sidebar Card (Original layout) -->
+        <div class="detail-sidebar-card">
+          <div class="sidebar-header">
+            最新推荐
+          </div>
+          <div class="sidebar-list">
+            ${relatedArticlesHTML.length > 0 ? relatedArticlesHTML : '<p class="sidebar-empty">该分类下无其他文章。</p>'}
+          </div>
         </div>
       </div>
     </div>
@@ -550,13 +550,37 @@ async function loadAndShowArticle(id: number) {
     
     const bodyEl = detailView.querySelector('.detail-body');
     if (bodyEl) {
+      bodyEl.innerHTML = `<div class="markdown-body">${data.html}</div>`;
+    }
+
+    const metaBoxEl = detailView.querySelector('#sidebar-meta-box');
+    if (metaBoxEl) {
+      const author = data.author || 'hengvvang';
       const pTime = data.publishTime || article.publishTime;
-      const dateHtml = formatEnglishDate(pTime);
-      const authorStr = data.author ? `by <span style="font-weight: 600; color: var(--text-dark, #333);">${data.author}</span> on ` : `on `;
-      bodyEl.innerHTML = `
-        <div class="markdown-body">${data.html}</div>
-        <div class="article-footer" style="margin-top: 20px; margin-bottom: -60px; padding-bottom: 0; color: var(--text-light, #888); font-size: 14px; text-align: right; position: relative; z-index: 1;">
-          ${authorStr}${dateHtml}
+      const formattedDate = formatEnglishDate(pTime);
+      const tagsHtml = data.tags && data.tags.length > 0 
+        ? data.tags.map((tag: string) => `<span class="tag-badge">${tag}</span>`).join(' <span class="meta-divider">·</span> ')
+        : `<span style="color: var(--text-light, #888);">None</span>`;
+        
+      const lastUpdatedHtml = data.lastUpdated
+        ? `<div class="meta-row meta-updated">Updated on ${formatEnglishDate(data.lastUpdated)}</div>`
+        : '';
+        
+      metaBoxEl.innerHTML = `
+        <div class="meta-row meta-tags">
+          ${tagsHtml}
+        </div>
+        <div class="meta-row meta-metrics">
+          <span class="meta-value">${data.readingTime || '10 min'} read</span>
+          <span class="meta-divider">·</span>
+          <span class="meta-value">${(data.wordCount || 0).toLocaleString()} words</span>
+        </div>
+        <div class="meta-row meta-pubdate">
+          on ${formattedDate}
+        </div>
+        ${lastUpdatedHtml}
+        <div class="meta-row meta-author">
+          by <span class="meta-author-name">${author}</span>
         </div>
       `;
     }
@@ -569,6 +593,10 @@ async function loadAndShowArticle(id: number) {
           <p>加载文章内容失败，请稍后重试。</p>
         </div>
       `;
+    }
+    const metaBoxEl = detailView.querySelector('#sidebar-meta-box');
+    if (metaBoxEl) {
+      metaBoxEl.innerHTML = `<div style="color: #a84545; font-size: 13px; text-align: center; padding: 20px 0;">Failed to load metadata.</div>`;
     }
   }
 }

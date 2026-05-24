@@ -49,6 +49,27 @@ function parseFrontMatter(content: string) {
   return { meta, markdown };
 }
 
+function calculateWordCount(markdown: string): number {
+  const cleanText = markdown
+    .replace(/[#*`_\[\]()\n\r]/g, " ")
+    .trim();
+  const cnChars = (cleanText.match(/[\u4e00-\u9fa5]/g) || []).length;
+  const enWords = cleanText.replace(/[\u4e00-\u9fa5]/g, "").split(/\s+/).filter(Boolean).length;
+  return cnChars + enWords;
+}
+
+function parseTags(tagsValue?: string): string[] {
+  if (!tagsValue) return [];
+  try {
+    if (tagsValue.startsWith("[") && tagsValue.endsWith("]")) {
+      return JSON.parse(tagsValue);
+    }
+    return tagsValue.split(",").map(t => t.trim().replace(/^['"]|['"]$/g, "")).filter(Boolean);
+  } catch (e) {
+    return [];
+  }
+}
+
 // Recursively scan directories for *.md files
 async function scanDirectory(dir: string, fileList: string[] = []) {
   try {
@@ -177,8 +198,13 @@ const server = serve({
       }
       
       const content = await Bun.file(article.filePath).text();
-      const { markdown } = parseFrontMatter(content);
+      const { meta, markdown } = parseFrontMatter(content);
       const html = await marked.parse(markdown);
+      const wordCount = calculateWordCount(markdown);
+      const tags = parseTags(meta.tags);
+      const author = meta.author || "hengvvang";
+      const readingTime = meta.readingTime || "10 min";
+      const lastUpdated = meta.lastUpdated || "";
       
       return new Response(JSON.stringify({
         html,
@@ -186,7 +212,11 @@ const server = serve({
         publishTime: article.publishTime,
         category: article.category,
         subcategory: article.subcategory,
-        author: article.author
+        author,
+        readingTime,
+        wordCount,
+        tags,
+        lastUpdated
       }), {
         headers: {
           "Content-Type": "application/json",
