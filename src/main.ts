@@ -21,6 +21,26 @@ function formatDate(dateStr: string): string {
   return dateStr;
 }
 
+function formatEnglishDate(dateStr: string): string {
+  const parts = dateStr.split(' ');
+  const [year, monthStr, dayStr] = parts[0].split('-');
+  if (!year || !monthStr || !dayStr) return dateStr;
+  
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const month = monthNames[parseInt(monthStr, 10) - 1];
+  const day = parseInt(dayStr, 10);
+  
+  if (parts[1]) {
+    const [hrStr, minStr] = parts[1].split(':');
+    let hour = parseInt(hrStr, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12 || 12;
+    return `${month} ${day}, ${year} at ${hour}:${minStr} ${ampm}`;
+  }
+  
+  return `${month} ${day}, ${year}`;
+}
+
 // Category icons
 const ICONS: Record<string, string> = {
   rust: `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`,
@@ -528,13 +548,13 @@ async function loadAndShowArticle(id: number) {
     
     const bodyEl = detailView.querySelector('.detail-body');
     if (bodyEl) {
-      const authorHtml = data.author ? `<span>作者：${data.author}</span>` : '';
-      const timeHtml = `<span>发布时间：${formatDate(data.publishTime || article.publishTime)}</span>`;
+      const pTime = data.publishTime || article.publishTime;
+      const dateStr = formatEnglishDate(pTime);
+      const authorStr = data.author ? `by <span style="font-weight: 600; color: var(--text-dark, #333); font-style: normal;">${data.author}</span> on ` : `on `;
       bodyEl.innerHTML = `
         <div class="markdown-body">${data.html}</div>
-        <div class="article-footer" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(136, 136, 136, 0.2); color: var(--text-light, #888); font-size: 14px; display: flex; justify-content: flex-end; gap: 20px;">
-          ${authorHtml}
-          ${timeHtml}
+        <div class="article-footer" style="margin-top: 40px; padding-top: 16px; border-top: 1px solid rgba(136, 136, 136, 0.2); color: var(--text-light, #888); font-size: 14px; text-align: right; font-style: italic; font-family: Georgia, serif;">
+          ${authorStr}${dateStr}
         </div>
       `;
     }
