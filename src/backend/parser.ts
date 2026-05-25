@@ -10,6 +10,49 @@ export interface ArticleMetadata {
   publishTime: string;
   author?: string;
   filePath: string;
+  cover?: string;
+  coverText?: { position: string; context: string };
+}
+
+// Helper to parse nested coverText block from front-matter header
+export function parseCoverText(header: string): { position: string; context: string } | undefined {
+  // 1. Try inline brace format: coverText: { position: "center", context: "hello" }
+  const inlineRegex = /coverText\s*:\s*\{\s*position\s*:\s*['"]?([^'",}]+)['"]?\s*,\s*context\s*:\s*['"]?([^'}]+)['"]?\s*\}/i;
+  const inlineMatch = header.match(inlineRegex);
+  if (inlineMatch) {
+    return {
+      position: inlineMatch[1].trim(),
+      context: inlineMatch[2].trim().replace(/^['"]|['"]$/g, "")
+    };
+  }
+  
+  // 2. Try multiline format:
+  // coverText:
+  //   position: center
+  //   context: hello
+  const multilineRegex = /coverText\s*:\s*\r?\n\s+position\s*:\s*['"]?([^'"\r\n]+)['"]?\s*\r?\n\s+context\s*:\s*['"]?([^'"\r\n]+)['"]?/i;
+  const multilineMatch = header.match(multilineRegex);
+  if (multilineMatch) {
+    return {
+      position: multilineMatch[1].trim(),
+      context: multilineMatch[2].trim()
+    };
+  }
+  
+  // Try alternate order in multiline format:
+  // coverText:
+  //   context: hello
+  //   position: center
+  const multilineAltRegex = /coverText\s*:\s*\r?\n\s+context\s*:\s*['"]?([^'"\r\n]+)['"]?\s*\r?\n\s+position\s*:\s*['"]?([^'"\r\n]+)['"]?/i;
+  const multilineAltMatch = header.match(multilineAltRegex);
+  if (multilineAltMatch) {
+    return {
+      position: multilineAltMatch[2].trim(),
+      context: multilineAltMatch[1].trim()
+    };
+  }
+  
+  return undefined;
 }
 
 // Stable numeric hash from filepath string
@@ -125,6 +168,15 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
     
     const snippet = meta.summary || meta.description || "";
     const author = meta.author;
+    
+    const cover = meta.cover || undefined;
+    let coverText: { position: string; context: string } | undefined = undefined;
+    
+    const endOffset = content.indexOf("---", 3);
+    if (content.startsWith("---") && endOffset !== -1) {
+      const header = content.slice(3, endOffset);
+      coverText = parseCoverText(header);
+    }
 
     articles.push({
       id: getNumericId(relPath),
@@ -134,7 +186,9 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
       contentSnippet: snippet,
       publishTime,
       author,
-      filePath: file
+      filePath: file,
+      cover,
+      coverText
     });
   }
   

@@ -5,6 +5,8 @@ export interface Article {
   subcategory?: string;
   contentSnippet: string;
   publishTime: string;
+  cover?: string;
+  coverText?: { position: string; context: string };
 }
 
 export interface ArticleContent {

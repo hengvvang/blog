@@ -36,7 +36,9 @@ async function buildStatic() {
       readingTime,
       wordCount,
       tags,
-      lastUpdated
+      lastUpdated,
+      cover: article.cover,
+      coverText: article.coverText
     };
     
     const outputPath = `./public/api/article-content/${article.id}.json`;

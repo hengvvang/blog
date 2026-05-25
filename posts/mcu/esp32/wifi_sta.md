@@ -6,6 +6,10 @@ summary: "逐步说明如何初始化 ESP32 的 Wi-Fi 协议栈，配置 STA 连
 readingTime: "3 min"
 tags: ["MCU","ESP32","Embedded","Hardware"]
 lastUpdated: "2026-05-25 02:30"
+cover: "/images/esp32-cover.png"
+coverText:
+  position: "center"
+  context: "ESP32 实战指南"
 ---
 
 

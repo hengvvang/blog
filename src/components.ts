@@ -45,18 +45,34 @@ export function renderHomeCollectionHTML(
   `;
 }
 
+const POSITION_MAP: Record<string, string> = {
+  topLeft: "top: 12px; left: 16px; transform: none; text-align: left;",
+  bottomLeft: "bottom: 12px; left: 16px; transform: none; text-align: left;",
+  center: "top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;",
+  bottomRight: "bottom: 12px; right: 16px; transform: none; text-align: right;",
+  topRight: "top: 12px; right: 16px; transform: none; text-align: right;"
+};
+
 // Featured article card (horizontal slide-out)
 export function renderFeaturedCardHTML(art: Article, categoryColor: string): string {
-  const badgeText = (art.subcategory || art.category).toUpperCase();
+  const coverBgStyle = art.cover
+    ? `background: url('${art.cover}') center center / cover no-repeat;`
+    : `background-color: ${categoryColor};`;
+  
+  let coverContentHTML = '';
+  if (art.coverText) {
+    const posStyle = POSITION_MAP[art.coverText.position] || POSITION_MAP.center;
+    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: 18px; font-weight: 700; color: #ffffff; text-shadow: 0 2px 6px rgba(0,0,0,0.5); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${art.coverText.context}</span>`;
+  }
+
   return `
     <div class="card toolchain-horizontal-card" onclick="window.viewArticle(${art.id})">
       <div class="card-cover-wrapper" style="height: auto; display: flex; flex-direction: column; gap: 8px; padding: 8px 16px 12px 16px;">
         <div style="text-align: right; width: 100%; margin-bottom: 0px; line-height: 1;">
           <span class="featured-date" style="font-size: 12px; color: var(--text-light, #888);">${art.publishTime}</span>
         </div>
-        <div class="featured-cover" style="background: linear-gradient(135deg, ${categoryColor} 0%, #1e222b 100%);">
-          <div class="featured-subcat-badge">${badgeText}</div>
-          <span class="featured-cover-text">${badgeText} 技术精选</span>
+        <div class="featured-cover" style="${coverBgStyle}">
+          ${coverContentHTML}
         </div>
         <div class="featured-info" style="padding: 0;">
           <h4 class="featured-title" style="margin: 4px 0; font-size: 16px;">${art.title}</h4>
@@ -80,11 +96,21 @@ export function renderFeaturedCardHTML(art: Article, categoryColor: string): str
 // Regular list article card
 export function renderListCardHTML(art: Article, categoryColor: string): string {
   const badgeText = (art.subcategory || art.category).toUpperCase();
+  const coverBgStyle = art.cover
+    ? `background: url('${art.cover}') center center / cover no-repeat;`
+    : `background-color: ${categoryColor};`;
+  
+  let coverContentHTML = '';
+  if (art.coverText) {
+    const posStyle = POSITION_MAP[art.coverText.position] || POSITION_MAP.center;
+    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: 14px; font-weight: 600; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.4); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${art.coverText.context}</span>`;
+  }
+
   return `
     <div class="card" style="width: 100%;" onclick="window.viewArticle(${art.id})">
       <div class="card-cover-wrapper" style="width: 100%; height: auto; display: flex; gap: 24px;">
-        <div class="list-card-cover" style="background: linear-gradient(135deg, ${categoryColor} 0%, #2e3440 100%);">
-          <span class="list-cover-badge">${badgeText}</span>
+        <div class="list-card-cover" style="${coverBgStyle}">
+          ${coverContentHTML}
         </div>
         <div class="list-card-info" style="padding: 0; flex-grow: 1;">
           <div class="list-card-header">
@@ -111,11 +137,23 @@ export function renderListCardHTML(art: Article, categoryColor: string): string 
 
 // Side bar: Related recommendation article item template
 export function renderRelatedCardHTML(rel: Article): string {
+  const coverBgStyle = rel.cover
+    ? `background: url('${rel.cover}') center center / cover no-repeat;`
+    : `background-color: ${getCategoryColor(rel.category)};`;
+    
+  let coverContentHTML = '';
+  if (rel.coverText) {
+    const posStyle = POSITION_MAP[rel.coverText.position] || POSITION_MAP.center;
+    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: 10px; font-weight: 600; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${rel.coverText.context}</span>`;
+  }
+
   return `
     <div class="card sidebar-item-card" onclick="window.viewArticle(${rel.id})">
       <div class="card-cover-wrapper" style="border: none;">
         <div class="sidebar-item-inner">
-          <div class="sidebar-thumb" style="background-color: ${getCategoryColor(rel.category)};"></div>
+          <div class="sidebar-thumb" style="position: relative; overflow: hidden; ${coverBgStyle}">
+            ${coverContentHTML}
+          </div>
           <div class="sidebar-item-info">
             <p class="sidebar-item-title">${rel.title}</p>
             <p class="sidebar-item-date">${rel.publishTime.split(' ')[0].replace(/-/g, '年').concat('日') /* localized inline */}</p>
