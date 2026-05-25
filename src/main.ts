@@ -5,7 +5,7 @@ import {
   categoryDirections,
   categoryOrders,
   slideDirs,
-  getCategoryKeywordsHTML,
+  getCategoryHomeElementsHTML,
   onRowEnter,
   onRowLeave,
   stopAllSlideshows
@@ -92,9 +92,9 @@ function renderArticles() {
     articleGrid.className = 'home-collections-wrapper';
     articleGrid.innerHTML = CATEGORIES.map(cat => {
       const count = ARTICLES.filter(a => a.category === cat).length;
-      const keywordsHTML = getCategoryKeywordsHTML(cat);
+      const { keywordsHTML, iconsHTML } = getCategoryHomeElementsHTML(cat);
       const order = categoryOrders[cat] || [0, 1, 3, 2];
-      return renderHomeCollectionHTML(cat, count, keywordsHTML, order);
+      return renderHomeCollectionHTML(cat, count, keywordsHTML, order, iconsHTML);
     }).join('');
   } else {
     renderPartition();

@@ -1,3 +1,5 @@
+import { SIMPLE_ICONS } from "./icons-data";
+
 // Date helpers
 export function formatDate(dateStr: string): string {
   const parts = dateStr.split(' ')[0].split('-');
@@ -42,16 +44,19 @@ export function getCategoryColor(cat: string): string {
   return categoryColors[cat];
 }
 
+export const SINGLE_ICON_CATEGORIES = ['rust', 'c', 'python'];
+
 export const ICONS: Record<string, string> = {
-  rust: `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`,
-  rtos: `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`,
-  mcu: `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="15" x2="23" y2="15"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="15" x2="4" y2="15"></line></svg>`,
-  markup: `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`,
-  c: `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>`,
-  toolchain: `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>`
+  rust: SIMPLE_ICONS["cat:rust"] || "",
+  rtos: SIMPLE_ICONS["cat:rtos"] || "",
+  mcu: SIMPLE_ICONS["cat:mcu"] || "",
+  markup: SIMPLE_ICONS["cat:markup"] || "",
+  c: SIMPLE_ICONS["cat:c"] || "",
+  toolchain: SIMPLE_ICONS["cat:toolchain"] || "",
+  python: SIMPLE_ICONS["cat:python"] || ""
 };
 
-export const DEFAULT_ICON = `<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
+export const DEFAULT_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
 
 export const KEYWORDS: Record<string, string[]> = {
   rust: ['Cargo', 'Rustc', 'Clippy', 'Tokio', 'Wasm'],
@@ -59,8 +64,14 @@ export const KEYWORDS: Record<string, string[]> = {
   mcu: ['STM32', 'ESP32', 'GD32', 'MSP430', 'AVR'],
   markup: ['Markdown', 'HTML', 'CSS', 'LaTeX', 'XML'],
   c: ['C99', 'C11', 'Pointer', 'Volatile', 'Makefile'],
-  toolchain: ['CMake', 'GCC', 'GDB', 'Git', 'Clang', 'LLVM']
+  toolchain: ['CMake', 'GCC', 'GDB', 'Git', 'Clang', 'LLVM'],
+  python: ['PIP', 'Pytest', 'Decorators', 'OOP', 'Asyncio']
 };
+
+export function getKeywordIcon(keyword: string): string {
+  const key = keyword.toLowerCase();
+  return SIMPLE_ICONS[key] || DEFAULT_ICON;
+}
 
 // Slideshow state
 export const slideshowTimers: Record<string, any> = {};
@@ -72,6 +83,35 @@ export const slideDirs = [
 ];
 export const categoryDirections: Record<string, typeof slideDirs[0]> = {};
 export const categoryOrders: Record<string, number[]> = {};
+
+export function getOppositeDirection(dir: typeof slideDirs[0]): typeof slideDirs[0] {
+  const idx = slideDirs.indexOf(dir);
+  if (idx === -1) return slideDirs[1];
+  if (idx === 0 || idx === 1) {
+    return slideDirs[idx ^ 1]; // opposite for up/down
+  }
+  return slideDirs[idx]; // same for left/right
+}
+
+export function getCategoryHomeElementsHTML(cat: string): { keywordsHTML: string; iconsHTML: string } {
+  const list = KEYWORDS[cat] || ['Code', 'Tech', 'Doc', 'Dev', 'System'];
+  const initialIndex = Math.floor(Math.random() * list.length);
+  
+  const keywordsHTML = list.map((word, i) => `<span class="media-text ${i === initialIndex ? 'js-active' : ''}">${word}</span>`).join('');
+  
+  let iconsHTML = '';
+  if (SINGLE_ICON_CATEGORIES.includes(cat)) {
+    const singleIcon = ICONS[cat] || DEFAULT_ICON;
+    iconsHTML = `<span class="icon-item js-active">${singleIcon}</span>`;
+  } else {
+    iconsHTML = list.map((word, i) => {
+      const iconSVG = getKeywordIcon(word);
+      return `<span class="icon-item ${i === initialIndex ? 'js-active' : ''}">${iconSVG}</span>`;
+    }).join('');
+  }
+  
+  return { keywordsHTML, iconsHTML };
+}
 
 export function getCategoryKeywordsHTML(cat: string): string {
   const list = KEYWORDS[cat] || ['Code', 'Tech', 'Doc', 'Dev', 'System'];
@@ -87,6 +127,9 @@ export function onRowEnter(cat: string): void {
   const texts = wrapper.querySelectorAll('.media-text');
   if (texts.length === 0) return;
   
+  const iconWrapper = document.querySelector(`.collection-icon[data-category="${cat}"]`);
+  const icons = iconWrapper ? iconWrapper.querySelectorAll('.icon-item') : [];
+  
   let currActive = -1;
   for (let i = 0; i < texts.length; i++) {
     if (texts[i].classList.contains('js-active')) {
@@ -99,10 +142,17 @@ export function onRowEnter(cat: string): void {
     const el = texts[currActive] as HTMLElement;
     el.classList.add('js-active');
     el.style.transform = 'translate(-50%, -50%)';
+    
+    if (icons[currActive]) {
+      const iconEl = icons[currActive] as HTMLElement;
+      iconEl.classList.add('js-active');
+      iconEl.style.transform = 'translate(-50%, -50%)';
+    }
   }
   
   if (texts.length > 1) {
     const fixedDir = categoryDirections[cat] || slideDirs[0];
+    const oppositeDir = getOppositeDirection(fixedDir);
     
     slideshowTimers[cat] = setInterval(() => {
       let curr = -1;
@@ -115,12 +165,13 @@ export function onRowEnter(cat: string): void {
       
       if (curr !== -1) {
         const nextActive = (curr + 1) % texts.length;
-        const rnd = fixedDir;
+        
+        // Transition text
         const currEl = texts[curr] as HTMLElement;
         const nextEl = texts[nextActive] as HTMLElement;
         
         nextEl.style.transition = 'none';
-        nextEl.style.transform = rnd.in;
+        nextEl.style.transform = fixedDir.in;
         
         void nextEl.offsetWidth; // force reflow
         
@@ -128,10 +179,30 @@ export function onRowEnter(cat: string): void {
         currEl.style.transition = '';
         
         currEl.classList.remove('js-active');
-        currEl.style.transform = rnd.out;
+        currEl.style.transform = fixedDir.out;
         
         nextEl.classList.add('js-active');
         nextEl.style.transform = 'translate(-50%, -50%)';
+        
+        // Transition icon (if multi-icon category)
+        if (icons.length > 1 && icons[curr] && icons[nextActive]) {
+          const currIconEl = icons[curr] as HTMLElement;
+          const nextIconEl = icons[nextActive] as HTMLElement;
+          
+          nextIconEl.style.transition = 'none';
+          nextIconEl.style.transform = oppositeDir.in;
+          
+          void nextIconEl.offsetWidth; // force reflow
+          
+          nextIconEl.style.transition = '';
+          currIconEl.style.transition = '';
+          
+          currIconEl.classList.remove('js-active');
+          currIconEl.style.transform = oppositeDir.out;
+          
+          nextIconEl.classList.add('js-active');
+          nextIconEl.style.transform = 'translate(-50%, -50%)';
+        }
       }
     }, 600);
   }

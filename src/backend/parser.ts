@@ -99,8 +99,13 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
     
     const relPath = relative(postsDir, file).replace(/\\/g, "/");
     const parts = relPath.split("/");
-    const category = meta.category || parts[0] || "general";
-    const subcategory = meta.subcategory || (parts.length > 2 ? parts.slice(1, -1).join("/") : undefined);
+    let category = meta.category || parts[0] || "general";
+    let subcategory = meta.subcategory || (parts.length > 2 ? parts.slice(1, -1).join("/") : undefined);
+    
+    if (category.toLowerCase() === "git") {
+      category = "toolchain";
+      subcategory = "git";
+    }
     
     let title = meta.title;
     if (!title) {

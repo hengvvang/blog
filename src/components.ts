@@ -19,12 +19,12 @@ export function renderHomeCollectionHTML(
   cat: string,
   articlesCount: number,
   keywordsHTML: string,
-  order: number[]
+  order: number[],
+  iconsHTML: string
 ): string {
   const formattedCount = String(articlesCount).padStart(2, '0');
-  const iconSVG = getCategoryIcon(cat) || DEFAULT_ICON;
   
-  const iconHTML = `<div class="collection-icon">${iconSVG}</div>`;
+  const iconHTML = `<div class="collection-icon" data-category="${cat}">${iconsHTML}</div>`;
   const nameHTML = `<h3 class="collection-name">${cat.toUpperCase()}</h3>`;
   const countHTML = `<h3 class="collection-count">(${formattedCount})</h3>`;
   const mediaHTML = `

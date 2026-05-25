@@ -10,7 +10,11 @@ const server = serve({
 
     // Route root to index.html
     if (path === "/") {
-      return new Response(Bun.file("./public/index.html"));
+      return new Response(Bun.file("./public/index.html"), {
+        headers: {
+          "Cache-Control": "no-cache"
+        }
+      });
     }
     
     // On-the-fly bundle main.ts for the browser
@@ -26,7 +30,10 @@ const server = serve({
       }
       
       return new Response(build.outputs[0], {
-        headers: { "Content-Type": "application/javascript" },
+        headers: {
+          "Content-Type": "application/javascript",
+          "Cache-Control": "no-cache"
+        },
       });
     }
 
@@ -88,11 +95,14 @@ const server = serve({
       });
     }
 
-    // Serve static files from public folder
     const publicFilePath = `./public${path}`;
     const publicFile = Bun.file(publicFilePath);
     if (await publicFile.exists()) {
-      return new Response(publicFile);
+      return new Response(publicFile, {
+        headers: {
+          "Cache-Control": "no-cache"
+        }
+      });
     }
 
     return new Response("Not found", { status: 404 });
