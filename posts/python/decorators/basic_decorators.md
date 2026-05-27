@@ -11,9 +11,13 @@ tags:
   - Scripting
 lastUpdated: 2026-05-25 02:30
 cover:
-  image: https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800&auto=format&fit=crop
-  position: center
-  text: PYTHON | DECORATORS
+  image:
+    src: https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+  text:
+    content: PYTHON | DECORATORS
+    position: center
 ---
 
 

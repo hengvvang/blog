@@ -53,26 +53,51 @@ const POSITION_MAP: Record<string, string> = {
   topRight: "top: 12px; right: 16px; transform: none; text-align: right;"
 };
 
-// Featured article card (horizontal slide-out)
-export function renderFeaturedCardHTML(art: Article, categoryColor: string): string {
-  const coverBgStyle = art.cover?.image
-    ? `background: url('${art.cover.image}') center center / cover no-repeat;`
-    : `background-color: ${categoryColor};`;
+// Unified Cover Renderer helper for filter isolation and custom styling
+function renderCoverHTML(cover: Article['cover'], categoryColor: string, defaultTextSize: string): string {
+  const fallbackColor = cover?.image?.color || categoryColor;
+  
+  let bgImageHTML = '';
+  if (cover?.image?.src) {
+    const filters: string[] = [];
+    if (cover.image.brightness !== undefined) {
+      filters.push(`brightness(${cover.image.brightness})`);
+    }
+    if (cover.image.blur !== undefined) {
+      filters.push(`blur(${cover.image.blur})`);
+    }
+    const filterStyle = filters.length > 0 ? `filter: ${filters.join(' ')};` : '';
+    bgImageHTML = `<div class="cover-bg-image" style="background-image: url('${cover.image.src}'); ${filterStyle}"></div>`;
+  }
   
   let coverContentHTML = '';
-  if (art.cover?.text && art.cover?.position) {
-    const posStyle = POSITION_MAP[art.cover.position] || POSITION_MAP.center;
-    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: 18px; font-weight: 700; color: #ffffff; text-shadow: 0 2px 6px rgba(0,0,0,0.5); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${art.cover.text}</span>`;
+  if (cover?.text?.content && cover?.text?.position) {
+    const posStyle = POSITION_MAP[cover.text.position] || POSITION_MAP.center;
+    const txtColor = cover.text.color || '#ffffff';
+    const txtSize = cover.text.size || defaultTextSize;
+    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: ${txtSize}; font-weight: 600; color: ${txtColor}; text-shadow: 0 2px 4px rgba(0,0,0,0.4); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${cover.text.content}</span>`;
   }
+  
+  return `
+    <div style="position: relative; width: 100%; height: 100%; background-color: ${fallbackColor}; overflow: hidden; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+      ${bgImageHTML}
+      ${coverContentHTML}
+    </div>
+  `;
+}
+
+// Featured article card (horizontal slide-out)
+export function renderFeaturedCardHTML(art: Article, categoryColor: string): string {
+  const scaleVar = art.cover?.image?.scale !== undefined ? `style="--cover-scale: ${art.cover.image.scale};"` : '';
 
   return `
-    <div class="card toolchain-horizontal-card" data-action="view-article" data-id="${art.id}">
+    <div class="card toolchain-horizontal-card" data-action="view-article" data-id="${art.id}" ${scaleVar}>
       <div class="card-cover-wrapper" style="height: auto; display: flex; flex-direction: column; gap: 8px; padding: 8px 16px 12px 16px;">
         <div style="text-align: right; width: 100%; margin-bottom: 0px; line-height: 1;">
           <span class="featured-date" style="font-size: 12px; color: var(--text-light, #888);">${art.publishTime}</span>
         </div>
-        <div class="featured-cover" style="${coverBgStyle}">
-          ${coverContentHTML}
+        <div class="featured-cover" style="position: relative; overflow: hidden; height: 160px; border-radius: 4px;">
+          ${renderCoverHTML(art.cover, categoryColor, '18px')}
         </div>
         <div class="featured-info" style="padding: 0;">
           <h4 class="featured-title" style="margin: 4px 0; font-size: 16px;">${art.title}</h4>
@@ -96,21 +121,13 @@ export function renderFeaturedCardHTML(art: Article, categoryColor: string): str
 // Regular list article card
 export function renderListCardHTML(art: Article, categoryColor: string): string {
   const badgeText = (art.subcategory || art.category).toUpperCase();
-  const coverBgStyle = art.cover?.image
-    ? `background: url('${art.cover.image}') center center / cover no-repeat;`
-    : `background-color: ${categoryColor};`;
-  
-  let coverContentHTML = '';
-  if (art.cover?.text && art.cover?.position) {
-    const posStyle = POSITION_MAP[art.cover.position] || POSITION_MAP.center;
-    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: 14px; font-weight: 600; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.4); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${art.cover.text}</span>`;
-  }
+  const scaleStyle = art.cover?.image?.scale !== undefined ? `--cover-scale: ${art.cover.image.scale};` : '';
 
   return `
-    <div class="card" style="width: 100%;" data-action="view-article" data-id="${art.id}">
+    <div class="card" style="width: 100%; ${scaleStyle}" data-action="view-article" data-id="${art.id}">
       <div class="card-cover-wrapper" style="width: 100%; height: auto; display: flex; gap: 24px;">
-        <div class="list-card-cover" style="${coverBgStyle}">
-          ${coverContentHTML}
+        <div class="list-card-cover" style="position: relative; overflow: hidden; width: 180px; height: 110px; border-radius: 4px; flex-shrink: 0;">
+          ${renderCoverHTML(art.cover, categoryColor, '14px')}
         </div>
         <div class="list-card-info" style="padding: 0; flex-grow: 1;">
           <div class="list-card-header">
@@ -137,22 +154,14 @@ export function renderListCardHTML(art: Article, categoryColor: string): string 
 
 // Side bar: Related recommendation article item template
 export function renderRelatedCardHTML(rel: Article): string {
-  const coverBgStyle = rel.cover?.image
-    ? `background: url('${rel.cover.image}') center center / cover no-repeat;`
-    : `background-color: ${getCategoryColor(rel.category)};`;
-    
-  let coverContentHTML = '';
-  if (rel.cover?.text && rel.cover?.position) {
-    const posStyle = POSITION_MAP[rel.cover.position] || POSITION_MAP.center;
-    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: 10px; font-weight: 600; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${rel.cover.text}</span>`;
-  }
+  const scaleVar = rel.cover?.image?.scale !== undefined ? `style="--cover-scale: ${rel.cover.image.scale};"` : '';
 
   return `
-    <div class="card sidebar-item-card" data-action="view-article" data-id="${rel.id}">
+    <div class="card sidebar-item-card" data-action="view-article" data-id="${rel.id}" ${scaleVar}>
       <div class="card-cover-wrapper" style="border: none;">
         <div class="sidebar-item-inner">
-          <div class="sidebar-thumb" style="position: relative; overflow: hidden; ${coverBgStyle}">
-            ${coverContentHTML}
+          <div class="sidebar-thumb" style="position: relative; overflow: hidden; width: 140px; height: 70px; border-radius: 4px;">
+            ${renderCoverHTML(rel.cover, getCategoryColor(rel.category), '10px')}
           </div>
           <div class="sidebar-item-info">
             <p class="sidebar-item-title">${rel.title}</p>

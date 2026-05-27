@@ -11,9 +11,13 @@ tags:
   - Kernel
 lastUpdated: 2026-05-25 02:30
 cover:
-  image: https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=800&auto=format&fit=crop
-  position: center
-  text: RTOS | FREERTOS
+  image:
+    src: https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+  text:
+    content: RTOS | FREERTOS
+    position: center
 ---
 
 

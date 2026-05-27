@@ -11,9 +11,13 @@ tags:
   - Hardware
 lastUpdated: 2026-05-25 02:30
 cover:
-  image: https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800&auto=format&fit=crop
-  position: bottomLeft
-  text: MCU | ESP32
+  image:
+    src: https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+  text:
+    content: MCU | ESP32
+    position: bottomLeft
 ---
 
 

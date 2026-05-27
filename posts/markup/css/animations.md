@@ -9,9 +9,13 @@ tags:
   - CSS
 lastUpdated: 2026-05-25 02:30
 cover:
-  image: https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop
-  position: topLeft
-  text: MARKUP | CSS
+  image:
+    src: https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+  text:
+    content: MARKUP | CSS
+    position: topLeft
 ---
 
 

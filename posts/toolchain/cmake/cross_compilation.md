@@ -11,9 +11,13 @@ tags:
   - Compiler
 lastUpdated: 2026-05-25 02:30
 cover:
-  image: https://images.unsplash.com/photo-1597839219216-a773cb2473e4?w=800&auto=format&fit=crop
-  position: bottomLeft
-  text: TOOLCHAIN | CMAKE
+  image:
+    src: https://images.unsplash.com/photo-1597839219216-a773cb2473e4?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+  text:
+    content: TOOLCHAIN | CMAKE
+    position: bottomLeft
 ---
 
 

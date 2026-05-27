@@ -11,9 +11,13 @@ tags:
   - Low-Level
 lastUpdated: 2026-05-25 02:30
 cover:
-  image: https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=800&auto=format&fit=crop
-  position: center
-  text: C | POINTERS
+  image:
+    src: https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+  text:
+    content: C | POINTERS
+    position: center
 ---
 
 

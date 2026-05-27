@@ -9,9 +9,13 @@ tags:
   - MARKDOWN
 lastUpdated: 2026-05-25 02:30
 cover:
-  image: https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=800&auto=format&fit=crop
-  position: topRight
-  text: MARKUP | MARKDOWN
+  image:
+    src: https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+  text:
+    content: MARKUP | MARKDOWN
+    position: topRight
 ---
 
 

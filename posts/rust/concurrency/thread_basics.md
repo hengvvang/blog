@@ -11,9 +11,13 @@ tags:
   - Safety
 lastUpdated: 2026-05-25 02:30
 cover:
-  image: https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&auto=format&fit=crop
-  position: bottomLeft
-  text: RUST | CONCURRENCY
+  image:
+    src: https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+  text:
+    content: RUST | CONCURRENCY
+    position: bottomLeft
 ---
 
 

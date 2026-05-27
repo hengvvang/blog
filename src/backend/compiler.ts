@@ -23,7 +23,6 @@ export async function compileArticleToContent(article: ArticleMetadata): Promise
     wordCount,
     tags,
     lastUpdated,
-    cover: article.cover,
-    coverText: article.coverText
+    cover: article.cover
   };
 }

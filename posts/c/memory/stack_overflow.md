@@ -11,9 +11,13 @@ tags:
   - Low-Level
 lastUpdated: 2026-05-25 02:30
 cover:
-  image: https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop
-  position: bottomLeft
-  text: C | MEMORY
+  image:
+    src: https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+  text:
+    content: C | MEMORY
+    position: bottomLeft
 ---
 
 

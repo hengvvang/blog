@@ -1,6 +1,7 @@
 import { readdir, stat } from "node:fs/promises";
 import { join, relative } from "node:path";
 import { parse as parseYaml } from "yaml";
+import { CoverConfig } from "../types";
 
 export interface ArticleMetadata {
   id: number;
@@ -11,11 +12,7 @@ export interface ArticleMetadata {
   publishTime: string;
   author?: string;
   filePath: string;
-  cover?: {
-    image?: string;
-    text?: string;
-    position?: string;
-  };
+  cover?: CoverConfig;
 }
 
 // Stable numeric hash from filepath string

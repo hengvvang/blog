@@ -1060,14 +1060,6 @@ body {
 
 
 
-.featured-cover::after {
-  content: '';
-  position: absolute;
-  top: 0; right: 0; bottom: 0; left: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%);
-  z-index: 1;
-}
-
 .featured-cover-text {
   font-family: 'Outfit', sans-serif;
   font-size: 18px;
@@ -1192,14 +1184,6 @@ body {
   overflow: hidden;
 }
 
-
-
-.list-card-cover::after {
-  content: '';
-  position: absolute;
-  top: 0; right: 0; bottom: 0; left: 0;
-  background: rgba(0, 0, 0, 0.05);
-}
 
 .list-cover-badge {
   font-family: 'Outfit', sans-serif;
@@ -1586,4 +1570,25 @@ body {
   background-color: #e2ded5;
   border: 0;
 }
+
+/* Background Image Layer for Filters & Hover Scale */
+.cover-bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  transition: transform var(--transition-duration-normal) var(--transition-easing);
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.card:hover .cover-bg-image {
+  transform: scale(var(--cover-scale, 1.05));
+}
+
 

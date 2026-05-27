@@ -10,9 +10,13 @@ tags:
   - Scripting
 lastUpdated: 2026-05-25 02:30
 cover:
-  image: https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop
-  position: bottomRight
-  text: PYTHON | OOP
+  image:
+    src: https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+  text:
+    content: PYTHON | OOP
+    position: bottomRight
 ---
 
 

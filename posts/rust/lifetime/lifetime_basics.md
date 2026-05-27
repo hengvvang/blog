@@ -11,9 +11,13 @@ tags:
   - Safety
 lastUpdated: 2026-05-25 02:30
 cover:
-  image: https://images.unsplash.com/photo-1618401471353-b98aedd07871?w=800&auto=format&fit=crop
-  position: bottomRight
-  text: RUST | LIFETIME
+  image:
+    src: https://images.unsplash.com/photo-1618401471353-b98aedd07871?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+  text:
+    content: RUST | LIFETIME
+    position: bottomRight
 ---
 
 

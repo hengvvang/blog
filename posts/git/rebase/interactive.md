@@ -11,9 +11,13 @@ tags:
   - Workflow
 lastUpdated: 2026-05-25 02:30
 cover:
-  image: https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop
-  position: center
-  text: GIT | REBASE
+  image:
+    src: https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+  text:
+    content: GIT | REBASE
+    position: center
 ---
 
 
