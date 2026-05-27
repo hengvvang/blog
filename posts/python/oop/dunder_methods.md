@@ -1,15 +1,18 @@
 ---
-title: "Python 常见双下魔术方法与运算符重载"
-publishTime: "2026-05-24 18:40"
-author: "hengvvang"
-summary: "总结 Python 内部的各种双下划线特殊成员，揭示如何通过重载它们使自定义类具备运算符、迭代器等原生能力。"
-readingTime: "2 min"
-tags: ["PYTHON","OOP","Scripting"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop"
-coverText:
+title: Python 常见双下魔术方法与运算符重载
+publishTime: 2026-05-24 18:40
+author: hengvvang
+summary: 总结 Python 内部的各种双下划线特殊成员，揭示如何通过重载它们使自定义类具备运算符、迭代器等原生能力。
+readingTime: 2 min
+tags:
+  - PYTHON
+  - OOP
+  - Scripting
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop
   position: bottomRight
-  context: "PYTHON | OOP"
+  text: PYTHON | OOP
 ---
 
 

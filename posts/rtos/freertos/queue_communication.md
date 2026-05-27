@@ -1,15 +1,19 @@
 ---
-title: "FreeRTOS 队列通信机制与数据拷贝深度剖析"
-publishTime: "2026-05-24 14:30"
-author: "hengvvang"
-summary: "讲解如何在不同优先级的 FreeRTOS 任务之间或者中断服务程序中，通过线程安全队列安全传递结构体数据。"
-readingTime: "2 min"
-tags: ["RTOS","FREERTOS","Real-Time","Kernel"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=800&auto=format&fit=crop"
-coverText:
+title: FreeRTOS 队列通信机制与数据拷贝深度剖析
+publishTime: 2026-05-24 14:30
+author: hengvvang
+summary: 讲解如何在不同优先级的 FreeRTOS 任务之间或者中断服务程序中，通过线程安全队列安全传递结构体数据。
+readingTime: 2 min
+tags:
+  - RTOS
+  - FREERTOS
+  - Real-Time
+  - Kernel
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=800&auto=format&fit=crop
   position: bottomLeft
-  context: "RTOS | FREERTOS"
+  text: RTOS | FREERTOS
 ---
 
 

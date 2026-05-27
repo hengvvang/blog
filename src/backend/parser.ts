@@ -11,8 +11,11 @@ export interface ArticleMetadata {
   publishTime: string;
   author?: string;
   filePath: string;
-  cover?: string;
-  coverText?: { position: string; context: string };
+  cover?: {
+    image?: string;
+    text?: string;
+    position?: string;
+  };
 }
 
 // Stable numeric hash from filepath string
@@ -125,8 +128,25 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
     
     const snippet = meta.summary || meta.description || "";
     const author = meta.author;
-    const cover = meta.cover || undefined;
-    const coverText = meta.coverText || undefined;
+    
+    // Robust backward-compatible mapping for cover configuration
+    let cover: any = undefined;
+    if (meta.cover) {
+      cover = {};
+      if (typeof meta.cover === "string") {
+        cover.image = meta.cover;
+      } else if (typeof meta.cover === "object") {
+        cover.image = meta.cover.image || undefined;
+        cover.text = meta.cover.text || undefined;
+        cover.position = meta.cover.position || undefined;
+      }
+    }
+    
+    if (meta.coverText && typeof meta.coverText === "object") {
+      if (!cover) cover = {};
+      cover.position = cover.position || meta.coverText.position || undefined;
+      cover.text = cover.text || meta.coverText.context || meta.coverText.text || undefined;
+    }
 
     articles.push({
       id: getNumericId(relPath),
@@ -137,8 +157,7 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
       publishTime,
       author,
       filePath: file,
-      cover,
-      coverText
+      cover
     });
   }
   

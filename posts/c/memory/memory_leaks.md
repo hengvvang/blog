@@ -1,15 +1,19 @@
 ---
-title: "C语言动态内存分配、内存泄漏与 Valgrind 排查"
-publishTime: "2026-05-24 17:30"
-author: "hengvvang"
-summary: "介绍如何利用 Valgrind 检测 C 代码中的内存开辟与释放不配对问题，保障堆内存的安全管理。"
-readingTime: "3 min"
-tags: ["C","MEMORY","Pointers","Low-Level"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop"
-coverText:
+title: C语言动态内存分配、内存泄漏与 Valgrind 排查
+publishTime: 2026-05-24 17:30
+author: hengvvang
+summary: 介绍如何利用 Valgrind 检测 C 代码中的内存开辟与释放不配对问题，保障堆内存的安全管理。
+readingTime: 3 min
+tags:
+  - C
+  - MEMORY
+  - Pointers
+  - Low-Level
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop
   position: topLeft
-  context: "C | MEMORY"
+  text: C | MEMORY
 ---
 
 

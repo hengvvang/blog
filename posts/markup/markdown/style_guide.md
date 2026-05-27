@@ -1,15 +1,17 @@
 ---
-title: "Markdown 深度定制与现代排版引擎实践"
-publishTime: "2026-05-24 15:10"
-author: "hengvvang"
-summary: "整理出一套通用的 Markdown 书写格式指引，包括空行标准、标点符号规范和中英文混排美化细节。"
-readingTime: "2 min"
-tags: ["MARKUP","MARKDOWN"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=800&auto=format&fit=crop"
-coverText:
+title: Markdown 深度定制与现代排版引擎实践
+publishTime: 2026-05-24 15:10
+author: hengvvang
+summary: 整理出一套通用的 Markdown 书写格式指引，包括空行标准、标点符号规范和中英文混排美化细节。
+readingTime: 2 min
+tags:
+  - MARKUP
+  - MARKDOWN
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=800&auto=format&fit=crop
   position: topRight
-  context: "MARKUP | MARKDOWN"
+  text: MARKUP | MARKDOWN
 ---
 
 

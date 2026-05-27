@@ -1,15 +1,19 @@
 ---
-title: "深入浅出 Rust 生命周期核心技术指南"
-publishTime: "2026-05-24 10:00"
-author: "hengvvang"
-summary: "阐述引用的作用域分析与悬空指针防范，帮助新手理解生命周期标注在编译器借用分析中的辅助作用。"
-readingTime: "3 min"
-tags: ["RUST","LIFETIME","System","Safety"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1618401471353-b98aedd07871?w=800&auto=format&fit=crop"
-coverText:
+title: 深入浅出 Rust 生命周期核心技术指南
+publishTime: 2026-05-24 10:00
+author: hengvvang
+summary: 阐述引用的作用域分析与悬空指针防范，帮助新手理解生命周期标注在编译器借用分析中的辅助作用。
+readingTime: 3 min
+tags:
+  - RUST
+  - LIFETIME
+  - System
+  - Safety
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1618401471353-b98aedd07871?w=800&auto=format&fit=crop
   position: bottomRight
-  context: "RUST | LIFETIME"
+  text: RUST | LIFETIME
 ---
 
 

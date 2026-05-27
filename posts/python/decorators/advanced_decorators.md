@@ -1,15 +1,19 @@
 ---
-title: "Python 带参数的高阶装饰器与类装饰器"
-publishTime: "2026-05-24 18:35"
-author: "hengvvang"
-summary: "超越常规无参装饰器，深入探讨类级包装器与带配置参数闭包的三层嵌套实现原理。"
-readingTime: "2 min"
-tags: ["PYTHON","DECORATORS","OOP","Scripting"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1527474305487-b87b222841cc?w=800&auto=format&fit=crop"
-coverText:
+title: Python 带参数的高阶装饰器与类装饰器
+publishTime: 2026-05-24 18:35
+author: hengvvang
+summary: 超越常规无参装饰器，深入探讨类级包装器与带配置参数闭包的三层嵌套实现原理。
+readingTime: 2 min
+tags:
+  - PYTHON
+  - DECORATORS
+  - OOP
+  - Scripting
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1527474305487-b87b222841cc?w=800&auto=format&fit=crop
   position: bottomLeft
-  context: "PYTHON | DECORATORS"
+  text: PYTHON | DECORATORS
 ---
 
 

@@ -1,15 +1,19 @@
 ---
-title: "Git Flow 分支管理工作流最佳实践"
-publishTime: "2026-05-24 18:10"
-author: "hengvvang"
-summary: "解析经典的 Git 分支开发模型，详细阐述 master、develop、feature、release 和 hotfix 各分支的协作规范。"
-readingTime: "2 min"
-tags: ["GIT","WORKFLOW","VCS","Workflow"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop"
-coverText:
+title: Git Flow 分支管理工作流最佳实践
+publishTime: 2026-05-24 18:10
+author: hengvvang
+summary: 解析经典的 Git 分支开发模型，详细阐述 master、develop、feature、release 和 hotfix 各分支的协作规范。
+readingTime: 2 min
+tags:
+  - GIT
+  - WORKFLOW
+  - VCS
+  - Workflow
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop
   position: bottomRight
-  context: "GIT | WORKFLOW"
+  text: GIT | WORKFLOW
 ---
 
 

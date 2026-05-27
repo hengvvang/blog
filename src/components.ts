@@ -55,14 +55,14 @@ const POSITION_MAP: Record<string, string> = {
 
 // Featured article card (horizontal slide-out)
 export function renderFeaturedCardHTML(art: Article, categoryColor: string): string {
-  const coverBgStyle = art.cover
-    ? `background: url('${art.cover}') center center / cover no-repeat;`
+  const coverBgStyle = art.cover?.image
+    ? `background: url('${art.cover.image}') center center / cover no-repeat;`
     : `background-color: ${categoryColor};`;
   
   let coverContentHTML = '';
-  if (art.coverText) {
-    const posStyle = POSITION_MAP[art.coverText.position] || POSITION_MAP.center;
-    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: 18px; font-weight: 700; color: #ffffff; text-shadow: 0 2px 6px rgba(0,0,0,0.5); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${art.coverText.context}</span>`;
+  if (art.cover?.text && art.cover?.position) {
+    const posStyle = POSITION_MAP[art.cover.position] || POSITION_MAP.center;
+    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: 18px; font-weight: 700; color: #ffffff; text-shadow: 0 2px 6px rgba(0,0,0,0.5); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${art.cover.text}</span>`;
   }
 
   return `
@@ -96,14 +96,14 @@ export function renderFeaturedCardHTML(art: Article, categoryColor: string): str
 // Regular list article card
 export function renderListCardHTML(art: Article, categoryColor: string): string {
   const badgeText = (art.subcategory || art.category).toUpperCase();
-  const coverBgStyle = art.cover
-    ? `background: url('${art.cover}') center center / cover no-repeat;`
+  const coverBgStyle = art.cover?.image
+    ? `background: url('${art.cover.image}') center center / cover no-repeat;`
     : `background-color: ${categoryColor};`;
   
   let coverContentHTML = '';
-  if (art.coverText) {
-    const posStyle = POSITION_MAP[art.coverText.position] || POSITION_MAP.center;
-    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: 14px; font-weight: 600; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.4); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${art.coverText.context}</span>`;
+  if (art.cover?.text && art.cover?.position) {
+    const posStyle = POSITION_MAP[art.cover.position] || POSITION_MAP.center;
+    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: 14px; font-weight: 600; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.4); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${art.cover.text}</span>`;
   }
 
   return `
@@ -137,14 +137,14 @@ export function renderListCardHTML(art: Article, categoryColor: string): string 
 
 // Side bar: Related recommendation article item template
 export function renderRelatedCardHTML(rel: Article): string {
-  const coverBgStyle = rel.cover
-    ? `background: url('${rel.cover}') center center / cover no-repeat;`
+  const coverBgStyle = rel.cover?.image
+    ? `background: url('${rel.cover.image}') center center / cover no-repeat;`
     : `background-color: ${getCategoryColor(rel.category)};`;
     
   let coverContentHTML = '';
-  if (rel.coverText) {
-    const posStyle = POSITION_MAP[rel.coverText.position] || POSITION_MAP.center;
-    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: 10px; font-weight: 600; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${rel.coverText.context}</span>`;
+  if (rel.cover?.text && rel.cover?.position) {
+    const posStyle = POSITION_MAP[rel.cover.position] || POSITION_MAP.center;
+    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: 10px; font-weight: 600; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${rel.cover.text}</span>`;
   }
 
   return `

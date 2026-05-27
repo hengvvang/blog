@@ -1,15 +1,19 @@
 ---
-title: "ESP32 Wi-Fi 站模式 STA 连接管理与事件驱动机制"
-publishTime: "2026-05-24 18:00"
-author: "hengvvang"
-summary: "逐步说明如何初始化 ESP32 的 Wi-Fi 协议栈，配置 STA 连接参数并处理 IP 地址获取事件。"
-readingTime: "3 min"
-tags: ["MCU","ESP32","Embedded","Hardware"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800&auto=format&fit=crop"
-coverText:
+title: ESP32 Wi-Fi 站模式 STA 连接管理与事件驱动机制
+publishTime: 2026-05-24 18:00
+author: hengvvang
+summary: 逐步说明如何初始化 ESP32 的 Wi-Fi 协议栈，配置 STA 连接参数并处理 IP 地址获取事件。
+readingTime: 3 min
+tags:
+  - MCU
+  - ESP32
+  - Embedded
+  - Hardware
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800&auto=format&fit=crop
   position: bottomLeft
-  context: "MCU | ESP32"
+  text: MCU | ESP32
 ---
 
 

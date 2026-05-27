@@ -1,15 +1,19 @@
 ---
-title: "链接器脚本高级命令与自定义 Section 分配"
-publishTime: "2026-05-24 16:50"
-author: "hengvvang"
-summary: "从 MEMORY 和 SECTIONS 指令入手，解析如何定义 Flash 与 RAM 的边界，以及如何安排代码段与数据段的存放位置。"
-readingTime: "1 min"
-tags: ["TOOLCHAIN","GCC","Build","Compiler"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop"
-coverText:
+title: 链接器脚本高级命令与自定义 Section 分配
+publishTime: 2026-05-24 16:50
+author: hengvvang
+summary: 从 MEMORY 和 SECTIONS 指令入手，解析如何定义 Flash 与 RAM 的边界，以及如何安排代码段与数据段的存放位置。
+readingTime: 1 min
+tags:
+  - TOOLCHAIN
+  - GCC
+  - Build
+  - Compiler
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop
   position: topRight
-  context: "TOOLCHAIN | GCC"
+  text: TOOLCHAIN | GCC
 ---
 
 

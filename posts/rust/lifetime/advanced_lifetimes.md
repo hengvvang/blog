@@ -1,15 +1,19 @@
 ---
-title: "Rust 高级生命周期约束与 HRTB 详解"
-publishTime: "2026-05-24 14:20"
-author: "hengvvang"
-summary: "探究生命周期的子类型关系、型变特征以及 for<'a> 高阶生命周期边界在复杂泛型函数中的限制。"
-readingTime: "1 min"
-tags: ["RUST","LIFETIME","System","Safety"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop"
-coverText:
+title: Rust 高级生命周期约束与 HRTB 详解
+publishTime: 2026-05-24 14:20
+author: hengvvang
+summary: 探究生命周期的子类型关系、型变特征以及 for<'a> 高阶生命周期边界在复杂泛型函数中的限制。
+readingTime: 1 min
+tags:
+  - RUST
+  - LIFETIME
+  - System
+  - Safety
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop
   position: center
-  context: "RUST | LIFETIME"
+  text: RUST | LIFETIME
 ---
 
 

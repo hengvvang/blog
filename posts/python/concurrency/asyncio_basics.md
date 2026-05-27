@@ -1,15 +1,19 @@
 ---
-title: "Python Asyncio 异步协程并发编程实战"
-publishTime: "2026-05-24 16:20"
-author: "hengvvang"
-summary: "深入协程的事件循环模型，分析 yield、async/await 在底层任务切换与高并发网络 IO 中的表现。"
-readingTime: "3 min"
-tags: ["PYTHON","CONCURRENCY","OOP","Scripting"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop"
-coverText:
+title: Python Asyncio 异步协程并发编程实战
+publishTime: 2026-05-24 16:20
+author: hengvvang
+summary: 深入协程的事件循环模型，分析 yield、async/await 在底层任务切换与高并发网络 IO 中的表现。
+readingTime: 3 min
+tags:
+  - PYTHON
+  - CONCURRENCY
+  - OOP
+  - Scripting
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop
   position: topLeft
-  context: "PYTHON | CONCURRENCY"
+  text: PYTHON | CONCURRENCY
 ---
 
 

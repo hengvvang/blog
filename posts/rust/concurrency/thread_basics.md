@@ -1,15 +1,19 @@
 ---
-title: "Rust 多线程并发编程与通道机制"
-publishTime: "2026-05-24 14:00"
-author: "hengvvang"
-summary: "从 OS 线程创建说起，精讲 Rust 的 Send/Sync 特质，以及如何通过 mpsc 通道在线程间安全传输消息。"
-readingTime: "1 min"
-tags: ["RUST","CONCURRENCY","System","Safety"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&auto=format&fit=crop"
-coverText:
+title: Rust 多线程并发编程与通道机制
+publishTime: 2026-05-24 14:00
+author: hengvvang
+summary: 从 OS 线程创建说起，精讲 Rust 的 Send/Sync 特质，以及如何通过 mpsc 通道在线程间安全传输消息。
+readingTime: 1 min
+tags:
+  - RUST
+  - CONCURRENCY
+  - System
+  - Safety
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&auto=format&fit=crop
   position: bottomLeft
-  context: "RUST | CONCURRENCY"
+  text: RUST | CONCURRENCY
 ---
 
 

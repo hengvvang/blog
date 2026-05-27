@@ -1,15 +1,19 @@
 ---
-title: "ESP32 蓝牙 BLE GATT 服务器开发流程与原理"
-publishTime: "2026-05-24 15:10"
-author: "hengvvang"
-summary: "使用 ESP-IDF 建立 GATT 结构，演示如何定义服务与特征，实现主机与从机间的高效蓝牙数据传输。"
-readingTime: "1 min"
-tags: ["MCU","ESP32","Embedded","Hardware"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop"
-coverText:
+title: ESP32 蓝牙 BLE GATT 服务器开发流程与原理
+publishTime: 2026-05-24 15:10
+author: hengvvang
+summary: 使用 ESP-IDF 建立 GATT 结构，演示如何定义服务与特征，实现主机与从机间的高效蓝牙数据传输。
+readingTime: 1 min
+tags:
+  - MCU
+  - ESP32
+  - Embedded
+  - Hardware
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop
   position: topLeft
-  context: "MCU | ESP32"
+  text: MCU | ESP32
 ---
 
 

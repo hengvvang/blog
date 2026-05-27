@@ -1,15 +1,19 @@
 ---
-title: "STM32 软件模拟 I2C 驱动与总线时序实现"
-publishTime: "2026-05-24 15:20"
-author: "hengvvang"
-summary: "深入探讨 STM32 硬件 I2C 产生死锁的经典硬件设计缺陷，并提供软件规避及驱动层面的健壮代码设计。"
-readingTime: "2 min"
-tags: ["MCU","STM32","Embedded","Hardware"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&auto=format&fit=crop"
-coverText:
+title: STM32 软件模拟 I2C 驱动与总线时序实现
+publishTime: 2026-05-24 15:20
+author: hengvvang
+summary: 深入探讨 STM32 硬件 I2C 产生死锁的经典硬件设计缺陷，并提供软件规避及驱动层面的健壮代码设计。
+readingTime: 2 min
+tags:
+  - MCU
+  - STM32
+  - Embedded
+  - Hardware
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&auto=format&fit=crop
   position: bottomRight
-  context: "MCU | STM32"
+  text: MCU | STM32
 ---
 
 

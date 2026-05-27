@@ -1,15 +1,19 @@
 ---
-title: "深入理解 C 语言栈溢出攻击与防御防范"
-publishTime: "2026-05-24 16:20"
-author: "hengvvang"
-summary: "详细剖析函数递归过深或局部变量过大导致系统栈空间耗尽的底层机制与防范思路。"
-readingTime: "1 min"
-tags: ["C","MEMORY","Pointers","Low-Level"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop"
-coverText:
+title: 深入理解 C 语言栈溢出攻击与防御防范
+publishTime: 2026-05-24 16:20
+author: hengvvang
+summary: 详细剖析函数递归过深或局部变量过大导致系统栈空间耗尽的底层机制与防范思路。
+readingTime: 1 min
+tags:
+  - C
+  - MEMORY
+  - Pointers
+  - Low-Level
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop
   position: bottomLeft
-  context: "C | MEMORY"
+  text: C | MEMORY
 ---
 
 

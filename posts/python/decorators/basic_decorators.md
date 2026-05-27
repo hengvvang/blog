@@ -1,15 +1,19 @@
 ---
-title: "Python 装饰器基础与函数运行时计时器"
-publishTime: "2026-05-24 18:30"
-author: "hengvvang"
-summary: "从函数是一等公民的性质出发，分析 Python 闭包的变量绑定机制，掌握装饰器简化横切关注点的基础。"
-readingTime: "1 min"
-tags: ["PYTHON","DECORATORS","OOP","Scripting"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800&auto=format&fit=crop"
-coverText:
+title: Python 装饰器基础与函数运行时计时器
+publishTime: 2026-05-24 18:30
+author: hengvvang
+summary: 从函数是一等公民的性质出发，分析 Python 闭包的变量绑定机制，掌握装饰器简化横切关注点的基础。
+readingTime: 1 min
+tags:
+  - PYTHON
+  - DECORATORS
+  - OOP
+  - Scripting
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800&auto=format&fit=crop
   position: center
-  context: "PYTHON | DECORATORS"
+  text: PYTHON | DECORATORS
 ---
 
 

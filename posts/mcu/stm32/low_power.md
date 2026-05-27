@@ -1,15 +1,19 @@
 ---
-title: "物联网 MCU 低功耗模式与底电流改善实战"
-publishTime: "2026-05-24 14:20"
-author: "hengvvang"
-summary: "细致对比运行模式下各种唤醒源、外设时钟挂载与不同低功耗状态下的毫安级乃至微安级电流消耗。"
-readingTime: "3 min"
-tags: ["MCU","STM32","Embedded","Hardware"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop"
-coverText:
+title: 物联网 MCU 低功耗模式与底电流改善实战
+publishTime: 2026-05-24 14:20
+author: hengvvang
+summary: 细致对比运行模式下各种唤醒源、外设时钟挂载与不同低功耗状态下的毫安级乃至微安级电流消耗。
+readingTime: 3 min
+tags:
+  - MCU
+  - STM32
+  - Embedded
+  - Hardware
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop
   position: topRight
-  context: "MCU | STM32"
+  text: MCU | STM32
 ---
 
 

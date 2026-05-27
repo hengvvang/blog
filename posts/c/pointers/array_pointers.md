@@ -1,15 +1,19 @@
 ---
-title: "C语言数组指针与指针数组概念辨析"
-publishTime: "2026-05-24 16:30"
-author: "hengvvang"
-summary: "区分指针组成的数组和指向整个数组的指针，帮助理清它们在定义、解引用和地址偏移上的核心差异。"
-readingTime: "1 min"
-tags: ["C","POINTERS","Pointers","Low-Level"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=800&auto=format&fit=crop"
-coverText:
+title: C语言数组指针与指针数组概念辨析
+publishTime: 2026-05-24 16:30
+author: hengvvang
+summary: 区分指针组成的数组和指向整个数组的指针，帮助理清它们在定义、解引用和地址偏移上的核心差异。
+readingTime: 1 min
+tags:
+  - C
+  - POINTERS
+  - Pointers
+  - Low-Level
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=800&auto=format&fit=crop
   position: center
-  context: "C | POINTERS"
+  text: C | POINTERS
 ---
 
 

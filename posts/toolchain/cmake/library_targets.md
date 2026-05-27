@@ -1,15 +1,19 @@
 ---
-title: "CMake 生成静态库与动态库目标规范管理"
-publishTime: "2026-05-24 17:00"
-author: "hengvvang"
-summary: "演示如何使用 target_link_libraries 进行现代 CMake 构建，精确管理目标之间的头文件及库链接关系。"
-readingTime: "1 min"
-tags: ["TOOLCHAIN","CMAKE","Build","Compiler"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop"
-coverText:
+title: CMake 生成静态库与动态库目标规范管理
+publishTime: 2026-05-24 17:00
+author: hengvvang
+summary: 演示如何使用 target_link_libraries 进行现代 CMake 构建，精确管理目标之间的头文件及库链接关系。
+readingTime: 1 min
+tags:
+  - TOOLCHAIN
+  - CMAKE
+  - Build
+  - Compiler
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop
   position: center
-  context: "TOOLCHAIN | CMAKE"
+  text: TOOLCHAIN | CMAKE
 ---
 
 

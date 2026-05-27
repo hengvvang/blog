@@ -1,3 +1,9 @@
+export interface CoverConfig {
+  image?: string;
+  text?: string;
+  position?: 'topLeft' | 'bottomLeft' | 'center' | 'bottomRight' | 'topRight';
+}
+
 export interface Article {
   id: number;
   title: string;
@@ -5,8 +11,7 @@ export interface Article {
   subcategory?: string;
   contentSnippet: string;
   publishTime: string;
-  cover?: string;
-  coverText?: { position: string; context: string };
+  cover?: CoverConfig;
 }
 
 export interface ArticleContent {
@@ -20,6 +25,5 @@ export interface ArticleContent {
   wordCount: number;
   tags: string[];
   lastUpdated: string;
-  cover?: string;
-  coverText?: { position: string; context: string };
+  cover?: CoverConfig;
 }

@@ -1,15 +1,19 @@
 ---
-title: "CMake 构建宏编写与自动化 CI/CD 环境结合运用"
-publishTime: "2026-05-24 12:15"
-author: "hengvvang"
-summary: "从 CMakeLists.txt 的基础指令开始，构建一个从单文件编译到多层目录结构项目的工程范本。"
-readingTime: "2 min"
-tags: ["TOOLCHAIN","CMAKE","Build","Compiler"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop"
-coverText:
+title: CMake 构建宏编写与自动化 CI/CD 环境结合运用
+publishTime: 2026-05-24 12:15
+author: hengvvang
+summary: 从 CMakeLists.txt 的基础指令开始，构建一个从单文件编译到多层目录结构项目的工程范本。
+readingTime: 2 min
+tags:
+  - TOOLCHAIN
+  - CMAKE
+  - Build
+  - Compiler
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop
   position: topLeft
-  context: "TOOLCHAIN | CMAKE"
+  text: TOOLCHAIN | CMAKE
 ---
 
 

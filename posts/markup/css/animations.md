@@ -1,15 +1,17 @@
 ---
-title: "CSS 关键帧动画 Keyframes 与微交互设计优化"
-publishTime: "2026-05-24 15:40"
-author: "hengvvang"
-summary: "结合丰富的动效实例，精讲 @keyframes 的时间步长分配以及 transition 在交互状态下的平滑演变控制。"
-readingTime: "1 min"
-tags: ["MARKUP","CSS"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop"
-coverText:
+title: CSS 关键帧动画 Keyframes 与微交互设计优化
+publishTime: 2026-05-24 15:40
+author: hengvvang
+summary: 结合丰富的动效实例，精讲 @keyframes 的时间步长分配以及 transition 在交互状态下的平滑演变控制。
+readingTime: 1 min
+tags:
+  - MARKUP
+  - CSS
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop
   position: topLeft
-  context: "MARKUP | CSS"
+  text: MARKUP | CSS
 ---
 
 

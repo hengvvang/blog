@@ -1,15 +1,19 @@
 ---
-title: "Zephyr 线程栈分析器与内存泄漏调试指南"
-publishTime: "2026-05-24 14:40"
-author: "hengvvang"
-summary: "利用系统的线程监控组件，实时输出每个任务栈的最高水位线，防范栈溢出引起的内核崩溃。"
-readingTime: "1 min"
-tags: ["RTOS","ZEPHYR","Real-Time","Kernel"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&auto=format&fit=crop"
-coverText:
+title: Zephyr 线程栈分析器与内存泄漏调试指南
+publishTime: 2026-05-24 14:40
+author: hengvvang
+summary: 利用系统的线程监控组件，实时输出每个任务栈的最高水位线，防范栈溢出引起的内核崩溃。
+readingTime: 1 min
+tags:
+  - RTOS
+  - ZEPHYR
+  - Real-Time
+  - Kernel
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&auto=format&fit=crop
   position: topRight
-  context: "RTOS | ZEPHYR"
+  text: RTOS | ZEPHYR
 ---
 
 

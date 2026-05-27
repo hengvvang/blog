@@ -1,15 +1,19 @@
 ---
-title: "C语言函数指针与面向对象回调函数设计"
-publishTime: "2026-05-24 16:10"
-author: "hengvvang"
-summary: "学习如何将函数地址作为参数进行传递，探讨回调函数以及基于函数指针数组的多路分发实现。"
-readingTime: "1 min"
-tags: ["C","POINTERS","Pointers","Low-Level"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop"
-coverText:
+title: C语言函数指针与面向对象回调函数设计
+publishTime: 2026-05-24 16:10
+author: hengvvang
+summary: 学习如何将函数地址作为参数进行传递，探讨回调函数以及基于函数指针数组的多路分发实现。
+readingTime: 1 min
+tags:
+  - C
+  - POINTERS
+  - Pointers
+  - Low-Level
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop
   position: topRight
-  context: "C | POINTERS"
+  text: C | POINTERS
 ---
 
 

@@ -1,15 +1,19 @@
 ---
-title: "Git Reflog 误删分支与未提交代码灾难恢复"
-publishTime: "2026-05-24 18:25"
-author: "hengvvang"
-summary: "教你使用引用日志来拯救那些被意外重置或强制删除的提交，是日常开发中必不可少的急救手册。"
-readingTime: "2 min"
-tags: ["GIT","INTERNALS","VCS","Workflow"]
-lastUpdated: "2026-05-25 02:30"
-cover: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop"
-coverText:
+title: Git Reflog 误删分支与未提交代码灾难恢复
+publishTime: 2026-05-24 18:25
+author: hengvvang
+summary: 教你使用引用日志来拯救那些被意外重置或强制删除的提交，是日常开发中必不可少的急救手册。
+readingTime: 2 min
+tags:
+  - GIT
+  - INTERNALS
+  - VCS
+  - Workflow
+lastUpdated: 2026-05-25 02:30
+cover:
+  image: https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop
   position: bottomLeft
-  context: "GIT | INTERNALS"
+  text: GIT | INTERNALS
 ---
 
 
