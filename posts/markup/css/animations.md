@@ -6,6 +6,10 @@ summary: "结合丰富的动效实例，精讲 @keyframes 的时间步长分配�
 readingTime: "1 min"
 tags: ["MARKUP","CSS"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop"
+coverText:
+  position: topLeft
+  context: "MARKUP | CSS"
 ---
 
 

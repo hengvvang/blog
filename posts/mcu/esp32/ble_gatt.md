@@ -6,8 +6,10 @@ summary: "使用 ESP-IDF 建立 GATT 结构，演示如何定义服务与特征�
 readingTime: "1 min"
 tags: ["MCU","ESP32","Embedded","Hardware"]
 lastUpdated: "2026-05-25 02:30"
-cover: "/images/ble-cover.png"
-coverText: { position: "topLeft", context: "BLE GATT 开发" }
+cover: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop"
+coverText:
+  position: topLeft
+  context: "MCU | ESP32"
 ---
 
 

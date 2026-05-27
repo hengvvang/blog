@@ -6,6 +6,10 @@ summary: "总结 Python 内部的各种双下划线特殊成员，揭示如何�
 readingTime: "2 min"
 tags: ["PYTHON","OOP","Scripting"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop"
+coverText:
+  position: bottomRight
+  context: "PYTHON | OOP"
 ---
 
 

@@ -6,6 +6,10 @@ summary: "深入探讨 STM32 硬件 I2C 产生死锁的经典硬件设计缺陷�
 readingTime: "2 min"
 tags: ["MCU","STM32","Embedded","Hardware"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&auto=format&fit=crop"
+coverText:
+  position: bottomRight
+  context: "MCU | STM32"
 ---
 
 

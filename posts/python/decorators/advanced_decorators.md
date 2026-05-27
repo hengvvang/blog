@@ -6,6 +6,10 @@ summary: "超越常规无参装饰器，深入探讨类级包装器与带配置�
 readingTime: "2 min"
 tags: ["PYTHON","DECORATORS","OOP","Scripting"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1527474305487-b87b222841cc?w=800&auto=format&fit=crop"
+coverText:
+  position: bottomLeft
+  context: "PYTHON | DECORATORS"
 ---
 
 

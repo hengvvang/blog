@@ -6,6 +6,10 @@ summary: "利用 DMA 通道在不占用 CPU 的情况下将多路模拟信号的
 readingTime: "2 min"
 tags: ["MCU","STM32","Embedded","Hardware"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&auto=format&fit=crop"
+coverText:
+  position: center
+  context: "MCU | STM32"
 ---
 
 

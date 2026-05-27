@@ -6,6 +6,10 @@ summary: "讲解如何在 Markdown 中直接渲染甘特图、流程图和序列
 readingTime: "1 min"
 tags: ["MARKUP","MARKDOWN"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop"
+coverText:
+  position: bottomRight
+  context: "MARKUP | MARKDOWN"
 ---
 
 

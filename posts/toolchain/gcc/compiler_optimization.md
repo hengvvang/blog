@@ -6,6 +6,10 @@ summary: "全方位对比 GCC 的各类编译优化等级，分析其在循环�
 readingTime: "1 min"
 tags: ["TOOLCHAIN","GCC","Build","Compiler"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop"
+coverText:
+  position: bottomRight
+  context: "TOOLCHAIN | GCC"
 ---
 
 

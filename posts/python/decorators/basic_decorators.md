@@ -6,6 +6,10 @@ summary: "从函数是一等公民的性质出发，分析 Python 闭包的变�
 readingTime: "1 min"
 tags: ["PYTHON","DECORATORS","OOP","Scripting"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800&auto=format&fit=crop"
+coverText:
+  position: center
+  context: "PYTHON | DECORATORS"
 ---
 
 

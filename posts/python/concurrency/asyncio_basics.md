@@ -6,6 +6,10 @@ summary: "深入协程的事件循环模型，分析 yield、async/await 在底�
 readingTime: "3 min"
 tags: ["PYTHON","CONCURRENCY","OOP","Scripting"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop"
+coverText:
+  position: topLeft
+  context: "PYTHON | CONCURRENCY"
 ---
 
 

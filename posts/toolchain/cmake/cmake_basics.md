@@ -6,6 +6,10 @@ summary: "从 CMakeLists.txt 的基础指令开始，构建一个从单文件编
 readingTime: "2 min"
 tags: ["TOOLCHAIN","CMAKE","Build","Compiler"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop"
+coverText:
+  position: topLeft
+  context: "TOOLCHAIN | CMAKE"
 ---
 
 

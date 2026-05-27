@@ -6,6 +6,10 @@ summary: "细致对比运行模式下各种唤醒源、外设时钟挂载与不�
 readingTime: "3 min"
 tags: ["MCU","STM32","Embedded","Hardware"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop"
+coverText:
+  position: topRight
+  context: "MCU | STM32"
 ---
 
 

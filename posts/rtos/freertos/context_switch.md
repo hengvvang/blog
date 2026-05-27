@@ -6,6 +6,10 @@ summary: "从 PendSV 中断与堆栈恢复的角度，层层剥离汇编代码�
 readingTime: "3 min"
 tags: ["RTOS","FREERTOS","Real-Time","Kernel"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&auto=format&fit=crop"
+coverText:
+  position: topLeft
+  context: "RTOS | FREERTOS"
 ---
 
 

@@ -6,6 +6,10 @@ summary: "从底层文件数据库的视角拆解 blob、tree 和 commit 等核�
 readingTime: "2 min"
 tags: ["GIT","INTERNALS","VCS","Workflow"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?w=800&auto=format&fit=crop"
+coverText:
+  position: topLeft
+  context: "GIT | INTERNALS"
 ---
 
 

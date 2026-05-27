@@ -6,6 +6,10 @@ summary: "从 OS 线程创建说起，精讲 Rust 的 Send/Sync 特质，以及�
 readingTime: "1 min"
 tags: ["RUST","CONCURRENCY","System","Safety"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&auto=format&fit=crop"
+coverText:
+  position: bottomLeft
+  context: "RUST | CONCURRENCY"
 ---
 
 

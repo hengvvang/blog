@@ -6,6 +6,10 @@ summary: "解析经典的 Git 分支开发模型，详细阐述 master、develop
 readingTime: "2 min"
 tags: ["GIT","WORKFLOW","VCS","Workflow"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop"
+coverText:
+  position: bottomRight
+  context: "GIT | WORKFLOW"
 ---
 
 

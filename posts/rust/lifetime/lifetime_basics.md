@@ -6,6 +6,10 @@ summary: "阐述引用的作用域分析与悬空指针防范，帮助新手理�
 readingTime: "3 min"
 tags: ["RUST","LIFETIME","System","Safety"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1618401471353-b98aedd07871?w=800&auto=format&fit=crop"
+coverText:
+  position: bottomRight
+  context: "RUST | LIFETIME"
 ---
 
 

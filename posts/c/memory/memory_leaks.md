@@ -6,6 +6,10 @@ summary: "介绍如何利用 Valgrind 检测 C 代码中的内存开辟与释放
 readingTime: "3 min"
 tags: ["C","MEMORY","Pointers","Low-Level"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop"
+coverText:
+  position: topLeft
+  context: "C | MEMORY"
 ---
 
 

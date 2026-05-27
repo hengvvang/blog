@@ -6,6 +6,10 @@ summary: "剖析 Python 的 __new__ 与 __init__，了解如何拦截类创建�
 readingTime: "2 min"
 tags: ["PYTHON","OOP","Scripting"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&auto=format&fit=crop"
+coverText:
+  position: topRight
+  context: "PYTHON | OOP"
 ---
 
 

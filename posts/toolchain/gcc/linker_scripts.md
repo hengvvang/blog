@@ -6,6 +6,10 @@ summary: "从 MEMORY 和 SECTIONS 指令入手，解析如何定义 Flash 与 RA
 readingTime: "1 min"
 tags: ["TOOLCHAIN","GCC","Build","Compiler"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop"
+coverText:
+  position: topRight
+  context: "TOOLCHAIN | GCC"
 ---
 
 

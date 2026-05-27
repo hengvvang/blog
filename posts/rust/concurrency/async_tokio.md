@@ -6,6 +6,10 @@ summary: "详细剖析 Tokio 内部的多线程调度队列、工作窃取（Wor
 readingTime: "1 min"
 tags: ["RUST","CONCURRENCY","System","Safety"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=800&auto=format&fit=crop"
+coverText:
+  position: topLeft
+  context: "RUST | CONCURRENCY"
 ---
 
 

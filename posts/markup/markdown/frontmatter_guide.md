@@ -6,6 +6,10 @@ summary: "规范阐述如何在 Markdown 顶部配置 YAML 参数，实现主题
 readingTime: "1 min"
 tags: ["MARKUP","MARKDOWN"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop"
+coverText:
+  position: center
+  context: "MARKUP | MARKDOWN"
 ---
 
 

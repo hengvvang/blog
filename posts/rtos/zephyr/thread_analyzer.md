@@ -6,6 +6,10 @@ summary: "利用系统的线程监控组件，实时输出每个任务栈的最�
 readingTime: "1 min"
 tags: ["RTOS","ZEPHYR","Real-Time","Kernel"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&auto=format&fit=crop"
+coverText:
+  position: topRight
+  context: "RTOS | ZEPHYR"
 ---
 
 

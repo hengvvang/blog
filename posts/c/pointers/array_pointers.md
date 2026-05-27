@@ -6,6 +6,10 @@ summary: "区分指针组成的数组和指向整个数组的指针，帮助理�
 readingTime: "1 min"
 tags: ["C","POINTERS","Pointers","Low-Level"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=800&auto=format&fit=crop"
+coverText:
+  position: center
+  context: "C | POINTERS"
 ---
 
 

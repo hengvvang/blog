@@ -6,6 +6,10 @@ summary: "学习如何将函数地址作为参数进行传递，探讨回调函�
 readingTime: "1 min"
 tags: ["C","POINTERS","Pointers","Low-Level"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop"
+coverText:
+  position: topRight
+  context: "C | POINTERS"
 ---
 
 

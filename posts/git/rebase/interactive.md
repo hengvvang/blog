@@ -6,6 +6,10 @@ summary: "演示如何利用交互式变基对历史提交记录进行合并、�
 readingTime: "3 min"
 tags: ["GIT","REBASE","VCS","Workflow"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop"
+coverText:
+  position: center
+  context: "GIT | REBASE"
 ---
 
 

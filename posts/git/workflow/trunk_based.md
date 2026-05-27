@@ -6,6 +6,10 @@ summary: "探究一种追求高频合并与持续集成的单主干开发流模�
 readingTime: "2 min"
 tags: ["GIT","WORKFLOW","VCS","Workflow"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1618401471353-b98aedd07871?w=800&auto=format&fit=crop"
+coverText:
+  position: topRight
+  context: "GIT | WORKFLOW"
 ---
 
 

@@ -6,6 +6,10 @@ summary: "整理出一套通用的 Markdown 书写格式指引，包括空行标
 readingTime: "2 min"
 tags: ["MARKUP","MARKDOWN"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=800&auto=format&fit=crop"
+coverText:
+  position: topRight
+  context: "MARKUP | MARKDOWN"
 ---
 
 

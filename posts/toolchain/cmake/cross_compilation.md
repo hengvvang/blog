@@ -6,6 +6,10 @@ summary: "配置工具链描述文件，指定 MCU 目标架构、交叉编译�
 readingTime: "1 min"
 tags: ["TOOLCHAIN","CMAKE","Build","Compiler"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1597839219216-a773cb2473e4?w=800&auto=format&fit=crop"
+coverText:
+  position: bottomLeft
+  context: "TOOLCHAIN | CMAKE"
 ---
 
 

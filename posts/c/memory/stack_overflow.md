@@ -6,6 +6,10 @@ summary: "详细剖析函数递归过深或局部变量过大导致系统栈空�
 readingTime: "1 min"
 tags: ["C","MEMORY","Pointers","Low-Level"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop"
+coverText:
+  position: bottomLeft
+  context: "C | MEMORY"
 ---
 
 

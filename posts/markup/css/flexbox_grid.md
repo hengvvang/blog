@@ -6,6 +6,10 @@ summary: "通过具体的页面布局案例，全方位对比一维弹性盒与�
 readingTime: "1 min"
 tags: ["MARKUP","CSS"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop"
+coverText:
+  position: bottomLeft
+  context: "MARKUP | CSS"
 ---
 
 

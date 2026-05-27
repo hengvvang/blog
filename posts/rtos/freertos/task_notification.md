@@ -6,6 +6,10 @@ summary: "展示如何直接通过任务控制块（TCB）中的通知值，实�
 readingTime: "2 min"
 tags: ["RTOS","FREERTOS","Real-Time","Kernel"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=800&auto=format&fit=crop"
+coverText:
+  position: center
+  context: "RTOS | FREERTOS"
 ---
 
 

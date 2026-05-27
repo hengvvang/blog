@@ -6,6 +6,10 @@ summary: "教你使用引用日志来拯救那些被意外重置或强制删除�
 readingTime: "2 min"
 tags: ["GIT","INTERNALS","VCS","Workflow"]
 lastUpdated: "2026-05-25 02:30"
+cover: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop"
+coverText:
+  position: bottomLeft
+  context: "GIT | INTERNALS"
 ---
 
 
