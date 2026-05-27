@@ -113,12 +113,6 @@ export function getCategoryHomeElementsHTML(cat: string): { keywordsHTML: string
   return { keywordsHTML, iconsHTML };
 }
 
-export function getCategoryKeywordsHTML(cat: string): string {
-  const list = KEYWORDS[cat] || ['Code', 'Tech', 'Doc', 'Dev', 'System'];
-  const initialIndex = Math.floor(Math.random() * list.length);
-  return list.map((word, i) => `<span class="media-text ${i === initialIndex ? 'js-active' : ''}">${word}</span>`).join('');
-}
-
 export function onRowEnter(cat: string): void {
   if (slideshowTimers[cat]) clearInterval(slideshowTimers[cat]);
   

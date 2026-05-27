@@ -86,7 +86,9 @@ const server = serve({
         readingTime,
         wordCount,
         tags,
-        lastUpdated
+        lastUpdated,
+        cover: article.cover,
+        coverText: article.coverText
       }), {
         headers: {
           "Content-Type": "application/json",

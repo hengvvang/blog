@@ -20,4 +20,6 @@ export interface ArticleContent {
   wordCount: number;
   tags: string[];
   lastUpdated: string;
+  cover?: string;
+  coverText?: { position: string; context: string };
 }
