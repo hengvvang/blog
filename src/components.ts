@@ -1,14 +1,14 @@
-import { Article, ArticleContent } from "./types";
-import { getCategoryColor, getCategoryIcon, DEFAULT_ICON } from "./utils";
+import { Article } from "./types";
+import { getCategoryColor } from "./utils";
 
 // Top Nav breadcrumbs and options
 export function renderNavHTML(categories: string[], currentCategory: string): string {
   const homeActive = currentCategory === 'home' ? 'active' : '';
-  let html = `<button class="nav-item ${homeActive}" onclick="window.location.hash = '#/'">首页</button>`;
+  let html = `<button class="nav-item ${homeActive}" data-action="select-category" data-cat="home">首页</button>`;
   
   html += categories.map(cat => {
     const active = cat === currentCategory ? 'active' : '';
-    return `<button class="nav-item ${active}" onclick="window.location.hash = '#/category/${cat}'">${cat}</button>`;
+    return `<button class="nav-item ${active}" data-action="select-category" data-cat="${cat}">${cat}</button>`;
   }).join('');
   
   return html;
@@ -37,7 +37,7 @@ export function renderHomeCollectionHTML(
   const rowContent = order.map(idx => elements[idx]).join('');
   
   return `
-    <div class="home-collection" onclick="window.selectCategory('${cat}')" onmouseenter="window.onRowEnter('${cat}')" onmouseleave="window.onRowLeave('${cat}')">
+    <div class="home-collection" data-action="select-category" data-cat="${cat}">
       <div class="collection-inner">
         ${rowContent}
       </div>
@@ -66,7 +66,7 @@ export function renderFeaturedCardHTML(art: Article, categoryColor: string): str
   }
 
   return `
-    <div class="card toolchain-horizontal-card" onclick="window.viewArticle(${art.id})">
+    <div class="card toolchain-horizontal-card" data-action="view-article" data-id="${art.id}">
       <div class="card-cover-wrapper" style="height: auto; display: flex; flex-direction: column; gap: 8px; padding: 8px 16px 12px 16px;">
         <div style="text-align: right; width: 100%; margin-bottom: 0px; line-height: 1;">
           <span class="featured-date" style="font-size: 12px; color: var(--text-light, #888);">${art.publishTime}</span>
@@ -107,7 +107,7 @@ export function renderListCardHTML(art: Article, categoryColor: string): string 
   }
 
   return `
-    <div class="card" style="width: 100%;" onclick="window.viewArticle(${art.id})">
+    <div class="card" style="width: 100%;" data-action="view-article" data-id="${art.id}">
       <div class="card-cover-wrapper" style="width: 100%; height: auto; display: flex; gap: 24px;">
         <div class="list-card-cover" style="${coverBgStyle}">
           ${coverContentHTML}
@@ -148,7 +148,7 @@ export function renderRelatedCardHTML(rel: Article): string {
   }
 
   return `
-    <div class="card sidebar-item-card" onclick="window.viewArticle(${rel.id})">
+    <div class="card sidebar-item-card" data-action="view-article" data-id="${rel.id}">
       <div class="card-cover-wrapper" style="border: none;">
         <div class="sidebar-item-inner">
           <div class="sidebar-thumb" style="position: relative; overflow: hidden; ${coverBgStyle}">
@@ -180,7 +180,7 @@ export function renderBottomBarHTML(prevArticle: Article | null, nextArticle: Ar
   return `
     <div class="detail-bottom-bar">
       ${prevArticle 
-        ? `<a class="bottombar-prev" onclick="window.viewArticle(${prevArticle.id})">
+        ? `<a class="bottombar-prev" data-action="view-article" data-id="${prevArticle.id}">
             <svg class="nav-arrow" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg>
             <div class="nav-link-info">
               <span class="nav-label">PREVIOUS ARTICLE</span>
@@ -190,7 +190,7 @@ export function renderBottomBarHTML(prevArticle: Article | null, nextArticle: Ar
         : ''
       }
       ${nextArticle 
-        ? `<a class="bottombar-next" onclick="window.viewArticle(${nextArticle.id})">
+        ? `<a class="bottombar-next" data-action="view-article" data-id="${nextArticle.id}">
             <div class="nav-link-info text-right">
               <span class="nav-label">NEXT ARTICLE</span>
               <span class="nav-title">${nextArticle.title}</span>
@@ -242,7 +242,7 @@ export function renderDetailViewHTML(
     <!-- Top Breadcrumbs / Path Bar -->
     <div class="detail-path-bar">
       <div class="path-breadcrumbs">
-        <span class="path-item" onclick="window.backToHome()">HOME</span>
+        <span class="path-item" data-action="back-to-home">HOME</span>
         <span class="path-separator">&gt;</span>
         <div class="path-category-dropdown">
           <span class="path-item active-cat">
@@ -250,17 +250,17 @@ export function renderDetailViewHTML(
             <svg class="dropdown-arrow" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none"></path></svg>
           </span>
           <div class="dropdown-content">
-            ${categories.map(cat => `<a onclick="window.selectCategory('${cat}')">${cat.toUpperCase()}</a>`).join('')}
+            ${categories.map(cat => `<a data-action="select-category" data-cat="${cat}">${cat.toUpperCase()}</a>`).join('')}
           </div>
         </div>
         <span class="path-separator">&gt;</span>
         <span class="path-title-truncated">${article.title}</span>
       </div>
-      <button class="return-news-btn" onclick="window.backToList()">
+      <button class="return-news-btn" data-action="back-to-list">
         Return to List
       </button>
     </div>
-
+ 
     <!-- Main Layout (Content Column + Sidebar Column) -->
     <div class="detail-main-layout">
       <!-- Left: Article Content Card -->
@@ -302,7 +302,7 @@ export function renderDetailViewHTML(
     </div>
 
     <!-- Floating Back to Top Button -->
-    <button id="back-top-btn" class="back-top-btn" onclick="window.scrollToTop()">
+    <button id="back-top-btn" class="back-top-btn" data-action="scroll-to-top">
       <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
     </button>
   `;

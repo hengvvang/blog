@@ -7,6 +7,29 @@
   --text-light: #7b7b7b;
   --btn-bg: #b79773; /* 截图使用的土豪金 */
   --btn-hover: #664d33;
+  
+  /* Refactored Design Tokens */
+  --border-color: #d3ccbe;
+  --border-light: #e2ded5;
+  --card-bg: rgb(245, 243, 238);
+  --card-bg-hover: rgb(228, 223, 217);
+  --white: #ffffff;
+  --card-btn-hover-bg: rgb(102, 77, 51);
+  --sidebar-hover-bg: rgb(227, 227, 229);
+  
+  --card-width: 464px;
+  --card-inner-width: 438px;
+  --card-padding-x: 13px;
+  --card-padding-y: 7px;
+  --sidebar-width: 355px;
+  --main-layout-gap: 25px;
+  
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  --transition-duration-normal: 0.6s;
+  --transition-duration-fast: 0.3s;
+  --transition-easing: cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 * {
@@ -16,7 +39,7 @@
 }
 
 body {
-  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   background-color: var(--bg-color);
   color: var(--text-dark);
   overflow-x: hidden;
@@ -49,7 +72,7 @@ body {
   display: inline-flex;
   align-items: center;
   position: relative;
-  transition: all 0.2s ease;
+  transition: all var(--transition-duration-fast) ease;
   text-transform: uppercase;
 }
 
@@ -82,7 +105,7 @@ body {
 
 /* 三列表格排布：将容器设计为三列且定宽 */
 .article-grid {
-  column-width: 464px;
+  column-width: var(--card-width);
   column-gap: 20px;
   max-width: 1432px;
   margin: 30px auto 0 auto;
@@ -90,11 +113,11 @@ body {
 
 /* ======== 原神卡片真实悬浮展开样式 ======== */
 .card {
-  width: 464px;
+  width: var(--card-width);
   box-sizing: border-box;
-  padding: 7px 13px; /* 官方使用 7px 13px 的内衬 */
-  transition: 0.6s;
-  background: rgb(245, 243, 238); /* 默认外皮颜色 */
+  padding: var(--card-padding-y) var(--card-padding-x); /* 官方使用 7px 13px 的内衬 */
+  transition: var(--transition-duration-normal);
+  background: var(--card-bg); /* 默认外皮颜色 */
   position: relative;
   display: flex;
   flex-direction: column;
@@ -106,20 +129,20 @@ body {
 
 /* 卡片容器变色 */
 .card:hover {
-  background: rgb(228, 223, 217); /* 激活时颜色变深 */
+  background: var(--card-bg-hover); /* 激活时颜色变深 */
 }
 
 /* 封面修改为真正的文章预览文本区块 */
 .card-cover-wrapper {
   border-radius: 4px;
-  width: 438px; /* 官方固定尺寸 */
+  width: var(--card-inner-width); /* 官方固定尺寸 */
   height: 146px;
   z-index: 2; /* 确保上方不会被掩盖 */
   overflow: hidden;
-  background-color: #ffffff; /* 更适合大段文字阅读的底色 */
+  background-color: var(--white); /* 更适合大段文字阅读的底色 */
   padding: 16px 20px;
   box-sizing: border-box;
-  border: 1px solid #e2ded5;
+  border: 1px solid var(--border-light);
 }
 
 .card-cover-text {
@@ -137,10 +160,10 @@ body {
 /* ===== 核心：卡片底部内容的 Accordion 展开交互 ===== */
 .card-content {
   overflow: hidden;
-  transition: 0.6s; /* 完美的 0.6s 官方过渡 */
+  transition: var(--transition-duration-normal); /* 完美的 0.6s 官方过渡 */
   display: flex;
   box-sizing: border-box;
-  width: 438px; /* 内部内容宽度锁定 438px */
+  width: var(--card-inner-width); /* 内部内容宽度锁定 438px */
   margin: 0 auto;
   height: 0px; /* 默认高度是0 */
 }
@@ -151,7 +174,7 @@ body {
 
 /* 两侧内容上方增加间距，避免与上方图片贴得太近 */
 .card-title-container {
-  padding-top: 7px;
+  padding-top: var(--card-padding-y);
   flex: 1 1 0%;
   overflow: hidden;
   display: flex;
@@ -162,7 +185,7 @@ body {
 .card-title {
   /* 使用 Webkit box 设置限制显示 (根据官方CSS) */
   line-height: 18px;
-  color: rgb(64, 72, 90);
+  color: var(--text-dark);
   font-size: 14px;
   overflow: hidden;
   display: -webkit-box;

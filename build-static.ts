@@ -1,6 +1,6 @@
 import { mkdir } from "node:fs/promises";
-import { marked } from "marked";
-import { loadArticles, parseFrontMatter, calculateWordCount, parseTags } from "./src/backend/parser";
+import { loadArticles } from "./src/backend/parser";
+import { compileArticleToContent } from "./src/backend/compiler";
 
 async function buildStatic() {
   console.log("Starting static site generation...");
@@ -17,30 +17,7 @@ async function buildStatic() {
   
   // Write each article content JSON
   for (const article of articles) {
-    const content = await Bun.file(article.filePath).text();
-    const { meta, markdown } = parseFrontMatter(content);
-    const html = await marked.parse(markdown);
-    const wordCount = calculateWordCount(markdown);
-    const tags = parseTags(meta.tags);
-    const author = meta.author || "hengvvang";
-    const readingTime = meta.readingTime || "10 min";
-    const lastUpdated = meta.lastUpdated || "";
-    
-    const articleData = {
-      html,
-      title: article.title,
-      publishTime: article.publishTime,
-      category: article.category,
-      subcategory: article.subcategory,
-      author,
-      readingTime,
-      wordCount,
-      tags,
-      lastUpdated,
-      cover: article.cover,
-      coverText: article.coverText
-    };
-    
+    const articleData = await compileArticleToContent(article);
     const outputPath = `./public/api/article-content/${article.id}.json`;
     await Bun.write(outputPath, JSON.stringify(articleData));
   }

@@ -17,6 +17,7 @@
   "dependencies": {
     "marked": "^18.0.4",
     "puppeteer": "^25.0.4",
-    "undici-types": "^8.3.0"
+    "undici-types": "^8.3.0",
+    "yaml": "^2.9.0"
   }
 }

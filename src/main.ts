@@ -32,38 +32,44 @@ let pageSize = 5;
 const navBar = document.getElementById('nav-bar');
 const articleGrid = document.getElementById('article-grid');
 
-// Expose animation utility triggers and handlers to the global window
-(window as any).onRowEnter = onRowEnter;
-(window as any).onRowLeave = onRowLeave;
-
-(window as any).backToHome = () => {
-  window.location.hash = "#/";
-};
-
-(window as any).backToList = () => {
-  window.location.hash = `#/category/${currentCategory}`;
-};
-
-(window as any).selectCategory = (cat: string) => {
-  window.location.hash = `#/category/${cat}`;
-};
-
-(window as any).viewArticle = (id: number) => {
-  window.location.hash = `#/article/${id}`;
-};
-
-(window as any).selectSubcat = (sub: string) => {
-  window.location.hash = `#/category/${currentCategory}?subcat=${sub}`;
-};
-
-(window as any).loadMore = () => {
-  pageSize += 5;
-  renderPartition();
-};
-
-(window as any).scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-};
+// Global Click Event Delegation
+document.body.addEventListener('click', (event) => {
+  const target = event.target as HTMLElement;
+  const actionEl = target.closest('[data-action]');
+  if (!actionEl) return;
+  
+  const action = actionEl.getAttribute('data-action');
+  
+  if (action === 'select-category') {
+    const cat = actionEl.getAttribute('data-cat');
+    if (cat) {
+      if (cat === 'home') {
+        window.location.hash = '#/';
+      } else {
+        window.location.hash = `#/category/${cat}`;
+      }
+    }
+  } else if (action === 'view-article') {
+    const id = actionEl.getAttribute('data-id');
+    if (id) {
+      window.location.hash = `#/article/${id}`;
+    }
+  } else if (action === 'back-to-home') {
+    window.location.hash = '#/';
+  } else if (action === 'back-to-list') {
+    window.location.hash = `#/category/${currentCategory}`;
+  } else if (action === 'select-subcat') {
+    const sub = actionEl.getAttribute('data-sub');
+    if (sub) {
+      window.location.hash = `#/category/${currentCategory}?subcat=${sub}`;
+    }
+  } else if (action === 'load-more') {
+    pageSize += 5;
+    renderPartition();
+  } else if (action === 'scroll-to-top') {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+});
 
 // Global scroll event listener for Back-to-Top button
 window.addEventListener('scroll', () => {
@@ -96,6 +102,16 @@ function renderArticles() {
       const order = categoryOrders[cat] || [0, 1, 3, 2];
       return renderHomeCollectionHTML(cat, count, keywordsHTML, order, iconsHTML);
     }).join('');
+    
+    // Programmatically bind hover events for the animated slideshow rows
+    const rows = articleGrid.querySelectorAll('.home-collection');
+    rows.forEach(row => {
+      const cat = row.getAttribute('data-cat');
+      if (cat) {
+        row.addEventListener('mouseenter', () => onRowEnter(cat));
+        row.addEventListener('mouseleave', () => onRowLeave(cat));
+      }
+    });
   } else {
     renderPartition();
   }
@@ -128,7 +144,7 @@ function renderPartition() {
     const subcats = ['all', ...Array.from(subcatsSet).sort()];
     tabsHTML = `<div class="toolchain-tabs">` + 
       subcats.map(sub => `
-        <button class="toolchain-tab ${currentSubcat === sub ? 'active' : ''}" onclick="window.selectSubcat('${sub}')">` +
+        <button class="toolchain-tab ${currentSubcat === sub ? 'active' : ''}" data-action="select-subcat" data-sub="${sub}">` +
           (sub === 'all' ? '全部' : sub.toUpperCase()) +
         `</button>
       `).join('') +
@@ -150,7 +166,7 @@ function renderPartition() {
   const hasMore = filteredArticles.length > pageSize;
   const loadMoreHTML = hasMore
     ? `<div class="toolchain-loadmore-container">
-        <button class="toolchain-loadmore-btn" onclick="window.loadMore()">更多</button>
+        <button class="toolchain-loadmore-btn" data-action="load-more">更多</button>
       </div>`
     : '';
     

@@ -1,5 +1,6 @@
 import { readdir, stat } from "node:fs/promises";
 import { join, relative } from "node:path";
+import { parse as parseYaml } from "yaml";
 
 export interface ArticleMetadata {
   id: number;
@@ -14,47 +15,6 @@ export interface ArticleMetadata {
   coverText?: { position: string; context: string };
 }
 
-// Helper to parse nested coverText block from front-matter header
-export function parseCoverText(header: string): { position: string; context: string } | undefined {
-  // 1. Try inline brace format: coverText: { position: "center", context: "hello" }
-  const inlineRegex = /coverText\s*:\s*\{\s*position\s*:\s*['"]?([^'",}]+)['"]?\s*,\s*context\s*:\s*['"]?([^'}]+)['"]?\s*\}/i;
-  const inlineMatch = header.match(inlineRegex);
-  if (inlineMatch) {
-    return {
-      position: inlineMatch[1].trim(),
-      context: inlineMatch[2].trim().replace(/^['"]|['"]$/g, "")
-    };
-  }
-  
-  // 2. Try multiline format:
-  // coverText:
-  //   position: center
-  //   context: hello
-  const multilineRegex = /coverText\s*:\s*\r?\n\s+position\s*:\s*['"]?([^'"\r\n]+)['"]?\s*\r?\n\s+context\s*:\s*['"]?([^'"\r\n]+)['"]?/i;
-  const multilineMatch = header.match(multilineRegex);
-  if (multilineMatch) {
-    return {
-      position: multilineMatch[1].trim(),
-      context: multilineMatch[2].trim()
-    };
-  }
-  
-  // Try alternate order in multiline format:
-  // coverText:
-  //   context: hello
-  //   position: center
-  const multilineAltRegex = /coverText\s*:\s*\r?\n\s+context\s*:\s*['"]?([^'"\r\n]+)['"]?\s*\r?\n\s+position\s*:\s*['"]?([^'"\r\n]+)['"]?/i;
-  const multilineAltMatch = header.match(multilineAltRegex);
-  if (multilineAltMatch) {
-    return {
-      position: multilineAltMatch[2].trim(),
-      context: multilineAltMatch[1].trim()
-    };
-  }
-  
-  return undefined;
-}
-
 // Stable numeric hash from filepath string
 export function getNumericId(str: string): number {
   let hash = 0;
@@ -65,9 +25,9 @@ export function getNumericId(str: string): number {
   return Math.abs(hash);
 }
 
-// Simple front matter parser
+// Robust standard front matter parser using yaml library
 export function parseFrontMatter(content: string) {
-  const meta: Record<string, string> = {};
+  let meta: Record<string, any> = {};
   let markdown = content;
   
   if (content.startsWith("---")) {
@@ -75,15 +35,10 @@ export function parseFrontMatter(content: string) {
     if (endOffset !== -1) {
       const header = content.slice(3, endOffset);
       markdown = content.slice(endOffset + 3);
-      
-      const lines = header.split("\n");
-      for (const line of lines) {
-        const parts = line.split(":");
-        if (parts.length >= 2) {
-          const key = parts[0].trim();
-          const value = parts.slice(1).join(":").trim().replace(/^['"]|['"]$/g, ""); // strip quotes
-          meta[key] = value;
-        }
+      try {
+        meta = parseYaml(header) || {};
+      } catch (err) {
+        console.error("Failed to parse YAML front matter:", err);
       }
     }
   }
@@ -99,13 +54,15 @@ export function calculateWordCount(markdown: string): number {
   return cnChars + enWords;
 }
 
-export function parseTags(tagsValue?: string): string[] {
+export function parseTags(tagsValue?: any): string[] {
   if (!tagsValue) return [];
+  if (Array.isArray(tagsValue)) return tagsValue.map(t => String(t).trim());
   try {
-    if (tagsValue.startsWith("[") && tagsValue.endsWith("]")) {
-      return JSON.parse(tagsValue);
+    const strVal = String(tagsValue).trim();
+    if (strVal.startsWith("[") && strVal.endsWith("]")) {
+      return JSON.parse(strVal);
     }
-    return tagsValue.split(",").map(t => t.trim().replace(/^['"]|['"]$/g, "")).filter(Boolean);
+    return strVal.split(",").map(t => t.trim().replace(/^['"]|['"]$/g, "")).filter(Boolean);
   } catch (e) {
     return [];
   }
@@ -160,7 +117,7 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
       }
     }
     
-    let publishTime = meta.publishTime;
+    let publishTime = String(meta.publishTime || "");
     if (!publishTime) {
       const fileStat = await stat(file);
       publishTime = fileStat.mtime.toISOString().replace("T", " ").substring(0, 16);
@@ -168,15 +125,8 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
     
     const snippet = meta.summary || meta.description || "";
     const author = meta.author;
-    
     const cover = meta.cover || undefined;
-    let coverText: { position: string; context: string } | undefined = undefined;
-    
-    const endOffset = content.indexOf("---", 3);
-    if (content.startsWith("---") && endOffset !== -1) {
-      const header = content.slice(3, endOffset);
-      coverText = parseCoverText(header);
-    }
+    const coverText = meta.coverText || undefined;
 
     articles.push({
       id: getNumericId(relPath),

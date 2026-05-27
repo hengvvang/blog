@@ -1,6 +1,6 @@
 import { serve } from "bun";
-import { marked } from "marked";
-import { loadArticles, parseFrontMatter, calculateWordCount, parseTags } from "./src/backend/parser";
+import { loadArticles } from "./src/backend/parser";
+import { compileArticleToContent } from "./src/backend/compiler";
 
 const server = serve({
   port: 9191,
@@ -67,29 +67,8 @@ const server = serve({
         return new Response("Article not found", { status: 404 });
       }
       
-      const content = await Bun.file(article.filePath).text();
-      const { meta, markdown } = parseFrontMatter(content);
-      const html = await marked.parse(markdown);
-      const wordCount = calculateWordCount(markdown);
-      const tags = parseTags(meta.tags);
-      const author = meta.author || "hengvvang";
-      const readingTime = meta.readingTime || "10 min";
-      const lastUpdated = meta.lastUpdated || "";
-      
-      return new Response(JSON.stringify({
-        html,
-        title: article.title,
-        publishTime: article.publishTime,
-        category: article.category,
-        subcategory: article.subcategory,
-        author,
-        readingTime,
-        wordCount,
-        tags,
-        lastUpdated,
-        cover: article.cover,
-        coverText: article.coverText
-      }), {
+      const articleData = await compileArticleToContent(article);
+      return new Response(JSON.stringify(articleData), {
         headers: {
           "Content-Type": "application/json",
           "Cache-Control": "no-cache"
