@@ -86,6 +86,20 @@ function renderCoverHTML(cover: Article['cover'], categoryColor: string, default
   `;
 }
 
+function renderBadgeHTML(art: Article): string {
+  const subcatStr = (art.subcategory || art.category).toUpperCase();
+  if (art.subtopic) {
+    return `
+      <span class="list-card-badge" style="display: inline-flex; align-items: center;">
+        <span style="color: #000000; font-weight: 700;">${subcatStr}</span>
+        <span style="color: #ffffff; margin: 0 6px; font-weight: 500; opacity: 0.85;">|</span>
+        <span style="color: #ffffff; font-weight: 700;">${art.subtopic.toUpperCase()}</span>
+      </span>
+    `;
+  }
+  return `<span class="list-card-badge">${subcatStr}</span>`;
+}
+
 // Featured article card (horizontal slide-out)
 export function renderFeaturedCardHTML(art: Article, categoryColor: string): string {
   const scaleVar = art.cover?.image?.scale !== undefined ? `style="--cover-scale: ${art.cover.image.scale};"` : '';
@@ -93,7 +107,8 @@ export function renderFeaturedCardHTML(art: Article, categoryColor: string): str
   return `
     <div class="card toolchain-horizontal-card" data-action="view-article" data-id="${art.id}" ${scaleVar}>
       <div class="card-cover-wrapper" style="height: auto; display: flex; flex-direction: column; gap: 8px; padding: 8px 16px 12px 16px;">
-        <div style="text-align: right; width: 100%; margin-bottom: 0px; line-height: 1;">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 0px; line-height: 1;">
+          ${renderBadgeHTML(art)}
           <span class="featured-date" style="font-size: 12px; color: var(--text-light, #888);">${art.publishTime}</span>
         </div>
         <div class="featured-cover" style="position: relative; overflow: hidden; height: 160px; border-radius: 4px;">
@@ -120,21 +135,6 @@ export function renderFeaturedCardHTML(art: Article, categoryColor: string): str
 
 // Regular list article card
 export function renderListCardHTML(art: Article, categoryColor: string): string {
-  const subcatStr = (art.subcategory || art.category).toUpperCase();
-  
-  let badgeHTML = '';
-  if (art.subtopic) {
-    badgeHTML = `
-      <span class="list-card-badge" style="display: inline-flex; align-items: center;">
-        <span style="color: #000000; font-weight: 700;">${subcatStr}</span>
-        <span style="color: #ffffff; margin: 0 6px; font-weight: 500; opacity: 0.85;">|</span>
-        <span style="color: #ffffff; font-weight: 700;">${art.subtopic.toUpperCase()}</span>
-      </span>
-    `;
-  } else {
-    badgeHTML = `<span class="list-card-badge">${subcatStr}</span>`;
-  }
-  
   const scaleStyle = art.cover?.image?.scale !== undefined ? `--cover-scale: ${art.cover.image.scale};` : '';
 
   return `
@@ -145,7 +145,7 @@ export function renderListCardHTML(art: Article, categoryColor: string): string 
         </div>
         <div class="list-card-info" style="padding: 0; flex-grow: 1;">
           <div class="list-card-header">
-            ${badgeHTML}
+            ${renderBadgeHTML(art)}
             <span class="list-card-date">${art.publishTime}</span>
           </div>
           <h4 class="list-card-title">${art.title}</h4>
