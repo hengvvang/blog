@@ -91,9 +91,9 @@ function renderBadgeHTML(art: Article): string {
   if (art.subtopic) {
     return `
       <span class="list-card-badge" style="display: inline-flex; align-items: center;">
-        <span>${subcatStr}</span>
-        <span style="margin: 0 6px; opacity: 0.8;">|</span>
-        <span>${art.subtopic.toUpperCase()}</span>
+        <span style="color: #000000; font-weight: 700;">${subcatStr}</span>
+        <span style="color: #ffffff; margin: 0 6px; font-weight: 500; opacity: 0.85;">|</span>
+        <span style="color: #ffffff; font-weight: 700;">${art.subtopic.toUpperCase()}</span>
       </span>
     `;
   }
@@ -106,8 +106,8 @@ export function renderFeaturedCardHTML(art: Article, categoryColor: string): str
 
   return `
     <div class="card toolchain-horizontal-card" data-action="view-article" data-id="${art.id}" ${scaleVar}>
-      <div class="card-cover-wrapper" style="height: auto; display: flex; flex-direction: column; gap: 8px; padding: 4px 16px 12px 16px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: -3px; margin-bottom: -1px; line-height: 1;">
+      <div class="card-cover-wrapper" style="height: auto; display: flex; flex-direction: column; gap: 8px; padding: 8px 16px 12px 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 2px; line-height: 1.2;">
           ${renderBadgeHTML(art)}
           <span class="featured-date" style="font-size: 12px; color: var(--text-light, #888);">${art.publishTime}</span>
         </div>
