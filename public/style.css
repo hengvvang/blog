@@ -732,7 +732,7 @@ body {
 }
 
 #sidebar-recommendations .sidebar-list {
-  margin-top: 16px;
+  margin-top: 24px;
 }
 
 /* Sidebar Metadata Card Styles */
@@ -1356,6 +1356,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: -6px; /* Shift the badge and date up relative to the card wrapper and image */
+  margin-bottom: 2px;
 }
 
 .list-card-badge {
