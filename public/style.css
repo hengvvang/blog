@@ -731,6 +731,10 @@ body {
   border-top: none;
 }
 
+#sidebar-recommendations .sidebar-list {
+  margin-top: 16px;
+}
+
 /* Sidebar Metadata Card Styles */
 .sidebar-meta-card .meta-row {
   font-size: 13px;
