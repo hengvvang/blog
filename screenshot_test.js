@@ -9,8 +9,8 @@ async function capture() {
   const page = await browser.newPage();
   await page.setViewport({ width: 1200, height: 1000 });
   
-  console.log("Navigating to Python category page...");
-  await page.goto('http://localhost:9191/#/category/lang?subcat=python&subtopic=all');
+  console.log("Navigating to RTOS Zephyr page...");
+  await page.goto('http://localhost:9191/#/category/rtos?subcat=zephyr&subtopic=all');
   
   // Wait for 2 seconds for content to fetch and render
   await new Promise(r => setTimeout(r, 2000));
