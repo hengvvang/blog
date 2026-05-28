@@ -116,7 +116,7 @@ export function renderFeaturedCardHTML(art: Article, categoryColor: string): str
         </div>
         <div class="featured-info" style="padding: 0;">
           <h4 class="featured-title" style="margin: 4px 0; font-size: 16px;">${art.title}</h4>
-          <p class="featured-snippet" style="font-size: 12px; margin: 0; -webkit-line-clamp: 2;">${art.contentSnippet}</p>
+          <p class="featured-snippet" style="font-size: 12px; margin: 0; -webkit-line-clamp: 1;">${art.contentSnippet}</p>
         </div>
       </div>
       <div class="card-content">

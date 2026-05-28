@@ -1347,6 +1347,9 @@ body {
   white-space: nowrap;
   flex-shrink: 0;
 }
+.toolchain-horizontal-card .featured-snippet {
+  -webkit-line-clamp: 1 !important;
+}
 .toolchain-horizontal-card .card-cover-wrapper {
   flex: 1;
   width: auto;
