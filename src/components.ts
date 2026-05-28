@@ -120,7 +120,8 @@ export function renderFeaturedCardHTML(art: Article, categoryColor: string): str
 
 // Regular list article card
 export function renderListCardHTML(art: Article, categoryColor: string): string {
-  const badgeText = (art.subcategory || art.category).toUpperCase();
+  const subcatStr = (art.subcategory || art.category).toUpperCase();
+  const badgeText = art.subtopic ? `${subcatStr} | ${art.subtopic.toUpperCase()}` : subcatStr;
   const scaleStyle = art.cover?.image?.scale !== undefined ? `--cover-scale: ${art.cover.image.scale};` : '';
 
   return `
