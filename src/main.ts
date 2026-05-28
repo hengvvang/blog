@@ -74,6 +74,39 @@ document.body.addEventListener('click', (event) => {
     renderPartition();
   } else if (action === 'scroll-to-top') {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else if (action === 'switch-meta-tab') {
+    const tabName = actionEl.getAttribute('data-tab');
+    if (tabName) {
+      const tabs = document.querySelectorAll('.sidebar-tab');
+      tabs.forEach(t => {
+        if (t.getAttribute('data-tab') === tabName) {
+          t.classList.add('active');
+        } else {
+          t.classList.remove('active');
+        }
+      });
+      const contents = document.querySelectorAll('.sidebar-tab-content');
+      contents.forEach(c => {
+        const id = c.getAttribute('id');
+        if (id === `tab-content-${tabName}`) {
+          c.classList.add('active');
+        } else {
+          c.classList.remove('active');
+        }
+      });
+      const recCard = document.getElementById('sidebar-recommendations');
+      if (recCard) {
+        recCard.style.display = tabName === 'info' ? 'block' : 'none';
+      }
+    }
+  } else if (action === 'scroll-to-heading') {
+    const targetId = actionEl.getAttribute('data-target');
+    if (targetId) {
+      const targetHeading = document.getElementById(targetId);
+      if (targetHeading) {
+        targetHeading.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
   }
 });
 
@@ -307,6 +340,37 @@ async function loadAndShowArticle(id: number) {
         lastUpdatedHtml
       );
     }
+
+    const outlineBoxEl = detailView.querySelector('#sidebar-outline-box');
+    if (bodyEl && outlineBoxEl) {
+      const headings = bodyEl.querySelectorAll('.markdown-body h2, .markdown-body h3');
+      const outlineItems: { text: string; id: string; level: number }[] = [];
+      
+      headings.forEach((heading, idx) => {
+        const id = `heading-${idx}`;
+        heading.id = id;
+        outlineItems.push({
+          text: heading.textContent || '',
+          id: id,
+          level: heading.tagName === 'H2' ? 2 : 3
+        });
+      });
+      
+      if (outlineItems.length > 0) {
+        outlineBoxEl.innerHTML = `
+          <div class="outline-list">
+            ${outlineItems.map(item => `
+              <div class="outline-item outline-level-${item.level}" data-action="scroll-to-heading" data-target="${item.id}">
+                <span class="outline-bullet"></span>
+                <span class="outline-text">${item.text}</span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else {
+        outlineBoxEl.innerHTML = `<div class="outline-empty">该文章无大纲目录</div>`;
+      }
+    }
   } catch (err) {
     console.error(err);
     const bodyEl = detailView.querySelector('.detail-body');
@@ -320,6 +384,10 @@ async function loadAndShowArticle(id: number) {
     const metaBoxEl = detailView.querySelector('#sidebar-meta-box');
     if (metaBoxEl) {
       metaBoxEl.innerHTML = `<div style="color: #a84545; font-size: 13px; text-align: center; padding: 20px 0;">Failed to load metadata.</div>`;
+    }
+    const outlineBoxEl = detailView.querySelector('#sidebar-outline-box');
+    if (outlineBoxEl) {
+      outlineBoxEl.innerHTML = `<div style="color: #a84545; font-size: 13px; text-align: center; padding: 20px 0;">Failed to load outline.</div>`;
     }
   }
 }

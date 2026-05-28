@@ -305,17 +305,38 @@ export function renderDetailViewHTML(
 
       <!-- Right: Sidebar Column containing Metadata Card and Related Articles Card -->
       <div class="detail-sidebar-column">
-        <!-- Sidebar Metadata Card -->
-        <div id="sidebar-meta-box" class="sidebar-meta-card">
-          <div class="loading-meta" style="color: var(--text-light, #888); font-size: 13px; text-align: center; padding: 20px 0;">
-            Loading metadata...
+        <!-- Sidebar Metadata Card with Tabs (Embedded / protruding right edge) -->
+        <div class="sidebar-meta-card">
+          <div class="sidebar-tabs-container">
+            <button class="sidebar-tab active" data-action="switch-meta-tab" data-tab="info">INFO</button>
+            <button class="sidebar-tab" data-action="switch-meta-tab" data-tab="outline">OUTLINE</button>
+          </div>
+          
+          <!-- Tab Contents: Info -->
+          <div class="sidebar-tab-content active" id="tab-content-info">
+            <div class="sidebar-header">INFO</div>
+            <div id="sidebar-meta-box" style="padding: 25px 20px;">
+              <div class="loading-meta" style="color: var(--text-light, #888); font-size: 13px; text-align: center; padding: 20px 0;">
+                Loading metadata...
+              </div>
+            </div>
+          </div>
+          
+          <!-- Tab Contents: Outline -->
+          <div class="sidebar-tab-content" id="tab-content-outline">
+            <div class="sidebar-header">OUTLINE</div>
+            <div id="sidebar-outline-box" class="outline-list" style="padding: 25px 20px;">
+              <div class="loading-meta" style="color: var(--text-light, #888); font-size: 13px; text-align: center; padding: 20px 0;">
+                Loading outline...
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Related Articles Sidebar Card (Original layout) -->
-        <div class="detail-sidebar-card">
+        <!-- Related Articles Sidebar Card (Original layout, sibling of sidebar-meta-card) -->
+        <div class="detail-sidebar-card" id="sidebar-recommendations">
           <div class="sidebar-header">
-            最新推荐
+            RECOMMENDED
           </div>
           <div class="sidebar-list">
             ${relatedHTML || '<p class="sidebar-empty">该分类下无其他文章。</p>'}
