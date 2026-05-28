@@ -125,10 +125,10 @@ export function renderListCardHTML(art: Article, categoryColor: string): string 
   let badgeHTML = '';
   if (art.subtopic) {
     badgeHTML = `
-      <span class="list-card-badge dual-badge">
-        <span class="badge-left">${subcatStr}</span>
-        <span class="badge-divider">|</span>
-        <span class="badge-right">${art.subtopic.toUpperCase()}</span>
+      <span class="list-card-badge" style="display: inline-flex; align-items: center;">
+        <span style="color: #000000; font-weight: 700;">${subcatStr}</span>
+        <span style="color: #ffffff; margin: 0 6px; font-weight: 500; opacity: 0.85;">|</span>
+        <span style="color: #ffffff; font-weight: 700;">${art.subtopic.toUpperCase()}</span>
       </span>
     `;
   } else {
