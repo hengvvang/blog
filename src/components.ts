@@ -121,7 +121,20 @@ export function renderFeaturedCardHTML(art: Article, categoryColor: string): str
 // Regular list article card
 export function renderListCardHTML(art: Article, categoryColor: string): string {
   const subcatStr = (art.subcategory || art.category).toUpperCase();
-  const badgeText = art.subtopic ? `${subcatStr} | ${art.subtopic.toUpperCase()}` : subcatStr;
+  
+  let badgeHTML = '';
+  if (art.subtopic) {
+    badgeHTML = `
+      <span class="list-card-badge dual-badge">
+        <span class="badge-left">${subcatStr}</span>
+        <span class="badge-divider">|</span>
+        <span class="badge-right">${art.subtopic.toUpperCase()}</span>
+      </span>
+    `;
+  } else {
+    badgeHTML = `<span class="list-card-badge">${subcatStr}</span>`;
+  }
+  
   const scaleStyle = art.cover?.image?.scale !== undefined ? `--cover-scale: ${art.cover.image.scale};` : '';
 
   return `
@@ -132,7 +145,7 @@ export function renderListCardHTML(art: Article, categoryColor: string): string 
         </div>
         <div class="list-card-info" style="padding: 0; flex-grow: 1;">
           <div class="list-card-header">
-            <span class="list-card-badge">${badgeText}</span>
+            ${badgeHTML}
             <span class="list-card-date">${art.publishTime}</span>
           </div>
           <h4 class="list-card-title">${art.title}</h4>
