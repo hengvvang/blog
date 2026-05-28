@@ -23,6 +23,7 @@ export interface Article {
   title: string;
   category: string;
   subcategory?: string;
+  subtopic?: string;
   contentSnippet: string;
   publishTime: string;
   cover?: CoverConfig;
@@ -34,6 +35,7 @@ export interface ArticleContent {
   publishTime: string;
   category: string;
   subcategory?: string;
+  subtopic?: string;
   author: string;
   readingTime: string;
   wordCount: number;

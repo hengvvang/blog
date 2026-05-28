@@ -18,6 +18,9 @@ cover:
   text:
     content: RUST | OWNERSHIP
     position: topRight
+category: lang
+subcategory: rust
+subtopic: ownership
 ---
 
 

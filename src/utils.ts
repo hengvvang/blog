@@ -44,32 +44,30 @@ export function getCategoryColor(cat: string): string {
   return categoryColors[cat];
 }
 
-export const SINGLE_ICON_CATEGORIES = ['rust', 'c', 'python'];
+export const SINGLE_ICON_CATEGORIES: string[] = [];
 
 export const ICONS: Record<string, string> = {
-  rust: SIMPLE_ICONS["cat:rust"] || "",
   rtos: SIMPLE_ICONS["cat:rtos"] || "",
   mcu: SIMPLE_ICONS["cat:mcu"] || "",
   markup: SIMPLE_ICONS["cat:markup"] || "",
-  c: SIMPLE_ICONS["cat:c"] || "",
-  toolchain: SIMPLE_ICONS["cat:toolchain"] || "",
-  python: SIMPLE_ICONS["cat:python"] || ""
+  toolchain: SIMPLE_ICONS["cat:toolchain"] || ""
 };
 
 export const DEFAULT_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
 
 export const KEYWORDS: Record<string, string[]> = {
-  rust: ['Cargo', 'Rustc', 'Clippy', 'Tokio', 'Wasm'],
+  lang: ['Rust', 'C', 'Python'],
   rtos: ['FreeRTOS', 'RT-Thread', 'Zephyr', 'uCOS', 'ThreadX'],
   mcu: ['STM32', 'ESP32', 'GD32', 'MSP430', 'AVR'],
   markup: ['Markdown', 'HTML', 'CSS', 'LaTeX', 'XML'],
-  c: ['C99', 'C11', 'Pointer', 'Volatile', 'Makefile'],
-  toolchain: ['CMake', 'GCC', 'GDB', 'Git', 'Clang', 'LLVM'],
-  python: ['PIP', 'Pytest', 'Decorators', 'OOP', 'Asyncio']
+  toolchain: ['CMake', 'GCC', 'GDB', 'Git', 'Clang', 'LLVM']
 };
 
 export function getKeywordIcon(keyword: string): string {
   const key = keyword.toLowerCase();
+  if (key === 'c' || key === 'rust' || key === 'python') {
+    return SIMPLE_ICONS[`cat:${key}`] || DEFAULT_ICON;
+  }
   return SIMPLE_ICONS[key] || DEFAULT_ICON;
 }
 

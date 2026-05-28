@@ -18,6 +18,9 @@ cover:
   text:
     content: RUST | LIFETIME
     position: bottomRight
+category: lang
+subcategory: rust
+subtopic: lifetime
 ---
 
 

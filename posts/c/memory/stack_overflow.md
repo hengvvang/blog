@@ -18,6 +18,9 @@ cover:
   text:
     content: C | MEMORY
     position: bottomLeft
+category: lang
+subcategory: c
+subtopic: memory
 ---
 
 

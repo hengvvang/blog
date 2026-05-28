@@ -18,6 +18,9 @@ cover:
   text:
     content: TOOLCHAIN | GCC
     position: bottomRight
+category: toolchain
+subcategory: gcc
+subtopic: others
 ---
 
 

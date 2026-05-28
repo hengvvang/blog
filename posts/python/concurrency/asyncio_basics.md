@@ -18,6 +18,9 @@ cover:
   text:
     content: PYTHON | CONCURRENCY
     position: topLeft
+category: lang
+subcategory: python
+subtopic: concurrency
 ---
 
 

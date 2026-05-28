@@ -18,6 +18,9 @@ cover:
   text:
     content: PYTHON | DECORATORS
     position: bottomLeft
+category: lang
+subcategory: python
+subtopic: decorators
 ---
 
 

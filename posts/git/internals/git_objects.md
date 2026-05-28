@@ -18,6 +18,9 @@ cover:
   text:
     content: GIT | INTERNALS
     position: topLeft
+category: toolchain
+subcategory: git
+subtopic: internals
 ---
 
 

@@ -8,6 +8,7 @@ export interface ArticleMetadata {
   title: string;
   category: string;
   subcategory?: string;
+  subtopic?: string;
   contentSnippet: string;
   publishTime: string;
   author?: string;
@@ -99,12 +100,13 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
     
     const relPath = relative(postsDir, file).replace(/\\/g, "/");
     const parts = relPath.split("/");
-    let category = meta.category || parts[0] || "general";
-    let subcategory = meta.subcategory || (parts.length > 2 ? parts.slice(1, -1).join("/") : undefined);
-    
-    if (category.toLowerCase() === "git") {
-      category = "toolchain";
-      subcategory = "git";
+
+    let category = meta.category ? String(meta.category).trim().toLowerCase() : "";
+    let subcategory = meta.subcategory ? String(meta.subcategory).trim().toLowerCase() : "";
+    let subtopic = meta.subtopic ? String(meta.subtopic).trim().toLowerCase() : "others";
+
+    if (!category || !subcategory) {
+      throw new Error(`Missing required 'category' or 'subcategory' in front matter for file: ${file}`);
     }
     
     let title = meta.title;
@@ -150,6 +152,7 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
       title,
       category: category.toLowerCase(),
       subcategory: subcategory ? subcategory.toLowerCase() : undefined,
+      subtopic,
       contentSnippet: snippet,
       publishTime,
       author,

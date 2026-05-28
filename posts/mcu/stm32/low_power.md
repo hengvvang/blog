@@ -18,6 +18,9 @@ cover:
   text:
     content: MCU | STM32
     position: topRight
+category: mcu
+subcategory: stm32
+subtopic: others
 ---
 
 

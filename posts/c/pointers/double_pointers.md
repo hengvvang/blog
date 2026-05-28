@@ -18,6 +18,9 @@ cover:
   text:
     content: C | POINTERS
     position: bottomRight
+category: lang
+subcategory: c
+subtopic: pointers
 ---
 
 

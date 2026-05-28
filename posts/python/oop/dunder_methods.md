@@ -17,6 +17,9 @@ cover:
   text:
     content: PYTHON | OOP
     position: bottomRight
+category: lang
+subcategory: python
+subtopic: oop
 ---
 
 

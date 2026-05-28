@@ -18,6 +18,9 @@ cover:
   text:
     content: TOOLCHAIN | CMAKE
     position: topLeft
+category: toolchain
+subcategory: cmake
+subtopic: others
 ---
 
 

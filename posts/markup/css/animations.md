@@ -16,6 +16,9 @@ cover:
   text:
     content: MARKUP | CSS
     position: topLeft
+category: markup
+subcategory: css
+subtopic: others
 ---
 
 

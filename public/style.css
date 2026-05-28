@@ -884,8 +884,8 @@ body {
   align-items: center;
   justify-content: center;
   color: var(--text-light);
-  width: clamp(24px, 3.5vw, 36px);
-  height: clamp(24px, 3.5vw, 36px);
+  width: clamp(36px, 5.2vw, 56px);
+  height: clamp(36px, 5.2vw, 56px);
   opacity: 0.5;
   transition: color 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
 }
@@ -1031,11 +1031,12 @@ body {
 
 /* ======== Genshin Impact News Layout for Toolchain ======== */
 .toolchain-partition-wrapper {
-  max-width: 1200px;
+  max-width: 1432px;
   margin: 30px auto 60px auto;
   display: flex;
-  flex-direction: column;
-  gap: 32px;
+  flex-direction: row;
+  gap: 30px;
+  align-items: flex-start;
 }
 
 /* 1. Featured cards */
@@ -1589,6 +1590,178 @@ body {
 
 .card:hover .cover-bg-image {
   transform: scale(var(--cover-scale, 1.05));
+}
+
+/* ======== Genshin Impact-Style Vertical Sidebar ======== */
+.genshin-sidebar-container {
+  width: 220px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 74px; /* Sticky below navigation bar */
+  z-index: 10;
+}
+
+.genshin-content-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.genshin-sidebar {
+  position: relative;
+  padding-left: 20px;
+}
+
+.genshin-sidebar-line {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 26px; /* Exactly aligns with the diamond centers */
+  width: 1px;
+  background-color: var(--border-color, #d3ccbe);
+  opacity: 0.6;
+}
+
+.genshin-sidebar-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.genshin-sidebar-item {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 10px 16px;
+  position: relative;
+  text-align: left;
+  width: 100%;
+  transition: background-color var(--transition-duration-fast) ease;
+  font-family: var(--font-sans);
+}
+
+.genshin-sidebar-diamond {
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--text-light, #7b7b7b);
+  transform: rotate(45deg);
+  background-color: var(--bg-color, #f3efe9);
+  margin-right: 18px;
+  flex-shrink: 0;
+  z-index: 1;
+  transition: all var(--transition-duration-fast) var(--transition-easing);
+}
+
+.genshin-sidebar-text {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-light, #7b7b7b);
+  letter-spacing: 0.05em;
+  transition: all var(--transition-duration-fast) var(--transition-easing);
+}
+
+/* Hover States */
+.genshin-sidebar-item:hover .genshin-sidebar-text {
+  color: var(--text-dark, #40485a);
+  transform: translateX(3px);
+}
+
+.genshin-sidebar-item:hover .genshin-sidebar-diamond {
+  border-color: var(--text-dark, #40485a);
+  background-color: var(--text-dark, #40485a);
+}
+
+/* Active Highlight (Genshin mondstadt select rect layout) */
+.genshin-sidebar-item.active {
+  background-color: rgba(183, 151, 115, 0.08); /* warm gold tint */
+  border-radius: 4px;
+}
+
+.genshin-sidebar-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background-color: var(--btn-bg, #b79773);
+  border-radius: 2px 0 0 2px;
+}
+
+.genshin-sidebar-item.active .genshin-sidebar-text {
+  color: var(--btn-bg, #b79773);
+  font-weight: 600;
+}
+
+.genshin-sidebar-item.active .genshin-sidebar-diamond {
+  border-color: var(--btn-bg, #b79773);
+  background-color: var(--white, #ffffff);
+  transform: rotate(45deg) scale(1.25);
+  box-shadow: 0 0 6px rgba(183, 151, 115, 0.5);
+}
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+  .toolchain-partition-wrapper {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .genshin-sidebar-container {
+    width: 100%;
+    position: static;
+  }
+  
+  .genshin-sidebar {
+    padding-left: 0;
+  }
+  
+  .genshin-sidebar-line {
+    display: none; /* Hide line on mobile horizontal bar list */
+  }
+  
+  .genshin-sidebar-items {
+    flex-direction: row;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 8px;
+    gap: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .genshin-sidebar-item {
+    width: auto;
+    padding: 6px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    background-color: var(--white);
+  }
+  
+  .genshin-sidebar-item.active {
+    background-color: var(--btn-bg);
+    border-color: var(--btn-bg);
+  }
+  
+  .genshin-sidebar-item.active .genshin-sidebar-text {
+    color: var(--white);
+  }
+  
+  .genshin-sidebar-item.active::before {
+    display: none;
+  }
+  
+  .genshin-sidebar-diamond {
+    display: none; /* Hide diamond on mobile horizontal pills */
+  }
+  
+  .genshin-sidebar-item.active .genshin-sidebar-diamond {
+    display: none;
+  }
 }
 
 

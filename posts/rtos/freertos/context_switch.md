@@ -18,6 +18,9 @@ cover:
   text:
     content: RTOS | FREERTOS
     position: topLeft
+category: rtos
+subcategory: freertos
+subtopic: others
 ---
 
 

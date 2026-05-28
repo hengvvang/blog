@@ -18,6 +18,9 @@ cover:
   text:
     content: MCU | ESP32
     position: topLeft
+category: mcu
+subcategory: esp32
+subtopic: others
 ---
 
 

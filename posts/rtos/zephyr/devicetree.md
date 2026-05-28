@@ -18,6 +18,9 @@ cover:
   text:
     content: RTOS | ZEPHYR
     position: bottomRight
+category: rtos
+subcategory: zephyr
+subtopic: others
 ---
 
 

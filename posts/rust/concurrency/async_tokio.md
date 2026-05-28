@@ -18,6 +18,9 @@ cover:
   text:
     content: RUST | CONCURRENCY
     position: topLeft
+category: lang
+subcategory: rust
+subtopic: concurrency
 ---
 
 

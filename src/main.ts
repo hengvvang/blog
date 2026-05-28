@@ -22,10 +22,11 @@ import {
 } from "./components";
 
 // State management
-let CATEGORIES: string[] = ['rust', 'rtos', 'mcu', 'markup', 'c', 'toolchain'];
+let CATEGORIES: string[] = ['lang', 'rtos', 'mcu', 'markup', 'toolchain'];
 let ARTICLES: Article[] = [];
 let currentCategory = 'home';
 let currentSubcat = 'all';
+let currentSubtopic = 'all';
 let pageSize = 5;
 
 // DOM references
@@ -46,7 +47,7 @@ document.body.addEventListener('click', (event) => {
       if (cat === 'home') {
         window.location.hash = '#/';
       } else {
-        window.location.hash = `#/category/${cat}`;
+        window.location.hash = `#/category/${cat}?subcat=all&subtopic=all`;
       }
     }
   } else if (action === 'view-article') {
@@ -57,11 +58,16 @@ document.body.addEventListener('click', (event) => {
   } else if (action === 'back-to-home') {
     window.location.hash = '#/';
   } else if (action === 'back-to-list') {
-    window.location.hash = `#/category/${currentCategory}`;
+    window.location.hash = `#/category/${currentCategory}?subcat=${currentSubcat}&subtopic=${currentSubtopic}`;
   } else if (action === 'select-subcat') {
     const sub = actionEl.getAttribute('data-sub');
     if (sub) {
-      window.location.hash = `#/category/${currentCategory}?subcat=${sub}`;
+      window.location.hash = `#/category/${currentCategory}?subcat=${sub}&subtopic=all`;
+    }
+  } else if (action === 'select-subtopic') {
+    const topic = actionEl.getAttribute('data-topic');
+    if (topic) {
+      window.location.hash = `#/category/${currentCategory}?subcat=${currentSubcat}&subtopic=${topic}`;
     }
   } else if (action === 'load-more') {
     pageSize += 5;
@@ -126,40 +132,79 @@ function renderPartition() {
   
   const allArticles = ARTICLES.filter(a => a.category === currentCategory);
   
-  const subcatsSet = new Set<string>();
-  allArticles.forEach(a => { if (a.subcategory) subcatsSet.add(a.subcategory); });
-  const hasSubcats = subcatsSet.size > 0;
+  // Determine subcategories for left sidebar
+  let subcats: string[] = [];
+  if (currentCategory === "lang") {
+    subcats = ["all", "rust", "c", "python"].filter(sub => sub === "all" || allArticles.some(a => a.subcategory === sub));
+  } else {
+    const subcatsSet = new Set<string>();
+    allArticles.forEach(a => { if (a.subcategory) subcatsSet.add(a.subcategory); });
+    subcats = ["all", ...Array.from(subcatsSet).sort()];
+  }
   
-  const filteredArticles = (currentSubcat === 'all')
+  // Render Left Sidebar HTML
+  const sidebarItemsHTML = subcats.map(sub => {
+    const activeClass = currentSubcat === sub ? 'active' : '';
+    const displayLabel = sub === 'all' ? '全部' : sub.toUpperCase();
+    return `
+      <button class="genshin-sidebar-item ${activeClass}" data-action="select-subcat" data-sub="${sub}">
+        <span class="genshin-sidebar-diamond"></span>
+        <span class="genshin-sidebar-text">${displayLabel}</span>
+      </button>
+    `;
+  }).join('');
+  
+  const sidebarHTML = `
+    <div class="genshin-sidebar">
+      <div class="genshin-sidebar-line"></div>
+      <div class="genshin-sidebar-items">
+        ${sidebarItemsHTML}
+      </div>
+    </div>
+  `;
+  
+  // Filter articles and handle subtopic tabs for all categories
+  let filteredArticles: Article[] = [];
+  let tabsHTML = '';
+  
+  const subcatArticles = currentSubcat === "all"
     ? allArticles
     : allArticles.filter(a => a.subcategory === currentSubcat);
+  
+  // Find unique subtopics for this subcategory
+  const topicsSet = new Set<string>();
+  subcatArticles.forEach(a => { if (a.subtopic) topicsSet.add(a.subtopic); });
+  const hasTopics = topicsSet.size > 0;
+  
+  if (hasTopics) {
+    const topics = ['all', ...Array.from(topicsSet).sort()];
+    tabsHTML = `<div class="toolchain-tabs">` + 
+      topics.map(topic => `
+        <button class="toolchain-tab ${currentSubtopic === topic ? 'active' : ''}" data-action="select-subtopic" data-topic="${topic}">` +
+          (topic === 'all' ? '全部' : topic.toUpperCase()) +
+        `</button>
+      `).join('') +
+    `</div>`;
+  }
+  
+  filteredArticles = (currentSubtopic === 'all')
+    ? subcatArticles
+    : subcatArticles.filter(a => a.subtopic === currentSubtopic);
   
   filteredArticles.sort((a, b) => new Date(b.publishTime).getTime() - new Date(a.publishTime).getTime());
   
   const featured = filteredArticles.slice(0, 3);
   const visibleList = filteredArticles.slice(0, pageSize);
   
-  let tabsHTML = '';
-  if (hasSubcats) {
-    const subcats = ['all', ...Array.from(subcatsSet).sort()];
-    tabsHTML = `<div class="toolchain-tabs">` + 
-      subcats.map(sub => `
-        <button class="toolchain-tab ${currentSubcat === sub ? 'active' : ''}" data-action="select-subcat" data-sub="${sub}">` +
-          (sub === 'all' ? '全部' : sub.toUpperCase()) +
-        `</button>
-      `).join('') +
-    `</div>`;
-  }
-  
   const featuredHTML = featured.length > 0 
     ? `<div class="toolchain-featured-section">` +
-        featured.map(art => renderFeaturedCardHTML(art, getCategoryColor(currentCategory))).join('') +
+        featured.map(art => renderFeaturedCardHTML(art, getCategoryColor(art.subcategory || currentCategory))).join('') +
       `</div>`
     : '';
     
   const listHTML = visibleList.length > 0
     ? `<div class="toolchain-list-section">` +
-        visibleList.map(art => renderListCardHTML(art, getCategoryColor(currentCategory))).join('') +
+        visibleList.map(art => renderListCardHTML(art, getCategoryColor(art.subcategory || currentCategory))).join('') +
       `</div>`
     : (featured.length === 0 ? '<div class="toolchain-empty">没有找到相关文章。</div>' : '');
     
@@ -171,17 +216,25 @@ function renderPartition() {
     : '';
     
   articleGrid.innerHTML = `
-    <!-- Top Featured section -->
-    ${featuredHTML}
+    <!-- Left Sidebar -->
+    <div class="genshin-sidebar-container">
+      ${sidebarHTML}
+    </div>
     
-    <!-- Subcategory Tabs -->
-    ${tabsHTML}
-    
-    <!-- Vertical List of regular cards -->
-    ${listHTML}
-    
-    <!-- Load more button -->
-    ${loadMoreHTML}
+    <!-- Right Content Area -->
+    <div class="genshin-content-container">
+      <!-- Top Featured section -->
+      ${featuredHTML}
+      
+      <!-- Subtopic Tabs (only for lang) -->
+      ${tabsHTML}
+      
+      <!-- Vertical List of regular cards -->
+      ${listHTML}
+      
+      <!-- Load more button -->
+      ${loadMoreHTML}
+    </div>
   `;
 }
 
@@ -289,13 +342,17 @@ function handleRouting() {
     const parts = hash.substring(11).split("?");
     const category = parts[0];
     let subcat = "all";
+    let subtopic = "all";
     
-    if (parts[1] && parts[1].startsWith("subcat=")) {
-      subcat = parts[1].substring(7);
+    if (parts[1]) {
+      const searchParams = new URLSearchParams(parts[1]);
+      subcat = searchParams.get("subcat") || "all";
+      subtopic = searchParams.get("subtopic") || "all";
     }
     
     currentCategory = category;
     currentSubcat = subcat;
+    currentSubtopic = subtopic;
     pageSize = 5;
     
     if (navBar) navBar.style.display = "flex";
@@ -325,7 +382,7 @@ async function initBlog() {
       if (a.category) scannedCats.add(a.category);
     });
     
-    const defaultCats = ['rust', 'rtos', 'mcu', 'markup', 'c', 'toolchain'];
+    const defaultCats = ['lang', 'rtos', 'mcu', 'markup', 'toolchain'];
     const allCats = new Set([...defaultCats, ...Array.from(scannedCats)]);
     CATEGORIES = Array.from(allCats).filter(cat => ARTICLES.some(a => a.category === cat));
     if (CATEGORIES.length === 0) {

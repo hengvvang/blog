@@ -18,6 +18,9 @@ cover:
   text:
     content: GIT | WORKFLOW
     position: bottomRight
+category: toolchain
+subcategory: git
+subtopic: workflow
 ---
 
 

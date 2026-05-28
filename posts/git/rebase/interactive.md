@@ -18,6 +18,9 @@ cover:
   text:
     content: GIT | REBASE
     position: center
+category: toolchain
+subcategory: git
+subtopic: rebase
 ---
 
 

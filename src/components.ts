@@ -8,7 +8,7 @@ export function renderNavHTML(categories: string[], currentCategory: string): st
   
   html += categories.map(cat => {
     const active = cat === currentCategory ? 'active' : '';
-    return `<button class="nav-item ${active}" data-action="select-category" data-cat="${cat}">${cat}</button>`;
+    return `<button class="nav-item ${active}" data-action="select-category" data-cat="${cat}">${cat.toUpperCase()}</button>`;
   }).join('');
   
   return html;

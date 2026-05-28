@@ -16,6 +16,9 @@ cover:
   text:
     content: MARKUP | MARKDOWN
     position: center
+category: markup
+subcategory: markdown
+subtopic: others
 ---
 
 
