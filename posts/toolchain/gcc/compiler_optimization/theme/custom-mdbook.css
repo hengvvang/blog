@@ -13,7 +13,7 @@
 }
 
 #sidebar a.active {
-  color: #b79773; /* complementary gold */
+  color: #b79773;
 }
 
 .left-buttons i {
@@ -22,4 +22,49 @@
 
 .left-buttons a:hover i {
   color: #b79773 !important;
+}
+
+/* Floating breadcrumbs */
+.mdbook-custom-breadcrumbs {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background-color: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 8px 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  z-index: 1000;
+  font-size: 11px;
+  font-family: system-ui, -apple-system, sans-serif;
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+}
+
+.mdbook-custom-breadcrumbs a {
+  color: #b79773 !important;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.mdbook-custom-breadcrumbs a:hover {
+  opacity: 0.8;
+}
+
+.mdbook-custom-breadcrumbs span {
+  color: #888;
+  opacity: 0.6;
+}
+
+/* Dark mode adjustments */
+html.dark .mdbook-custom-breadcrumbs,
+html.navy .mdbook-custom-breadcrumbs,
+html.ayu .mdbook-custom-breadcrumbs {
+  background-color: #1a1a1a;
+  border-color: #2e2e2e;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
 }
