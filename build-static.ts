@@ -1,8 +1,10 @@
 import { mkdir, rm, writeFile, readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { loadArticles } from "./src/backend/parser";
+import { compileArticleToContent } from "./src/backend/compiler";
 import { execSync } from "node:child_process";
 import { relative, join } from "node:path";
+
 
 async function safeReadFile(path: string): Promise<string> {
   for (let i = 0; i < 5; i++) {
@@ -39,6 +41,23 @@ async function buildStatic() {
   const clientList = articles.map(({ filePath, bookSrc, ...rest }) => rest);
   await safeWriteFile("./public/api/articles.json", JSON.stringify(clientList));
   console.log(`Generated: public/api/articles.json (${clientList.length} articles)`);
+  
+  // Create output article-content directory inside public/api/
+  await mkdir("./public/api/article-content", { recursive: true });
+  
+  // Pre-render article contents to JSON
+  for (const art of articles) {
+    try {
+      const content = await compileArticleToContent(art);
+      await safeWriteFile(
+        `./public/api/article-content/${art.id}.json`,
+        JSON.stringify(content)
+      );
+    } catch (err) {
+      console.error(`Failed to pre-render article content for id ${art.id}:`, err);
+    }
+  }
+  console.log(`Pre-rendered content for ${articles.length} articles inside public/api/article-content/`);
   
   // Aggregate unique books to compile and build blog taxonomy
   const uniqueBookSrcs = new Set<string>();
