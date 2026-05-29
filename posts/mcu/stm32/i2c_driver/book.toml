@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "STM32 软件模拟 I2C 驱动与总线时序实现"
+title = "STM32 GPIO Software Simulated I2C Driver"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Comprehensive guide to I2C physical timing, GPIO simulation, hardware deadlock bugs, and robust driver design."
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "C语言双指针高级操作与内存对齐总线陷阱"
+title = "Double Pointers & Multi-Level Indirection"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Deep dive into pointer-to-pointer mechanisms, parameter modification, and dynamic 2D array management."
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

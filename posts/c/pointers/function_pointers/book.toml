@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "C语言函数指针与面向对象回调函数设计"
+title = "Function Pointers, Compiler Optimizations & Routing"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Deep dive into function pointer syntax, indirect branch assembly translation, branch prediction, and state machines."
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]
