@@ -1,8 +1,9 @@
 [book]
-src = "."
-title = "实时操作系统 RTOS 任务调度与优先级翻转"
+title = "FreeRTOS Context Switch Internals & Priority Inversion"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Low-level exploration of ARM Cortex-M thread architecture, PendSV handlers, context restoration, and priority inheritance."
+language = "zh-CN"
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

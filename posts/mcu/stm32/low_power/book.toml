@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "物联网 MCU 低功耗模式与底电流改善实战"
+title = "STM32 Low Power Optimization & Leakage Design"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Systematic analysis of low power domains, GPIO leakage minimization, and sleep/stop modes configuration."
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

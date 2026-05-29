@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "STM32 DMA 搬运 ADC 多通道高速采样机制"
+title = "STM32 DMA ADC Multi-Channel Acquisition"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Deep dive into ADC sampling mechanisms, DMA peripheral integration, and multi-channel high-speed circular buffers."
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]
