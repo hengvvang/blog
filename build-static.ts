@@ -1,7 +1,32 @@
-import { mkdir } from "node:fs/promises";
+import { mkdir, rm, writeFile, readFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { loadArticles } from "./src/backend/parser";
 import { execSync } from "node:child_process";
 import { relative, join } from "node:path";
+
+async function safeReadFile(path: string): Promise<string> {
+  for (let i = 0; i < 5; i++) {
+    try {
+      return await readFile(path, "utf-8");
+    } catch (err) {
+      if (i === 4) throw err;
+      await new Promise(r => setTimeout(r, 100));
+    }
+  }
+  return "";
+}
+
+async function safeWriteFile(path: string, content: string) {
+  for (let i = 0; i < 5; i++) {
+    try {
+      await writeFile(path, content, "utf-8");
+      return;
+    } catch (err) {
+      if (i === 4) throw err;
+      await new Promise(r => setTimeout(r, 100));
+    }
+  }
+}
 
 async function buildStatic() {
   console.log("Starting static site generation...");
@@ -12,87 +37,168 @@ async function buildStatic() {
   
   // Write articles list JSON (exclude filePath and bookSrc from client payload)
   const clientList = articles.map(({ filePath, bookSrc, ...rest }) => rest);
-  await Bun.write("./public/api/articles.json", JSON.stringify(clientList));
+  await safeWriteFile("./public/api/articles.json", JSON.stringify(clientList));
   console.log(`Generated: public/api/articles.json (${clientList.length} articles)`);
   
-  // Aggregate unique books to compile
+  // Aggregate unique books to compile and build blog taxonomy
   const uniqueBookSrcs = new Set<string>();
+  const taxonomy: Record<string, { subcategories: Record<string, string[]> }> = {};
+  
   for (const art of articles) {
     if (art.bookSrc) {
       uniqueBookSrcs.add(art.bookSrc);
     }
+    const cat = art.category || "";
+    const subcat = art.subcategory || "";
+    const subtopic = art.subtopic || "";
+    if (cat) {
+      if (!taxonomy[cat]) {
+        taxonomy[cat] = { subcategories: {} };
+      }
+      if (subcat) {
+        if (!taxonomy[cat].subcategories[subcat]) {
+          taxonomy[cat].subcategories[subcat] = [];
+        }
+        if (subtopic) {
+          if (!taxonomy[cat].subcategories[subcat].includes(subtopic)) {
+            taxonomy[cat].subcategories[subcat].push(subtopic);
+          }
+        }
+      }
+    }
   }
   
-  const customCss = `/* Custom mdbook themes to align with the premium blog design */
-:root {
-  --sidebar-width: 250px;
-}
-
-#sidebar {
-  background-color: #1a1a1a;
-  border-right: 1px solid #2e2e2e;
-}
-
-#sidebar a {
-  color: #c9c9c9;
-}
-
-#sidebar a.active {
-  color: #b79773; /* complementary gold */
-}
-
-.left-buttons i {
-  transition: color 0.2s ease;
-}
-
-.left-buttons a:hover i {
-  color: #b79773 !important;
-}
-
-/* Floating breadcrumbs in bottom-right corner */
+  const customCss = `/* Custom floating breadcrumb panel styling */
 .mdbook-custom-breadcrumbs {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  background-color: #ffffff;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
-  padding: 8px 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
   z-index: 1000;
   font-size: 11px;
   font-family: system-ui, -apple-system, sans-serif;
-  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
-  gap: 8px;
-  line-height: 1;
+  gap: 4px;
+  line-height: 1.2;
 }
 
-.mdbook-custom-breadcrumbs a {
-  color: #b79773 !important;
+.mdbook-custom-breadcrumbs svg.breadcrumb-separator-icon {
+  width: 12px;
+  height: 12px;
+  color: var(--fg);
+  opacity: 0.5;
+  margin: 0 6px;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+/* Breadcrumb Item */
+.breadcrumb-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  user-select: none;
+  color: var(--fg);
   font-weight: 600;
-  text-decoration: none;
-  transition: opacity 0.2s ease;
+  transition: background-color 0.15s, color 0.15s;
 }
 
-.mdbook-custom-breadcrumbs a:hover {
-  opacity: 0.8;
+.breadcrumb-item:hover {
+  background-color: var(--theme-hover);
 }
 
-.mdbook-custom-breadcrumbs span {
-  color: #888;
-  opacity: 0.6;
+.breadcrumb-item a {
+  color: inherit !important;
+  text-decoration: none !important;
 }
 
-/* Dark mode adjustments */
-html.dark .mdbook-custom-breadcrumbs,
-html.navy .mdbook-custom-breadcrumbs,
-html.ayu .mdbook-custom-breadcrumbs,
-html.coal .mdbook-custom-breadcrumbs {
-  background-color: #1a1a1a;
-  border-color: #2e2e2e;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+.breadcrumb-item .arrow-icon {
+  width: 10px;
+  height: 10px;
+  margin-left: 6px;
+  opacity: 0.7;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.breadcrumb-item.active .arrow-icon {
+  transform: rotate(180deg);
+}
+
+/* Dropdown menu */
+.breadcrumb-dropdown {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-bottom: 10px;
+  background-color: var(--theme-popup-bg, var(--bg, #ffffff));
+  border: 1px solid var(--theme-popup-border, #cccccc);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  min-width: 140px;
+  padding: 6px 0;
+  z-index: 1001;
+  flex-direction: column;
+}
+
+.breadcrumb-item.active .breadcrumb-dropdown {
+  display: flex;
+}
+
+/* Caret indicator pointing to the trigger */
+.breadcrumb-dropdown::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 14px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: var(--theme-popup-bg, var(--bg, #ffffff)) transparent transparent transparent;
+}
+
+.breadcrumb-dropdown::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 13px;
+  border-width: 7px;
+  border-style: solid;
+  border-color: var(--theme-popup-border, #cccccc) transparent transparent transparent;
+  z-index: -1;
+}
+
+/* Dropdown items */
+.breadcrumb-dropdown a {
+  color: var(--fg) !important;
+  padding: 8px 16px;
+  text-decoration: none !important;
+  font-size: 11px;
+  font-weight: normal;
+  white-space: nowrap;
+  text-align: left;
+  display: block;
+  line-height: 1.4;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.breadcrumb-dropdown a:hover {
+  background-color: var(--theme-hover);
+  color: var(--sidebar-active, var(--links)) !important;
+}
+
+.breadcrumb-dropdown a.active-link {
+  font-weight: bold;
+  color: var(--sidebar-active, var(--links)) !important;
+  background-color: var(--theme-hover);
 }
 `;
 
@@ -107,6 +213,43 @@ html.coal .mdbook-custom-breadcrumbs {
       const category = art.category || "";
       const subcat = art.subcategory || "";
       const subtopic = art.subtopic || "";
+
+      // Ensure book.toml contains both css and js under output.html pointing to theme/ path
+      const bookTomlPath = join(bookSrc, "book.toml");
+      if (existsSync(bookTomlPath)) {
+        let bookToml = await safeReadFile(bookTomlPath);
+        let updated = false;
+        
+        // Ensure additional-css = ["theme/custom-mdbook.css"]
+        if (!bookToml.includes('additional-css = ["theme/custom-mdbook.css"]')) {
+          const cssLinePattern = /additional-css\s*=\s*\[[^\]]+\]\r?\n?/g;
+          if (cssLinePattern.test(bookToml)) {
+            bookToml = bookToml.replace(cssLinePattern, 'additional-css = ["theme/custom-mdbook.css"]\n');
+          } else {
+            bookToml = bookToml.replace("[output.html]", '[output.html]\nadditional-css = ["theme/custom-mdbook.css"]');
+          }
+          updated = true;
+        }
+        
+        // Ensure additional-js = ["theme/custom-mdbook.js"]
+        if (!bookToml.includes('additional-js = ["theme/custom-mdbook.js"]')) {
+          const jsLinePattern = /additional-js\s*=\s*\[[^\]]+\]\r?\n?/g;
+          if (jsLinePattern.test(bookToml)) {
+            bookToml = bookToml.replace(jsLinePattern, 'additional-js = ["theme/custom-mdbook.js"]\n');
+          } else {
+            bookToml = bookToml.replace("[output.html]", '[output.html]\nadditional-js = ["theme/custom-mdbook.js"]');
+          }
+          updated = true;
+        }
+        
+        if (updated) {
+          await safeWriteFile(bookTomlPath, bookToml);
+        }
+      }
+
+      // Cleanup files at book root and recreate theme folder
+      await rm(join(bookSrc, "custom-mdbook.css"), { force: true });
+      await rm(join(bookSrc, "custom-mdbook.js"), { force: true });
       
       const themeDir = join(bookSrc, "theme");
       await mkdir(themeDir, { recursive: true });
@@ -115,40 +258,107 @@ html.coal .mdbook-custom-breadcrumbs {
   const category = "${category}";
   const subcat = "${subcat}";
   const subtopic = "${subtopic}";
+  const taxonomy = ${JSON.stringify(taxonomy)};
+  
+  const separatorSVG = \`<svg class="breadcrumb-separator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>\`;
+  const arrowSVG = \`<svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>\`;
 
-  if (category && subcat) {
-    const breadcrumbs = [
-      { label: 'HOME', url: '/' }
-    ];
-
-    breadcrumbs.push({
-      label: category.toUpperCase(),
-      url: \`/#/category/\${category}\`
-    });
-
-    breadcrumbs.push({
-      label: subcat.toUpperCase(),
-      url: \`/#/category/\${category}?subcat=\${subcat}&subtopic=all\`
-    });
-
-    if (subtopic && subtopic !== 'all' && subtopic !== 'others') {
-      breadcrumbs.push({
-        label: subtopic.toUpperCase(),
-        url: \`/#/category/\${category}?subcat=\${subcat}&subtopic=\${subtopic}\`
-      });
-    }
-
-    const breadcrumbHTML = breadcrumbs.map(b => \`<a href="\${b.url}" target="_parent">\${b.label}</a>\`).join('<span>&gt;</span>');
-
+  if (category) {
     const container = document.createElement('div');
     container.className = 'mdbook-custom-breadcrumbs';
-    container.innerHTML = breadcrumbHTML;
+    
+    // HOME item
+    let html = \`
+      <div class="breadcrumb-item">
+        <a href="/" target="_parent">HOME</a>
+      </div>
+    \`;
+    
+    // Category dropdown
+    const categories = Object.keys(taxonomy).sort();
+    const categoryDropdownHTML = categories.map(cat => {
+      const activeClass = cat === category ? 'active-link' : '';
+      return \`<a href="/#/category/\${cat}?subcat=all&subtopic=all" target="_parent" class="\${activeClass}">\${cat.toUpperCase()}</a>\`;
+    }).join('');
+    
+    html += \`
+      \${separatorSVG}
+      <div class="breadcrumb-item dropdown-trigger">
+        <span class="segment-label">\${category.toUpperCase()}</span>
+        \${arrowSVG}
+        <div class="breadcrumb-dropdown">\${categoryDropdownHTML}</div>
+      </div>
+    \`;
+    
+    // Subcategory dropdown
+    if (subcat) {
+      const subcategories = Object.keys(taxonomy[category]?.subcategories || {}).sort();
+      const subcatDropdownHTML = subcategories.map(sub => {
+        const activeClass = sub === subcat ? 'active-link' : '';
+        return \`<a href="/#/category/\${category}?subcat=\${sub}&subtopic=all" target="_parent" class="\${activeClass}">\${sub.toUpperCase()}</a>\`;
+      }).join('');
+      
+      html += \`
+        \${separatorSVG}
+        <div class="breadcrumb-item dropdown-trigger">
+          <span class="segment-label">\${subcat.toUpperCase()}</span>
+          \${arrowSVG}
+          <div class="breadcrumb-dropdown">\${subcatDropdownHTML}</div>
+        </div>
+      \`;
+    }
+    
+    // Subtopic dropdown
+    if (subtopic) {
+      const subtopics = (taxonomy[category]?.subcategories[subcat] || []).sort();
+      const subtopicDropdownHTML = subtopics.map(topic => {
+        const activeClass = topic === subtopic ? 'active-link' : '';
+        return \`<a href="/#/category/\${category}?subcat=\${subcat}&subtopic=\${topic}" target="_parent" class="\${activeClass}">\${topic.toUpperCase()}</a>\`;
+      }).join('');
+      
+      if (subtopics.length > 0) {
+        html += \`
+          \${separatorSVG}
+          <div class="breadcrumb-item dropdown-trigger">
+            <span class="segment-label">\${subtopic.toUpperCase()}</span>
+            \${arrowSVG}
+            <div class="breadcrumb-dropdown">\${subtopicDropdownHTML}</div>
+          </div>
+        \`;
+      }
+    }
+    
+    container.innerHTML = html;
     document.body.appendChild(container);
+    
+    // Click events toggle
+    const triggers = container.querySelectorAll('.dropdown-trigger');
+    triggers.forEach(trigger => {
+      trigger.addEventListener('click', (e) => {
+        if (e.target.closest('.breadcrumb-dropdown a')) {
+          return;
+        }
+        e.stopPropagation();
+        const isActive = trigger.classList.contains('active');
+        
+        // Close all
+        triggers.forEach(t => t.classList.remove('active'));
+        
+        if (!isActive) {
+          trigger.classList.add('active');
+        }
+      });
+    });
+    
+    // Close on click outside
+    document.addEventListener('click', () => {
+      triggers.forEach(t => t.classList.remove('active'));
+    });
   }
 });`;
 
-      await Bun.write(join(themeDir, "custom-mdbook.js"), customJs);
-      await Bun.write(join(themeDir, "custom-mdbook.css"), customCss);
+      await safeWriteFile(join(themeDir, "custom-mdbook.js"), customJs);
+      await safeWriteFile(join(themeDir, "custom-mdbook.css"), customCss);
     }
 
     console.log(`Compiling mdbook: "${bookSrc}" -> "${destDir}"`);
