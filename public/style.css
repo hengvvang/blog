@@ -1513,6 +1513,9 @@ body {
     flex: 0 0 auto !important;
     width: 33.3333% !important;
   }
+  .toolchain-featured-section:hover .toolchain-horizontal-card:not(:hover) {
+    width: calc(33.3333% - 22px) !important;
+  }
   .toolchain-horizontal-card:hover {
     width: calc(33.3333% + 44px) !important;
   }
@@ -1759,7 +1762,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  overflow: hidden;
+  overflow: visible;
   width: 100%;
 }
 

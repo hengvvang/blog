@@ -34,6 +34,9 @@ async function buildStatic() {
   console.log("Starting static site generation...");
   const articles = await loadArticles();
   
+  // Clean up legacy theme folder
+  await rm("./public/books/theme", { recursive: true, force: true });
+  
   // Create output API directories inside public/
   await mkdir("./public/api", { recursive: true });
   
@@ -221,68 +224,52 @@ async function buildStatic() {
 }
 `;
 
-  // Compile each book automatically
-  for (const bookSrc of uniqueBookSrcs) {
-    const bookFolder = relative("posts", bookSrc).replace(/\\/g, "/");
-    const destDir = join(process.cwd(), "public/books", bookFolder);
-    
-    // Find corresponding article metadata
-    const art = articles.find(a => a.bookSrc === bookSrc);
-    if (art) {
-      const category = art.category || "";
-      const subcat = art.subcategory || "";
-      const subtopic = art.subtopic || "";
+  // Write central theme once
+  const centralThemeDir = "./posts/.theme";
+  await mkdir(centralThemeDir, { recursive: true });
+  await safeWriteFile(join(centralThemeDir, "custom-mdbook.css"), customCss);
 
-      // Ensure book.toml contains both css and js under output.html pointing to theme/ path
-      const bookTomlPath = join(bookSrc, "book.toml");
-      if (existsSync(bookTomlPath)) {
-        let bookToml = await safeReadFile(bookTomlPath);
-        let updated = false;
-        
-        // Ensure additional-css = ["theme/custom-mdbook.css"]
-        if (!bookToml.includes('additional-css = ["theme/custom-mdbook.css"]')) {
-          const cssLinePattern = /additional-css\s*=\s*\[[^\]]+\]\r?\n?/g;
-          if (cssLinePattern.test(bookToml)) {
-            bookToml = bookToml.replace(cssLinePattern, 'additional-css = ["theme/custom-mdbook.css"]\n');
-          } else {
-            bookToml = bookToml.replace("[output.html]", '[output.html]\nadditional-css = ["theme/custom-mdbook.css"]');
-          }
-          updated = true;
+  const customJs = `window.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const res = await fetch('/api/articles.json');
+    if (!res.ok) throw new Error("Failed to load articles list");
+    const articles = await res.json();
+    
+    // Find matching article based on pathname
+    const pathname = window.location.pathname;
+    const article = articles.find(a => pathname.endsWith(a.path) || pathname.includes(a.path));
+    if (!article) return; // Not a registered article book page
+    
+    const category = article.category;
+    const subcat = article.subcategory;
+    const subtopic = article.subtopic;
+    
+    // Build taxonomy mapping
+    const taxonomy = {};
+    articles.forEach(art => {
+      const cat = art.category || "";
+      const sub = art.subcategory || "";
+      const topic = art.subtopic || "";
+      if (cat) {
+        if (!taxonomy[cat]) {
+          taxonomy[cat] = { subcategories: {} };
         }
-        
-        // Ensure additional-js = ["theme/custom-mdbook.js"]
-        if (!bookToml.includes('additional-js = ["theme/custom-mdbook.js"]')) {
-          const jsLinePattern = /additional-js\s*=\s*\[[^\]]+\]\r?\n?/g;
-          if (jsLinePattern.test(bookToml)) {
-            bookToml = bookToml.replace(jsLinePattern, 'additional-js = ["theme/custom-mdbook.js"]\n');
-          } else {
-            bookToml = bookToml.replace("[output.html]", '[output.html]\nadditional-js = ["theme/custom-mdbook.js"]');
+        if (sub) {
+          if (!taxonomy[cat].subcategories[sub]) {
+            taxonomy[cat].subcategories[sub] = [];
           }
-          updated = true;
-        }
-        
-        if (updated) {
-          await safeWriteFile(bookTomlPath, bookToml);
+          if (topic) {
+            if (!taxonomy[cat].subcategories[sub].includes(topic)) {
+              taxonomy[cat].subcategories[sub].push(topic);
+            }
+          }
         }
       }
+    });
+    
+    const separatorSVG = \`<svg class="breadcrumb-separator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>\`;
+    const arrowSVG = \`<svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>\`;
 
-      // Cleanup files at book root and recreate theme folder
-      await rm(join(bookSrc, "custom-mdbook.css"), { force: true });
-      await rm(join(bookSrc, "custom-mdbook.js"), { force: true });
-      
-      const themeDir = join(bookSrc, "theme");
-      await mkdir(themeDir, { recursive: true });
-
-      const customJs = `window.addEventListener('DOMContentLoaded', () => {
-  const category = "${category}";
-  const subcat = "${subcat}";
-  const subtopic = "${subtopic}";
-  const taxonomy = ${JSON.stringify(taxonomy)};
-  
-  const separatorSVG = \`<svg class="breadcrumb-separator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>\`;
-  const arrowSVG = \`<svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>\`;
-
-  if (category) {
     const container = document.createElement('div');
     container.className = 'mdbook-custom-breadcrumbs';
     
@@ -373,12 +360,89 @@ async function buildStatic() {
     document.addEventListener('click', () => {
       triggers.forEach(t => t.classList.remove('active'));
     });
+    
+  } catch (err) {
+    console.error("Failed to build custom breadcrumbs:", err);
   }
 });`;
 
-      await safeWriteFile(join(themeDir, "custom-mdbook.js"), customJs);
-      await safeWriteFile(join(themeDir, "custom-mdbook.css"), customCss);
+  await safeWriteFile(join(centralThemeDir, "custom-mdbook.js"), customJs);
+  console.log("Generated central custom-mdbook.js");
+
+  // Compile each book automatically
+  for (const bookSrc of uniqueBookSrcs) {
+    const bookFolder = relative("posts", bookSrc).replace(/\\/g, "/");
+    const destDir = join(process.cwd(), "public/books", bookFolder);
+    
+    // Ensure book.toml contains theme path pointing to central posts/theme relatively
+    const bookTomlPath = join(bookSrc, "book.toml");
+    if (existsSync(bookTomlPath)) {
+      let bookToml = await safeReadFile(bookTomlPath);
+      let updated = false;
+      
+      // Dynamically set src directory config based on physical folder structure
+      const hasSrcFolder = existsSync(join(bookSrc, "src"));
+      if (hasSrcFolder) {
+        if (bookToml.includes('src = "."')) {
+          bookToml = bookToml.replace(/src\s*=\s*"\."\r?\n?/g, "");
+          updated = true;
+        }
+      } else {
+        if (!bookToml.includes('src = "."')) {
+          const srcLinePattern = /src\s*=\s*"[^"]+"\r?\n?/g;
+          if (srcLinePattern.test(bookToml)) {
+            bookToml = bookToml.replace(srcLinePattern, 'src = "."\n');
+          } else {
+            bookToml = bookToml.replace("[book]", '[book]\nsrc = "."');
+          }
+          updated = true;
+        }
+      }
+      
+      // Ensure [output.html] section exists
+      if (!bookToml.includes("[output.html]")) {
+        bookToml += "\n\n[output.html]\n";
+        updated = true;
+      }
+      
+      // Remove theme configuration if it exists
+      if (bookToml.includes("theme = ")) {
+        bookToml = bookToml.replace(/theme\s*=\s*"[^"]+"\r?\n?/g, "");
+        updated = true;
+      }
+      
+      // Ensure additional-css = ["../../../.theme/custom-mdbook.css"]
+      if (!bookToml.includes('additional-css = ["../../../.theme/custom-mdbook.css"]')) {
+        const cssLinePattern = /additional-css\s*=\s*\[[^\]]+\]\r?\n?/g;
+        if (cssLinePattern.test(bookToml)) {
+          bookToml = bookToml.replace(cssLinePattern, 'additional-css = ["../../../.theme/custom-mdbook.css"]\n');
+        } else {
+          bookToml = bookToml.replace("[output.html]", '[output.html]\nadditional-css = ["../../../.theme/custom-mdbook.css"]');
+        }
+        updated = true;
+      }
+      
+      // Ensure additional-js = ["../../../.theme/custom-mdbook.js"]
+      if (!bookToml.includes('additional-js = ["../../../.theme/custom-mdbook.js"]')) {
+        const jsLinePattern = /additional-js\s*=\s*\[[^\]]+\]\r?\n?/g;
+        if (jsLinePattern.test(bookToml)) {
+          bookToml = bookToml.replace(jsLinePattern, 'additional-js = ["../../../.theme/custom-mdbook.js"]\n');
+        } else {
+          bookToml = bookToml.replace("[output.html]", '[output.html]\nadditional-js = ["../../../.theme/custom-mdbook.js"]');
+        }
+        updated = true;
+      }
+      
+      if (updated) {
+        await safeWriteFile(bookTomlPath, bookToml);
+      }
     }
+
+    // Cleanup duplicated files at book root and remove local theme folder
+    await rm(join(bookSrc, "custom-mdbook.css"), { force: true });
+    await rm(join(bookSrc, "custom-mdbook.js"), { force: true });
+    await rm(join(bookSrc, "theme"), { recursive: true, force: true });
+    await rm(join(bookSrc, ".theme"), { recursive: true, force: true });
 
     console.log(`Compiling mdbook: "${bookSrc}" -> "${destDir}"`);
     try {

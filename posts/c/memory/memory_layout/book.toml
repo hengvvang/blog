@@ -1,8 +1,7 @@
 [book]
-src = "."
-title = "CMake 交叉编译配置与 Toolchain 工具链声明"
+title = "Embedded C Memory Layout & Alignment"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Production-grade guide on memory layout and alignment in embedded systems."
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

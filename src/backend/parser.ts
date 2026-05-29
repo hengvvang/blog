@@ -1,4 +1,5 @@
 import { readdir, stat } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { join, relative, dirname } from "node:path";
 import { parse as parseYaml } from "yaml";
 import { CoverConfig } from "../types";
@@ -117,7 +118,10 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
     }
     
     const path = `/books/${bookFolder}/index.html`;
-    const file = join(bookSrc, "README.md").replace(/\\/g, "/");
+    let file = join(bookSrc, "src", "README.md").replace(/\\/g, "/");
+    if (!existsSync(file)) {
+      file = join(bookSrc, "README.md").replace(/\\/g, "/");
+    }
     
     const timeline = meta.timeline || {};
     let publishTime = timeline.publishTime ? String(timeline.publishTime).trim() : "";

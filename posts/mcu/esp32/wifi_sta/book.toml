@@ -1,9 +1,9 @@
 [book]
+src = "."
 title = "ESP32 Wi-Fi 站模式 STA 连接管理与事件驱动机制"
 authors = ["hengvvang"]
 description = "Compiled Article Book"
-src = "."
 
 [output.html]
-additional-css = ["theme/custom-mdbook.css"]
-additional-js = ["theme/custom-mdbook.js"]
+additional-css = ["../../../.theme/custom-mdbook.css"]
+additional-js = ["../../../.theme/custom-mdbook.js"]

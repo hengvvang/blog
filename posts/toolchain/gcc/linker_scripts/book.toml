@@ -1,9 +1,9 @@
 [book]
+src = "."
 title = "链接器脚本高级命令与自定义 Section 分配"
 authors = ["hengvvang"]
 description = "Compiled Article Book"
-src = "."
 
 [output.html]
-additional-css = ["theme/custom-mdbook.css"]
-additional-js = ["theme/custom-mdbook.js"]
+additional-css = ["../../../.theme/custom-mdbook.css"]
+additional-js = ["../../../.theme/custom-mdbook.js"]

@@ -1,9 +1,9 @@
 [book]
+src = "."
 title = "STM32 DMA 搬运 ADC 多通道高速采样机制"
 authors = ["hengvvang"]
 description = "Compiled Article Book"
-src = "."
 
 [output.html]
-additional-css = ["theme/custom-mdbook.css"]
-additional-js = ["theme/custom-mdbook.js"]
+additional-css = ["../../../.theme/custom-mdbook.css"]
+additional-js = ["../../../.theme/custom-mdbook.js"]

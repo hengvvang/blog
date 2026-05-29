@@ -1,9 +1,9 @@
 [book]
+src = "."
 title = "静态博客 Front Matter 头部数据段语法指南"
 authors = ["hengvvang"]
 description = "Compiled Article Book"
-src = "."
 
 [output.html]
-additional-css = ["theme/custom-mdbook.css"]
-additional-js = ["theme/custom-mdbook.js"]
+additional-css = ["../../../.theme/custom-mdbook.css"]
+additional-js = ["../../../.theme/custom-mdbook.js"]

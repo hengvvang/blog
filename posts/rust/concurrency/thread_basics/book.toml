@@ -1,9 +1,9 @@
 [book]
+src = "."
 title = "Rust 多线程并发编程与通道机制"
 authors = ["hengvvang"]
 description = "Compiled Article Book"
-src = "."
 
 [output.html]
-additional-css = ["theme/custom-mdbook.css"]
-additional-js = ["theme/custom-mdbook.js"]
+additional-css = ["../../../.theme/custom-mdbook.css"]
+additional-js = ["../../../.theme/custom-mdbook.js"]
