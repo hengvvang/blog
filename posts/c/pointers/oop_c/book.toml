@@ -1,7 +1,7 @@
 [book]
-title = "Array Pointers & Pointer Arrays"
+title = "Callback Mechanisms, Function Pointers & OOP C"
 authors = ["hengvvang"]
-description = "Comprehensive guide resolving definitions, dereferences, offsets, and multi-dimensional decay."
+description = "Deep dive into function pointers, callback architectures, and OOP design patterns in C."
 src = "src"
 
 [output.html]

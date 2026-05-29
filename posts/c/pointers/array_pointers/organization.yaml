@@ -5,20 +5,15 @@ category: lang
 subcategory: c
 subtopic: pointers
 timeline:
-  publishTime: 2026-05-24 16:30
-  lastUpdated: 2026-05-25 02:30
+  publishTime: "2026-05-30 10:30"
 cover:
-  title: C语言数组指针与指针数组概念辨析
-  summary: 区分指针组成的数组和指向整个数组的指针，帮助理清它们在定义、解引用和地址偏移上的核心差异。
-  tags:
-    - C
-    - POINTERS
-    - Pointers
-    - Low-Level
+  title: "C语言数组指针与指针数组概念辨析"
+  summary: "深度剖析指针数组和数组指针的定义本质，梳理两者在二级指针解引用、算术地址偏移、多维数组衰变（Decay）以及函数接口传参上的底层差异与工程安全实践。"
+  tags: ["C", "Pointers", "Arrays", "Multidimensional", "Low-Level"]
   image:
-    src: https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=800&auto=format&fit=crop
+    src: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=800&auto=format&fit=crop"
     text:
-      content: C | POINTERS
-      position: center
+      content: "C | POINTERS"
+      position: "center"
     brightness: 0.75
     scale: 1.08

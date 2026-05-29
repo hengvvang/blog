@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "C语言动态内存分配、内存泄漏与 Valgrind 排查"
+title = "Dynamic Memory & Valgrind Debugging"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Deep dive into dynamic memory allocation, heap leaks, and runtime analysis with Valgrind."
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

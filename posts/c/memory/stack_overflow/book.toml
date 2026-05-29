@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "深入理解 C 语言栈溢出攻击与防御防范"
+title = "Stack Memory & Overflow Defense"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Deep dive into calling conventions, function frames, stack overflow vulnerabilities, and defense measures."
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

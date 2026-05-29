@@ -5,20 +5,15 @@ category: lang
 subcategory: c
 subtopic: memory
 timeline:
-  publishTime: 2026-05-24 16:20
-  lastUpdated: 2026-05-25 02:30
+  publishTime: "2026-05-30 10:00"
 cover:
-  title: 深入理解 C 语言栈溢出攻击与防御防范
-  summary: 详细剖析函数递归过深或局部变量过大导致系统栈空间耗尽的底层机制与防范思路。
-  tags:
-    - C
-    - MEMORY
-    - Pointers
-    - Low-Level
+  title: "深入理解 C 语言栈溢出攻击与防御防范"
+  summary: "详细剖析函数递归调用、局部变量在硬件栈帧上的空间编排、栈缓冲区溢出覆写返回地址的底层机理，以及编译器 Canary 哨兵、系统 DEP/ASLR 和硬件 MPU 对栈溢出的防御规避实践。"
+  tags: ["C", "Memory", "Security", "Stack Overflow", "Cortex-M"]
   image:
-    src: https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop
+    src: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop"
     text:
-      content: C | MEMORY
-      position: bottomLeft
+      content: "C | MEMORY"
+      position: "bottomLeft"
     brightness: 0.75
     scale: 1.08
