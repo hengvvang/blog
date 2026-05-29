@@ -1,0 +1,22 @@
+book:
+  src: posts/markup
+  path: css/flexbox_grid.html
+category: markup
+subcategory: css
+subtopic: others
+timeline:
+  publishTime: 2026-05-24 15:30
+  lastUpdated: 2026-05-25 02:30
+cover:
+  title: 现代 CSS 页面排版：Flexbox 与 Grid 综合实践
+  summary: 通过具体的页面布局案例，全方位对比一维弹性盒与二维网格系统在不同业务场景下的排版选型原则。
+  tags:
+    - MARKUP
+    - CSS
+  image:
+    src: https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop
+    text:
+      content: MARKUP | CSS
+      position: bottomLeft
+    brightness: 0.75
+    scale: 1.08

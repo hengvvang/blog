@@ -1,0 +1,24 @@
+book:
+  src: posts/rtos
+  path: zephyr/thread_analyzer.html
+category: rtos
+subcategory: zephyr
+subtopic: others
+timeline:
+  publishTime: 2026-05-24 14:40
+  lastUpdated: 2026-05-25 02:30
+cover:
+  title: Zephyr 线程栈分析器与内存泄漏调试指南
+  summary: 利用系统的线程监控组件，实时输出每个任务栈的最高水位线，防范栈溢出引起的内核崩溃。
+  tags:
+    - RTOS
+    - ZEPHYR
+    - Real-Time
+    - Kernel
+  image:
+    src: https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&auto=format&fit=crop
+    text:
+      content: RTOS | ZEPHYR
+      position: topRight
+    brightness: 0.75
+    scale: 1.08

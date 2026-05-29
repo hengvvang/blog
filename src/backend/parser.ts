@@ -1,5 +1,5 @@
 import { readdir, stat } from "node:fs/promises";
-import { join, relative } from "node:path";
+import { join, relative, dirname } from "node:path";
 import { parse as parseYaml } from "yaml";
 import { CoverConfig } from "../types";
 
@@ -11,9 +11,10 @@ export interface ArticleMetadata {
   subtopic?: string;
   contentSnippet: string;
   publishTime: string;
-  author?: string;
   filePath: string;
   cover?: CoverConfig;
+  path: string;
+  bookSrc?: string;
 }
 
 // Stable numeric hash from filepath string
@@ -69,16 +70,16 @@ export function parseTags(tagsValue?: any): string[] {
   }
 }
 
-// Recursively scan directories for *.md files
-export async function scanDirectory(dir: string, fileList: string[] = []): Promise<string[]> {
+// Recursively scan directories for organization.yaml configuration files
+export async function scanForYamlConfigs(dir: string, fileList: string[] = []): Promise<string[]> {
   try {
     const files = await readdir(dir);
     for (const file of files) {
       const filePath = join(dir, file);
       const fileStat = await stat(filePath);
       if (fileStat.isDirectory()) {
-        await scanDirectory(filePath, fileList);
-      } else if (file.endsWith(".md")) {
+        await scanForYamlConfigs(filePath, fileList);
+      } else if (file === "organization.yaml") {
         fileList.push(filePath);
       }
     }
@@ -91,73 +92,63 @@ export async function scanDirectory(dir: string, fileList: string[] = []): Promi
 // Get all articles with metadata
 export async function loadArticles(): Promise<ArticleMetadata[]> {
   const postsDir = "./posts";
-  const files = await scanDirectory(postsDir);
+  const yamlFiles = await scanForYamlConfigs(postsDir);
   const articles: ArticleMetadata[] = [];
   
-  for (const file of files) {
-    const content = await Bun.file(file).text();
-    const { meta, markdown } = parseFrontMatter(content);
+  for (const yamlFile of yamlFiles) {
+    let meta: any = {};
+    try {
+      const yamlContent = await Bun.file(yamlFile).text();
+      meta = parseYaml(yamlContent) || {};
+    } catch (err) {
+      console.error(`Failed to parse YAML config: ${yamlFile}`, err);
+      continue;
+    }
     
-    const relPath = relative(postsDir, file).replace(/\\/g, "/");
-    const parts = relPath.split("/");
-
-    let category = meta.category ? String(meta.category).trim().toLowerCase() : "";
-    let subcategory = meta.subcategory ? String(meta.subcategory).trim().toLowerCase() : "";
-    let subtopic = meta.subtopic ? String(meta.subtopic).trim().toLowerCase() : "others";
-
+    const bookSrc = dirname(yamlFile).replace(/\\/g, "/");
+    const bookFolder = relative(postsDir, bookSrc).replace(/\\/g, "/");
+    
+    const category = meta.category ? String(meta.category).trim().toLowerCase() : "";
+    const subcategory = meta.subcategory ? String(meta.subcategory).trim().toLowerCase() : "";
+    const subtopic = meta.subtopic ? String(meta.subtopic).trim().toLowerCase() : "others";
+    
     if (!category || !subcategory) {
-      throw new Error(`Missing required 'category' or 'subcategory' in front matter for file: ${file}`);
+      throw new Error(`Missing category or subcategory in ${yamlFile}`);
     }
     
-    let title = meta.title;
-    if (!title) {
-      const titleMatch = markdown.match(/^#\s+(.+)$/m);
-      if (titleMatch) {
-        title = titleMatch[1].trim();
-      } else {
-        title = parts[parts.length - 1].replace(/\.md$/, "").replace(/[-_]/g, " ");
-      }
-    }
+    const path = `/books/${bookFolder}/index.html`;
+    const file = join(bookSrc, "README.md").replace(/\\/g, "/");
     
-    let publishTime = String(meta.publishTime || "");
+    const timeline = meta.timeline || {};
+    let publishTime = timeline.publishTime ? String(timeline.publishTime).trim() : "";
     if (!publishTime) {
       const fileStat = await stat(file);
       publishTime = fileStat.mtime.toISOString().replace("T", " ").substring(0, 16);
     }
     
-    const snippet = meta.summary || meta.description || "";
-    const author = meta.author;
+    const coverMeta = meta.cover || {};
+    const title = coverMeta.title || "";
+    const snippet = coverMeta.summary || "";
     
-    // Robust backward-compatible mapping for cover configuration
     let cover: any = undefined;
-    if (meta.cover) {
-      cover = {};
-      if (typeof meta.cover === "string") {
-        cover.image = meta.cover;
-      } else if (typeof meta.cover === "object") {
-        cover.image = meta.cover.image || undefined;
-        cover.text = meta.cover.text || undefined;
-        cover.position = meta.cover.position || undefined;
-      }
-    }
-    
-    if (meta.coverText && typeof meta.coverText === "object") {
-      if (!cover) cover = {};
-      cover.position = cover.position || meta.coverText.position || undefined;
-      cover.text = cover.text || meta.coverText.context || meta.coverText.text || undefined;
+    if (coverMeta.image) {
+      cover = {
+        image: coverMeta.image
+      };
     }
 
     articles.push({
-      id: getNumericId(relPath),
+      id: getNumericId(bookFolder),
       title,
-      category: category.toLowerCase(),
-      subcategory: subcategory ? subcategory.toLowerCase() : undefined,
+      category,
+      subcategory: subcategory || undefined,
       subtopic,
       contentSnippet: snippet,
       publishTime,
-      author,
       filePath: file,
-      cover
+      cover,
+      path,
+      bookSrc
     });
   }
   

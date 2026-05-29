@@ -1,11 +1,3 @@
-export interface CoverImageConfig {
-  src?: string;
-  color?: string;
-  brightness?: number;
-  blur?: number;
-  scale?: number;
-}
-
 export interface CoverTextConfig {
   content?: string;
   position?: 'topLeft' | 'bottomLeft' | 'center' | 'bottomRight' | 'topRight';
@@ -13,9 +5,17 @@ export interface CoverTextConfig {
   size?: string;
 }
 
+export interface CoverImageConfig {
+  src?: string;
+  color?: string;
+  brightness?: number;
+  blur?: number;
+  scale?: number;
+  text?: CoverTextConfig;
+}
+
 export interface CoverConfig {
   image?: CoverImageConfig;
-  text?: CoverTextConfig;
 }
 
 export interface Article {
@@ -27,6 +27,7 @@ export interface Article {
   contentSnippet: string;
   publishTime: string;
   cover?: CoverConfig;
+  path?: string;
 }
 
 export interface ArticleContent {

@@ -1,0 +1,9 @@
+[book]
+title = "ESP32 蓝牙 BLE GATT 服务器开发流程与原理"
+authors = ["hengvvang"]
+description = "Compiled Article Book"
+src = "."
+
+[output.html]
+additional-css = ["theme/custom-mdbook.css"]
+additional-js = ["theme/custom-mdbook.js"]

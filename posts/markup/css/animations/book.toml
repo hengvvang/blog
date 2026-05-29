@@ -1,0 +1,9 @@
+[book]
+title = "CSS 关键帧动画 Keyframes 与微交互设计优化"
+authors = ["hengvvang"]
+description = "Compiled Article Book"
+src = "."
+
+[output.html]
+additional-css = ["theme/custom-mdbook.css"]
+additional-js = ["theme/custom-mdbook.js"]

@@ -51,9 +51,14 @@ document.body.addEventListener('click', (event) => {
       }
     }
   } else if (action === 'view-article') {
-    const id = actionEl.getAttribute('data-id');
-    if (id) {
-      window.location.hash = `#/article/${id}`;
+    const idStr = actionEl.getAttribute('data-id');
+    if (idStr) {
+      const art = ARTICLES.find(a => String(a.id) === idStr);
+      if (art && art.path) {
+        window.location.href = art.path;
+      } else {
+        window.location.hash = `#/article/${idStr}`;
+      }
     }
   } else if (action === 'back-to-home') {
     window.location.hash = '#/';
@@ -433,7 +438,12 @@ function handleRouting() {
   } else if (hash.startsWith("#/article/")) {
     const articleIdStr = hash.substring(10);
     const id = parseInt(articleIdStr, 10);
-    loadAndShowArticle(id);
+    const art = ARTICLES.find(a => a.id === id);
+    if (art && art.path) {
+      window.location.replace(art.path);
+    } else {
+      loadAndShowArticle(id);
+    }
   }
 }
 

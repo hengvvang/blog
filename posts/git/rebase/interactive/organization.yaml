@@ -1,0 +1,24 @@
+book:
+  src: posts/git
+  path: rebase/interactive.html
+category: toolchain
+subcategory: git
+subtopic: rebase
+timeline:
+  publishTime: 2026-05-24 16:45
+  lastUpdated: 2026-05-25 02:30
+cover:
+  title: Git Rebase 交互式变基精讲
+  summary: 演示如何利用交互式变基对历史提交记录进行合并、重写、拆分与清理，打造清爽优雅的项目历史树。
+  tags:
+    - GIT
+    - REBASE
+    - VCS
+    - Workflow
+  image:
+    src: https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop
+    text:
+      content: GIT | REBASE
+      position: center
+    brightness: 0.75
+    scale: 1.08

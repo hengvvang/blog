@@ -1,0 +1,22 @@
+book:
+  src: posts/markup
+  path: markdown/style_guide.html
+category: markup
+subcategory: markdown
+subtopic: others
+timeline:
+  publishTime: 2026-05-24 15:10
+  lastUpdated: 2026-05-25 02:30
+cover:
+  title: Markdown 深度定制与现代排版引擎实践
+  summary: 整理出一套通用的 Markdown 书写格式指引，包括空行标准、标点符号规范和中英文混排美化细节。
+  tags:
+    - MARKUP
+    - MARKDOWN
+  image:
+    src: https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=800&auto=format&fit=crop
+    text:
+      content: MARKUP | MARKDOWN
+      position: topRight
+    brightness: 0.75
+    scale: 1.08

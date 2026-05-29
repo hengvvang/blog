@@ -1,0 +1,24 @@
+book:
+  src: posts/python
+  path: concurrency/asyncio_basics.html
+category: lang
+subcategory: python
+subtopic: concurrency
+timeline:
+  publishTime: 2026-05-24 16:20
+  lastUpdated: 2026-05-25 02:30
+cover:
+  title: Python Asyncio 异步协程并发编程实战
+  summary: 深入协程的事件循环模型，分析 yield、async/await 在底层任务切换与高并发网络 IO 中的表现。
+  tags:
+    - PYTHON
+    - CONCURRENCY
+    - OOP
+    - Scripting
+  image:
+    src: https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop
+    text:
+      content: PYTHON | CONCURRENCY
+      position: topLeft
+    brightness: 0.75
+    scale: 1.08

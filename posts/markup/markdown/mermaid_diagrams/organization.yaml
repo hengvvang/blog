@@ -1,0 +1,22 @@
+book:
+  src: posts/markup
+  path: markdown/mermaid_diagrams.html
+category: markup
+subcategory: markdown
+subtopic: others
+timeline:
+  publishTime: 2026-05-24 15:50
+  lastUpdated: 2026-05-25 02:30
+cover:
+  title: Markdown 深度实践：使用 Mermaid 绘制流程图
+  summary: 讲解如何在 Markdown 中直接渲染甘特图、流程图和序列图，极大地提高技术文档中的图形表达效率。
+  tags:
+    - MARKUP
+    - MARKDOWN
+  image:
+    src: https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop
+    text:
+      content: MARKUP | MARKDOWN
+      position: bottomRight
+    brightness: 0.75
+    scale: 1.08

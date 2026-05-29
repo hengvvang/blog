@@ -1,0 +1,24 @@
+book:
+  src: posts/toolchain
+  path: cmake/library_targets.html
+category: toolchain
+subcategory: cmake
+subtopic: others
+timeline:
+  publishTime: 2026-05-24 17:00
+  lastUpdated: 2026-05-25 02:30
+cover:
+  title: CMake 生成静态库与动态库目标规范管理
+  summary: 演示如何使用 target_link_libraries 进行现代 CMake 构建，精确管理目标之间的头文件及库链接关系。
+  tags:
+    - TOOLCHAIN
+    - CMAKE
+    - Build
+    - Compiler
+  image:
+    src: https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop
+    text:
+      content: TOOLCHAIN | CMAKE
+      position: center
+    brightness: 0.75
+    scale: 1.08

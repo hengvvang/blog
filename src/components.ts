@@ -71,11 +71,12 @@ function renderCoverHTML(cover: Article['cover'], categoryColor: string, default
   }
   
   let coverContentHTML = '';
-  if (cover?.text?.content && cover?.text?.position) {
-    const posStyle = POSITION_MAP[cover.text.position] || POSITION_MAP.center;
-    const txtColor = cover.text.color || '#ffffff';
-    const txtSize = cover.text.size || defaultTextSize;
-    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: ${txtSize}; font-weight: 600; color: ${txtColor}; text-shadow: 0 2px 4px rgba(0,0,0,0.4); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${cover.text.content}</span>`;
+  const coverText = cover?.image?.text;
+  if (coverText?.content && coverText?.position) {
+    const posStyle = POSITION_MAP[coverText.position] || POSITION_MAP.center;
+    const txtColor = coverText.color || '#ffffff';
+    const txtSize = coverText.size || defaultTextSize;
+    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: ${txtSize}; font-weight: 600; color: ${txtColor}; text-shadow: 0 2px 4px rgba(0,0,0,0.4); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${coverText.content}</span>`;
   }
   
   return `

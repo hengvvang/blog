@@ -1,0 +1,9 @@
+[book]
+title = "CMake 构建宏编写与自动化 CI/CD 环境结合运用"
+authors = ["hengvvang"]
+description = "Compiled Article Book"
+src = "."
+
+[output.html]
+additional-css = ["theme/custom-mdbook.css"]
+additional-js = ["theme/custom-mdbook.js"]

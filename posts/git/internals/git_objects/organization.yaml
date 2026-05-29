@@ -1,0 +1,24 @@
+book:
+  src: posts/git
+  path: internals/git_objects.html
+category: toolchain
+subcategory: git
+subtopic: internals
+timeline:
+  publishTime: 2026-05-24 18:20
+  lastUpdated: 2026-05-25 02:30
+cover:
+  title: Git 底层原理：三类核心对象 blob, tree, commit
+  summary: 从底层文件数据库的视角拆解 blob、tree 和 commit 等核心概念，揭秘 Git 追踪文件版本变化的秘诀。
+  tags:
+    - GIT
+    - INTERNALS
+    - VCS
+    - Workflow
+  image:
+    src: https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?w=800&auto=format&fit=crop
+    text:
+      content: GIT | INTERNALS
+      position: topLeft
+    brightness: 0.75
+    scale: 1.08

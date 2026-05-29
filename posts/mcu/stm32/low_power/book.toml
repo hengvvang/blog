@@ -1,0 +1,9 @@
+[book]
+title = "物联网 MCU 低功耗模式与底电流改善实战"
+authors = ["hengvvang"]
+description = "Compiled Article Book"
+src = "."
+
+[output.html]
+additional-css = ["theme/custom-mdbook.css"]
+additional-js = ["theme/custom-mdbook.js"]

@@ -40,7 +40,7 @@ const server = serve({
     // API: articles list
     if (path === "/api/articles" || path === "/api/articles.json") {
       const list = await loadArticles();
-      const clientList = list.map(({ filePath, ...rest }) => rest);
+      const clientList = list.map(({ filePath, bookSrc, ...rest }) => rest);
       return new Response(JSON.stringify(clientList), {
         headers: {
           "Content-Type": "application/json",

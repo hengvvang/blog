@@ -1,0 +1,9 @@
+[book]
+title = "Rust 高级生命周期约束与 HRTB 详解"
+authors = ["hengvvang"]
+description = "Compiled Article Book"
+src = "."
+
+[output.html]
+additional-css = ["theme/custom-mdbook.css"]
+additional-js = ["theme/custom-mdbook.js"]

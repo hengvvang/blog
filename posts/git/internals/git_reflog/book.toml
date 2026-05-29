@@ -1,0 +1,9 @@
+[book]
+title = "Git Reflog 误删分支与未提交代码灾难恢复"
+authors = ["hengvvang"]
+description = "Compiled Article Book"
+src = "."
+
+[output.html]
+additional-css = ["theme/custom-mdbook.css"]
+additional-js = ["theme/custom-mdbook.js"]
