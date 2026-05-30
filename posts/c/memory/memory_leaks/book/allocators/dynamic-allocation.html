@@ -1,0 +1,742 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>第一章：堆内存布局与分配器实现原理 - Dynamic Memory &amp; Valgrind Debugging</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Deep dive into dynamic memory allocation, heap leaks, and runtime analysis with Valgrind.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-0392ca55.css">
+        <link rel="stylesheet" href="../css/chrome-fc474251.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../__shared_theme/custom-mdbook.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-c22c1746.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-50b2852c.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Dynamic Memory &amp; Valgrind Debugging</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="第一章堆内存布局与分配器实现原理"><a class="header" href="#第一章堆内存布局与分配器实现原理">第一章：堆内存布局与分配器实现原理</a></h1>
+<p>在深入探讨动态内存泄漏与调试之前，我们必须首先理清一个核心问题：<strong>当我们在 C 语言中调用 <code>malloc(size)</code> 或 <code>free(ptr)</code> 时，操作系统和运行时库（C Runtime Library）到底在底层做了什么？</strong></p>
+<p>许多人将 <code>malloc</code> 误认为是一个简单的系统调用，但实际上，它是一个高度复杂的<strong>用户态内存管理器</strong>。它在操作系统内核提供的粗粒度物理页分配之上，构建了一套极其高效的细粒度“内存零售”算法。本章将从虚拟内存的逻辑视图出发，深入解析堆区布局、内核系统调用、glibc <code>ptmalloc</code> 分配器内核源码级设计（包括 Chunk 结构、Tcache 与 Bins 链表体系），最后提供一个支持 8 字节对齐、块分裂与相邻块合并的自定义内存分配器 C 语言实现。</p>
+<hr>
+<h2 id="进程虚拟内存布局与堆区位置"><a class="header" href="#进程虚拟内存布局与堆区位置">进程虚拟内存布局与堆区位置</a></h2>
+<p>现代操作系统（如 Linux）通过 CPU 的**内存管理单元（MMU）**建立起虚拟地址空间（Virtual Address Space）到物理内存（Physical RAM）的映射。在 64 位 x86_64 体系下，用户态进程拥有高达 256TB（48位地址线）的虚拟地址空间。</p>
+<p>一个典型 Linux 进程的虚拟内存空间布局（从低地址到高地址）如下所示：</p>
+<pre><code class="language-text">       +------------------------------------+ &lt;--- 0x7FFFFFFFFFFF (用户空间最高虚拟地址)
+       |      内核空间 (Kernel Space)        | 
+       |      (仅内核态可访问，用户态受保护)  |
+       +------------------------------------+ &lt;--- 0x800000000000
+       |      环境变量 &amp; 命令行参数          |
+       +------------------------------------+
+       |  用户栈区 (Stack Segment)           | &lt;--- 向低地址生长 (Downwards)
+       |  (存储局部变量、函数参数、栈帧信息)  |
+       |                 |                  |
+       |                 v                  |
+       +------------------------------------+
+       |                                    |
+       |     共享库和匿名映射区 (Mmap)       | &lt;--- 用于动态库加载、大块匿名映射
+       |                                    |
+       +------------------------------------+
+       |                 ^                  |
+       |                 |                  |
+       |  用户堆区 (Heap Segment)            | &lt;--- 向高地址生长 (Upwards)
+       |  (动态分配，终点为 Program Break)   |
+       +------------------------------------+ &lt;--- Program Break 指针 (brk/sbrk 控制点)
+       |  未初始化全局数据区 (BSS Segment)    |
+       +------------------------------------+
+       |  已初始化全局数据区 (Data Segment)   |
+       +------------------------------------+
+       |  只读代码段 (Text Segment)           |
+       +------------------------------------+ &lt;--- 0x000000000000 (低地址起点)
+</code></pre>
+<h3 id="虚拟内存空间的各个核心区域详解"><a class="header" href="#虚拟内存空间的各个核心区域详解">虚拟内存空间的各个核心区域详解：</a></h3>
+<ol>
+<li><strong>代码段（Text Segment）：</strong> 存储可执行的二进制 CPU 机器指令。此区域通常是只读的，防止程序在运行时意外或恶意修改自身指令。</li>
+<li><strong>数据段（Data Segment）：</strong> 包含程序中已初始化的全局变量和静态变量（如 <code>int global_var = 42;</code>）。其空间大小在编译链接阶段确定。</li>
+<li><strong>BSS 段（Block Started by Symbol）：</strong> 包含未初始化的全局和静态变量（如 <code>int global_uninit;</code>）。在程序加载阶段，内核会自动将该区域全部清零。</li>
+<li><strong>堆区（Heap Segment）：</strong> 动态内存分配的场所。堆的起点紧随 BSS 段之后，向高地址方向延伸。堆的顶端由一个名为 <strong>Program Break</strong>（程序断点）的指针标记。堆的分配和释放完全由程序员通过 <code>malloc</code>/<code>free</code> 系列 API 控制。</li>
+<li><strong>内存映射段（Memory Mapping Segment / Mmap）：</strong> 用于加载动态共享库（如 <code>libc.so</code>）、文件映射（通过 <code>mmap</code> 系统调用）以及大块匿名物理内存的分配。它自顶向下或自底向上生长，取决于系统内核配置。</li>
+<li><strong>栈区（Stack Segment）：</strong> 存储局部变量、函数参数以及函数调用时的上下文（返回地址、寄存器状态）。栈由编译器自动生成管理指令，在运行时由 CPU 栈指针寄存器（如 <code>%rsp</code>）直接控制，自高地址向低地址快速生长。栈的大小通常受到内核严格限制（如 <code>ulimit -s</code> 限制的 8MB）。</li>
+</ol>
+<hr>
+<h2 id="核心系统调用brksbrk-与-mmap"><a class="header" href="#核心系统调用brksbrk-与-mmap">核心系统调用：<code>brk</code>/<code>sbrk</code> 与 <code>mmap</code></a></h2>
+<p>用户态的 <code>malloc</code> 库并不是凭空产生内存的，它必须向操作系统内核申请虚拟内存页（以 4KB 为基本单位）。当 <code>malloc</code> 收到内存请求时，会根据请求的大小，选择不同的底层系统调用来向内核“批发”虚拟空间：</p>
+<pre><code class="language-text">                         +-----------------------------+
+                         |     C 应用程序 (用户态)      |
+                         +-----------------------------+
+                                     |
+                                     | 调用 malloc(size)
+                                     v
+                        +-------------------------------+
+                        | glibc ptmalloc 用户态分配管理器 |
+                        +-------------------------------+
+                               /                 \
+                 小于 128KB   /                   \   大于等于 128KB
+                (小额分配)   /                     \  (大额分配)
+                            v                       v
+                     +------------+           +------------+
+                     | brk / sbrk |           |    mmap    |
+                     +------------+           +------------+
+                            \                       /
+                             \ 触发缺页中断时映射    /
+                              v                   v
+                        +-------------------------------+
+                        |       Linux 内核 (内核态)      |
+                        +-------------------------------+
+</code></pre>
+<h3 id="1-brk-与-sbrk扩展堆顶断点针对小额分配"><a class="header" href="#1-brk-与-sbrk扩展堆顶断点针对小额分配">1. <code>brk</code> 与 <code>sbrk</code>：扩展堆顶断点（针对小额分配）</a></h3>
+<p>当申请的内存小于阈值（glibc 中默认为 128KB，由 <code>M_MMAP_THRESHOLD</code> 决定）时，分配器使用 <code>brk</code> 或 <code>sbrk</code> 系统调用来抬高堆顶的 Program Break 指针，使堆区向高地址方向扩展。</p>
+<pre><code class="language-c">#include &lt;unistd.h&gt;
+
+int brk(void *addr);
+void *sbrk(intptr_t increment);
+</code></pre>
+<ul>
+<li><strong><code>brk(addr)</code></strong>：直接将进程的 Program Break 指针设置为指定的虚拟地址 <code>addr</code>。若成功返回 0，失败返回 -1 并设置 <code>errno</code>。</li>
+<li><strong><code>sbrk(increment)</code></strong>：将 Program Break 指针向高地址移动 <code>increment</code> 字节。若 <code>increment</code> 为 0，则返回当前堆顶的虚拟地址；若 <code>increment</code> 为正数，则将堆顶抬高，并返回<strong>移动前</strong>的旧堆顶虚拟地址（即新分配内存的起点）。</li>
+</ul>
+<h4 id="sbrk-移动过程示意图"><a class="header" href="#sbrk-移动过程示意图">sbrk 移动过程示意图：</a></h4>
+<pre><code class="language-text">      低地址                                                             高地址
+      =========================================================================&gt;
+      |      BSS 段      |     已分配堆空间     |  新分配虚拟空间  |  未分配虚拟空间  |
+      =========================================================================&gt;
+                                             ^                 ^
+                                             |                 |
+                                      旧 Program Break   新 Program Break
+                                    (sbrk 移动前的返回值) (sbrk(increment) 之后)
+</code></pre>
+<blockquote class="blockquote-tag blockquote-tag-note">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p>
+<p><strong>延迟绑定（Lazy Allocation）</strong>：无论是 <code>brk</code> 还是 <code>mmap</code>，在成功执行系统调用后，内核仅在页表（Page Table）中分配了虚拟地址范围，并<strong>没有</strong>立刻分配物理内存页。只有当程序首次读写这块新分配的虚拟内存时，CPU 会触发<strong>缺页中断（Page Fault）</strong>，内核才会去物理内存中寻找空闲页帧，并将其与虚拟地址建立映射关系。这极大节省了系统资源。</p>
+</blockquote>
+<h3 id="2-mmap-与-munmap匿名映射针对大额分配"><a class="header" href="#2-mmap-与-munmap匿名映射针对大额分配">2. <code>mmap</code> 与 <code>munmap</code>：匿名映射（针对大额分配）</a></h3>
+<p>当分配请求大小超过 <code>M_MMAP_THRESHOLD</code>（通常为 128KB 至 512KB）时，为了防止在堆区内部留下大量无法归还给操作系统的碎空闲块，<code>malloc</code> 会调用 <code>mmap</code> 在虚拟内存映射区申请一块独立的虚拟内存空间。</p>
+<pre><code class="language-c">#include &lt;sys/mman.h&gt;
+
+void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset);
+int munmap(void *addr, size_t length);
+</code></pre>
+<ul>
+<li>在 <code>malloc</code> 中，大内存的匿名映射调用方式如下：
+<pre><code class="language-c">void *ptr = mmap(NULL, length, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+</code></pre>
+<ul>
+<li><code>addr = NULL</code>：由操作系统自动选择合适的虚拟地址进行映射。</li>
+<li><code>length</code>：需要分配的内存字节数（会自动对齐到 4KB 页面边界）。</li>
+<li><code>PROT_READ | PROT_WRITE</code>：映射区域可读、可写。</li>
+<li><code>MAP_PRIVATE | MAP_ANONYMOUS</code>：私有映射且为匿名映射（不关联任何物理文件，数据保存在物理 RAM 中，与文件描述符无关）。</li>
+<li><code>fd = -1</code>, <code>offset = 0</code>：因为是匿名映射，文件描述符和偏移量被忽略。</li>
+</ul>
+</li>
+<li><strong>物理内存释放</strong>：当对这块内存调用 <code>free(ptr)</code> 时，分配器内部会立即调用 <code>munmap(ptr, length)</code>。操作系统内核会立即销毁对应的页表映射，将物理页回收，这块虚拟内存会立即交还给内核。而使用 <code>brk</code>/<code>sbrk</code> 扩展的内存，即使调用 <code>free</code> 也通常无法立即交还操作系统，只能退回到分配器的空闲链表中等待复用。</li>
+</ul>
+<hr>
+<h2 id="现代分配器元数据管理以-glibc-ptmalloc-为例"><a class="header" href="#现代分配器元数据管理以-glibc-ptmalloc-为例">现代分配器元数据管理（以 glibc <code>ptmalloc</code> 为例）</a></h2>
+<p>为了高效管理分配出的内存并实现高频复用，分配器必须知道每一块已分配或已释放内存的<strong>大小</strong>与<strong>状态</strong>。这些信息就保存在内存块的头部，称为<strong>元数据（Metadata）</strong>。</p>
+<h3 id="1-堆块chunk的物理布局"><a class="header" href="#1-堆块chunk的物理布局">1. 堆块（Chunk）的物理布局</a></h3>
+<p>在 glibc <code>ptmalloc</code> 中，内存的分配单位是 <code>malloc_chunk</code>（堆块）。它的结构非常紧凑，根据使用状态（In-Use）与空闲状态（Free），其内部字段的物理复用逻辑如下：</p>
+<h4 id="a-处于使用状态中的-chunk-物理结构"><a class="header" href="#a-处于使用状态中的-chunk-物理结构">A. 处于使用状态中的 Chunk 物理结构：</a></h4>
+<pre><code class="language-text">+-----------------------+-----------------------+
+|  prev_size (8 bytes)  | 如果前一个相邻 chunk 是空闲的，记录其物理大小；若前块已分配，此空间可复用为前块用户数据 |
++-----------------------+-----------------------+
+|    size (8 bytes)     | 当前 chunk 的总大小（包括头部），由于对齐，低 3 位用作状态标志位 [A|M|P]      |
++-----------------------+-----------------------+ &lt;--- malloc(N) 返回给用户的指针 ptr 指向这里
+|                                               |
+|               用户数据区 (User Data)           |
+|               (大小为 8 或 16 字节对齐)         |
+|                                               |
++-----------------------------------------------+
+</code></pre>
+<ul>
+<li><strong><code>prev_size</code></strong>：仅在前一个相邻低地址 chunk 是空闲状态（Free）时有效，记录前块大小。如果前块正在被使用，<code>prev_size</code> 字段是无用的，为了节省内存，前块的用户数据会直接延伸并覆盖写入这个 8 字节空间（这称为“空间复用”）。</li>
+<li><strong><code>size</code></strong>：表示当前 chunk 的总大小（单位是字节）。在 64 位系统上，所有 chunk 大小必须按 16 字节对齐，因此 <code>size</code> 值的低 3 位（bit 2, bit 1, bit 0）必然为 0。分配器复用了这 3 位作为控制标志：
+<ul>
+<li><strong><code>A</code> (NON_MAIN_ARENA, 值为 0x4)</strong>：非主分配区标志。1 表示该 chunk 来自线程创建的次要分配区（Non-main Arena），0 表示来自进程主分配区（Main Arena）。</li>
+<li><strong><code>M</code> (IS_MMAPPED, 值为 0x2)</strong>：通过 <code>mmap</code> 匿名映射分配标志。1 表示是通过 <code>mmap</code> 分配的大内存，0 表示通过 <code>brk</code> 扩展堆分配。</li>
+<li><strong><code>P</code> (PREV_INUSE, 值为 0x1)</strong>：前一相邻物理堆块使用标志。1 表示前一个相邻堆块正在被使用，0 表示前一相邻堆块空闲。<strong>这是 <code>free</code> 时判断是否与前一相邻块进行内存合并的关键依据。</strong></li>
+</ul>
+</li>
+</ul>
+<h4 id="b-处于空闲状态中的-chunk-物理结构"><a class="header" href="#b-处于空闲状态中的-chunk-物理结构">B. 处于空闲状态中的 Chunk 物理结构：</a></h4>
+<p>当一个 chunk 被 <code>free</code> 后，它内部的用户数据区不再起作用。分配器会将其改写为指针链表节点，用于将空闲块组织起来：</p>
+<pre><code class="language-text">+-----------------------+-----------------------+
+|  prev_size (8 bytes)  | 前一个相邻块空闲时，记录其大小（同上）                                        |
++-----------------------+-----------------------+
+|    size (8 bytes)     | 当前 chunk 的总大小，低 3 位 [A|M|P]                                        |
++-----------------------+-----------------------+ &lt;--- 链表指针复用了原本的用户数据区
+|      fd (8 bytes)     | Forward Pointer：指向当前 Bins 链表中的下一个空闲 Chunk                         |
++-----------------------+-----------------------+
+|      bk (8 bytes)     | Backward Pointer：指向当前 Bins 链表中的前一个空闲 Chunk                        |
++-----------------------+-----------------------+
+|  fd_nextsize (8bytes) | 仅在 Largebin 中有效：指向下一个不同大小的空闲 Chunk                             |
++-----------------------+-----------------------+
+|  bk_nextsize (8bytes) | 仅在 Largebin 中有效：指向前一个不同大小的空闲 Chunk                             |
++-----------------------+-----------------------+
+</code></pre>
+<h3 id="2-线程缓存与空闲链表bins体系"><a class="header" href="#2-线程缓存与空闲链表bins体系">2. 线程缓存与空闲链表（Bins）体系</a></h3>
+<p>当程序频繁调用 <code>free</code> 时，分配器并不会立刻通过 <code>sbrk</code> 收缩堆空间（因为系统调用有较大的上下文切换开销），而是将空闲堆块根据大小和分类，放入不同的“回收箱”——<strong>Bins</strong> 中，以便下次 <code>malloc</code> 时实现 $O(1)$ 或 $O(\log N)$ 的极速复用。</p>
+<p>glibc 的空闲链表体系包括：</p>
+<pre><code class="language-text">               +-------------------------------------------------------+
+               |                    malloc(size)                       |
+               +-------------------------------------------------------+
+                                           |
+                                           v
+               +-------------------------------------------------------+
+               | 1. Tcache (Thread Cache - 线程局部无锁单向链表)        |
+               +-------------------------------------------------------+
+                                           | (未命中)
+                                           v
+               +-------------------------------------------------------+
+               | 2. Fastbins (小对象无合并单向链表, LIFO)               |
+               +-------------------------------------------------------+
+                                           | (未命中)
+                                           v
+               +-------------------------------------------------------+
+               | 3. Unsorted Bin (未分类空闲块缓冲双向链表, 合并整理)     |
+               +-------------------------------------------------------+
+                                           | (未命中)
+                                           v
+               +-------------------------------------------------------+
+               | 4. Smallbins (固定大小双向链表, FIFO, &lt;1024B)          |
+               +-------------------------------------------------------+
+                                           | (未命中)
+                                           v
+               +-------------------------------------------------------+
+               | 5. Largebins (范围大小排序双向链表, 支持拆分)           |
+               +-------------------------------------------------------+
+                                           | (未命中)
+                                           v
+               +-------------------------------------------------------+
+               | 6. Top Chunk (堆顶最后的预留空间，若仍不够则调用 sbrk)   |
+               +-------------------------------------------------------+
+</code></pre>
+<ul>
+<li><strong>Tcache (Thread Local Cache)</strong>：从 glibc 2.26 引入。每个线程独占一个缓存结构，包含 64 个单向链表。每个链表最多存放 7 个相同大小的空闲 chunk（范围在 24 到 1032 字节之间）。由于是线程局部存储（TLS），存取时<strong>不需要加锁</strong>，性能极高。</li>
+<li><strong>Fastbins</strong>：快速回收箱。单向链表，采用后进先出（LIFO）策略。用于存放小尺寸的空闲块（通常 $\le 80$ 字节，最大可配置至 160 字节）。为了保证极速存取，Fastbins 中的 chunk 释放后<strong>不会被清除 PREV_INUSE 标志，也不会与相邻空闲块合并</strong>。</li>
+<li><strong>Unsorted Bin</strong>：未分类回收箱。双向链表。除了 Tcache 和 Fastbin 之外，所有被释放的堆块首先进入这里。它是分配器的一个高效缓冲区。在随后的 <code>malloc</code> 动作遍历该链表时，分配器会尝试整理这些块：能直接满足请求的就分配出去，否则将其从 Unsorted Bin 移出，正确分类并归档到对应的 Smallbins 或 Largebins 中。</li>
+<li><strong>Smallbins</strong>：小型回收箱。双向链表，采用先进先出（FIFO）策略。共有 62 个 Smallbin，每个 Smallbin 链表内只包含<strong>完全相同尺寸</strong>的空闲 chunk（16、32、48… 直至小于 1024 字节）。</li>
+<li><strong>Largebins</strong>：大型回收箱。双向链表。共有 62 个 Largebin，用于存储 $\ge 1024$ 字节的空闲块。每个 Largebin 存放的是一个<strong>大小范围</strong>内的空闲块，块在链表内部按照大小从大到小降序排列，以便在分配大内存时进行快速检索。</li>
+</ul>
+<hr>
+<h2 id="堆碎片heap-fragmentation的成因与类型"><a class="header" href="#堆碎片heap-fragmentation的成因与类型">堆碎片（Heap Fragmentation）的成因与类型</a></h2>
+<p>频繁的动态内存申请与释放，很容易导致物理内存的低效利用。这种现象被称为堆碎片，主要分为两类：</p>
+<h3 id="1-内部碎片internal-fragmentation"><a class="header" href="#1-内部碎片internal-fragmentation">1. 内部碎片（Internal Fragmentation）</a></h3>
+<ul>
+<li><strong>物理表现</strong>：
+<pre><code class="language-text">+-----------------------------------------------+
+|            用户申请的 17 字节数据               | 对齐填充 (15 字节) |
++-----------------------------------------------+-----------------+
+|&lt;------------------------- 实际分配的 Chunk 大小 (32 字节) -------------&gt;|
+</code></pre>
+</li>
+<li><strong>成因</strong>：为了提高内存访问效率（如 CPU 数据对齐要求）以及简化分配器的元数据管理，分配器通常会对申请的大小进行对齐向上取整（例如 8 字节或 16 字节对齐）。如果用户申请 17 字节，分配器实际给出了 32 字节。</li>
+<li><strong>影响</strong>：多分配的 15 字节由于被分配器控制头视作该 chunk 的一部分，无法分配给其他请求，造成了微量但高频的内存隐形浪费。</li>
+</ul>
+<h3 id="2-外部碎片external-fragmentation"><a class="header" href="#2-外部碎片external-fragmentation">2. 外部碎片（External Fragmentation）</a></h3>
+<ul>
+<li><strong>物理表现</strong>：
+<pre><code class="language-text">+-----------+-----------+-----------+-----------+-----------+
+|  已占块 A  |  空闲块 B  |  已占块 C  |  空闲块 D  |  已占块 E  |  &lt;-- 堆区现状
+|  (16 KB)  |  (32 KB)  |  (16 KB)  |  (32 KB)  |  (16 KB)  |
++-----------+-----------+-----------+-----------+-----------+
+</code></pre>
+</li>
+<li><strong>成因</strong>：在程序运行中，交替释放了 B 块和 D 块。此时系统共有 64KB 的空闲内存，但它们在物理地址上是<strong>不连续</strong>的。如果程序此时申请一块 48KB 的连续内存，分配器将无法使用 B 块或 D 块进行响应，只能继续向内核调用 <code>sbrk</code> 抬高 Program Break 来获取更多空间。</li>
+<li><strong>危害</strong>：导致进程的虚拟内存和物理内存占用不断膨胀，甚至在系统明明还有大量剩余物理内存的情况下，由于找不到连续的空间而抛出 <code>ENOMEM</code>（内存不足）错误崩溃。</li>
+<li><strong>对抗策略</strong>：分配器在 <code>free</code> 时检测前后相邻块的 <code>P</code> 位，如果为空闲状态则执行<strong>合并（Coalescing）</strong>，将离散的碎小块融合成一个大块。</li>
+</ul>
+<hr>
+<h2 id="自定义内存分配器实现"><a class="header" href="#自定义内存分配器实现">自定义内存分配器实现</a></h2>
+<p>为了深入理解分配器管理的本质，我们将在 C 语言中，使用 Linux 标准的用户态堆底 <code>sbrk</code> 调用，从零实现一个具备 First-Fit（首次适应）搜索算法、8 字节对齐、块分裂（Split）以及相邻块立即合并（Coalescing）的自定义内存分配器。</p>
+<h3 id="1-核心设计框图与对齐算术"><a class="header" href="#1-核心设计框图与对齐算术">1. 核心设计框图与对齐算术</a></h3>
+<ul>
+<li><strong>8字节对齐</strong>：为了满足 CPU 存取效率，所有返回的地址必须是 8 字节的倍数。我们使用位运算宏 <code>ALIGN(size)</code>：
+<pre><code class="language-c">#define ALIGN(size) (((size) + 7) &amp; ~7)
+</code></pre>
+</li>
+<li><strong>元数据控制头</strong>：我们定义一个 <code>BlockHeader</code> 链表结构，隐式存放在用户数据指针的左侧：
+<pre><code class="language-c">typedef struct BlockHeader {
+    size_t size;               // 用户数据区的大小（不含头部自身）
+    int is_free;               // 是否空闲标记：1 代表空闲，0 代表正在使用
+    struct BlockHeader* next;   // 指向下一个物理相邻的内存块控制头
+} BlockHeader;
+</code></pre>
+在 64 位系统上，<code>BlockHeader</code> 结构体的大小为 <code>8 + 4 + 8 = 20</code> 字节。通过 <code>ALIGN</code> 宏对齐后，控制头实际占用 <code>24</code> 字节。</li>
+</ul>
+<h4 id="内存块物理连续链表布局"><a class="header" href="#内存块物理连续链表布局">内存块物理连续链表布局：</a></h4>
+<pre><code class="language-text">  global_free_list_head
+         |
+         v
+  +------------------+     +------------------+     +------------------+
+  | BlockHeader 1    |     | BlockHeader 2    |     | BlockHeader 3    |
+  | size: 32         |     | size: 64         |     | size: 16         |
+  | is_free: 0       |     | is_free: 1       |     | is_free: 0       |
+  | next: -----------&gt;----&gt;| next: -----------&gt;----&gt;| next: NULL       |
+  +------------------+     +------------------+     +------------------+
+  |  用户数据区 1    |     |  用户数据区 2    |     |  用户数据区 3    |
+  |  (32 bytes)      |     |  (64 bytes)      |     |  (16 bytes)      |
+  +------------------+     +------------------+     +------------------+
+  ^                        ^                        ^
+  block1                   block2                   block3
+  (malloc 返回 block1+1)    (空闲块可被复用/分裂)     (sbrk 申请的新堆底)
+</code></pre>
+<h3 id="2-自定义分配器完整实现-my_allocatorc"><a class="header" href="#2-自定义分配器完整实现-my_allocatorc">2. 自定义分配器完整实现 (<code>my_allocator.c</code>)</a></h3>
+<p>请阅读下方带有详尽注释的生产级 C 语言源码实现：</p>
+<pre><code class="language-c">#include &lt;stddef.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdint.h&gt;
+#include &lt;assert.h&gt;
+
+// 将传入的大小向上对齐到 8 字节的倍数
+// 例如：ALIGN(3) -&gt; 8; ALIGN(8) -&gt; 8; ALIGN(9) -&gt; 16
+#define ALIGN(size) (((size) + 7) &amp; ~7)
+
+// 内存块控制头
+typedef struct BlockHeader {
+    size_t size;               // 实际分配给用户的数据区大小（不含 BlockHeader 自身）
+    int is_free;               // 状态标志：0 表示占用，1 表示空闲
+    struct BlockHeader* next;   // 链表指针，指向物理地址相邻的下一个堆块
+} BlockHeader;
+
+// 元数据头部占用空间，必须进行 8 字节对齐
+#define BLOCK_HEADER_SIZE ALIGN(sizeof(BlockHeader))
+
+// 全局堆内存物理链表头指针
+static BlockHeader* global_free_list_head = NULL;
+
+/**
+ * @brief 使用 First-Fit (首次适应) 策略在空闲链表中寻找合适的块
+ * @param last 出参，保存遍历到的最后一个块，方便后续申请新空间时进行追加链接
+ * @param size 对齐后的请求大小
+ * @return 找到的符合条件的空闲块指针；若未找到返回 NULL
+ */
+static BlockHeader* find_free_block(BlockHeader** last, size_t size) {
+    BlockHeader* current = global_free_list_head;
+    while (current) {
+        if (current-&gt;is_free &amp;&amp; current-&gt;size &gt;= size) {
+            return current;
+        }
+        *last = current;
+        current = current-&gt;next;
+    }
+    return NULL;
+}
+
+/**
+ * @brief 向操作系统内核申请物理页扩展堆顶 (通过 sbrk 系统调用)
+ * @param last 当前链表的尾节点，新申请的块将追加到该节点后
+ * @param size 对齐后的用户数据区大小
+ * @return 新分配的块控制头指针；若系统内存耗尽返回 NULL
+ */
+static BlockHeader* request_space_from_os(BlockHeader* last, size_t size) {
+    // 获取当前堆顶的 Program Break 地址
+    BlockHeader* block = (BlockHeader*)sbrk(0);
+    
+    // 物理分配的总虚拟空间：控制头大小 + 对齐后的用户数据区大小
+    size_t total_size = BLOCK_HEADER_SIZE + size;
+    
+    // 调用 sbrk 移动堆顶指针
+    void* request = sbrk(total_size);
+    if (request == (void*)-1) {
+        return NULL; // 内存不足，sbrk 失败
+    }
+    
+    // 如果链表不为空，将新块挂载到现有链表的尾部
+    if (last) {
+        last-&gt;next = block;
+    }
+    
+    block-&gt;size = size;
+    block-&gt;is_free = 0;
+    block-&gt;next = NULL;
+    
+    return block;
+}
+
+/**
+ * @brief 块分裂 (Splitting)：将一个过大的空闲块拆分为两块，减少内部碎片
+ * @param block 待分裂的空闲块控制头指针
+ * @param size 用户请求的对齐大小
+ */
+static void split_block(BlockHeader* block, size_t size) {
+    // 分裂阈值：剩余空间必须能容纳一个完整的 BlockHeader 加上最少 8 字节的数据区
+    // 否则进行分裂反而会增加控制头的开销，得不偿失
+    if (block-&gt;size &gt;= size + BLOCK_HEADER_SIZE + 8) {
+        // 计算分裂出的新空闲块的起始物理地址
+        BlockHeader* new_block = (BlockHeader*)((char*)block + BLOCK_HEADER_SIZE + size);
+        
+        // 初始化新分裂出的空闲块控制头
+        new_block-&gt;size = block-&gt;size - size - BLOCK_HEADER_SIZE;
+        new_block-&gt;is_free = 1;
+        new_block-&gt;next = block-&gt;next;
+        
+        // 修正原块的尺寸，并将新块插入链表
+        block-&gt;size = size;
+        block-&gt;next = new_block;
+    }
+}
+
+/**
+ * @brief 首次适应动态内存分配函数
+ * @param size 用户请求分配的字节数
+ * @return 指向已分配内存的指针（已对齐）；若失败返回 NULL
+ */
+void* my_malloc(size_t size) {
+    if (size &lt;= 0) {
+        return NULL;
+    }
+    
+    // 对齐用户请求的字节大小
+    size_t aligned_size = ALIGN(size);
+    BlockHeader* block = NULL;
+    
+    // 1. 若为首次分配，则直接向系统申请空间
+    if (global_free_list_head == NULL) {
+        block = request_space_from_os(NULL, aligned_size);
+        if (!block) {
+            return NULL;
+        }
+        global_free_list_head = block;
+    } else {
+        BlockHeader* last = global_free_list_head;
+        // 2. 遍历链表寻找满足大小的空闲块
+        block = find_free_block(&amp;last, aligned_size);
+        if (block) {
+            // 3. 找到后尝试对其进行分裂，防止大块小用造成内部碎片
+            split_block(block, aligned_size);
+            block-&gt;is_free = 0;
+        } else {
+            // 4. 未找到空闲块，通过 sbrk 向内核申请新空间并挂载到链表尾部
+            block = request_space_from_os(last, aligned_size);
+            if (!block) {
+                return NULL;
+            }
+        }
+    }
+    
+    // 关键点：返回跳过 BlockHeader 控制头之后的实际数据区指针
+    return (void*)(block + 1);
+}
+
+/**
+ * @brief 空闲块合并 (Coalescing)：遍历物理相邻的节点，合并连续的空闲块以对抗外部碎片
+ */
+static void coalesce_free_blocks() {
+    BlockHeader* current = global_free_list_head;
+    while (current &amp;&amp; current-&gt;next) {
+        // 如果当前块和下一个相邻块均为空闲状态，则进行物理合并
+        if (current-&gt;is_free &amp;&amp; current-&gt;next-&gt;is_free) {
+            // 当前块的大小累加：下块的数据区大小 + 下块控制头本身大小
+            current-&gt;size += BLOCK_HEADER_SIZE + current-&gt;next-&gt;size;
+            // 从物理链表中剥离下块
+            current-&gt;next = current-&gt;next-&gt;next;
+        } else {
+            current = current-&gt;next;
+        }
+    }
+}
+
+/**
+ * @brief 动态内存释放函数
+ * @param ptr 指向需要释放的内存的指针
+ */
+void my_free(void* ptr) {
+    if (!ptr) {
+        return;
+    }
+    
+    // 核心算术：通过用户指针回退 1 个 BlockHeader 的步长，定位到头部元数据
+    BlockHeader* block = (BlockHeader*)ptr - 1;
+    
+    // 防御性断言，防止对未分配或已释放的块重复操作
+    assert(block-&gt;is_free == 0);
+    
+    // 标记为闲置
+    block-&gt;is_free = 1;
+    
+    // 释放后立即扫描整个堆链表，对物理上连续的空闲空洞进行深度合并
+    coalesce_free_blocks();
+}
+
+// ==================== 验证测试驱动程序 ====================
+
+/**
+ * @brief 打印当前自定义堆的物理链表结构，用于直观分析
+ */
+void print_heap_layout(const char* stage) {
+    printf("\n&gt;&gt;&gt; Heap Layout [%s] &lt;&lt;&lt;\n", stage);
+    BlockHeader* curr = global_free_list_head;
+    int index = 0;
+    while (curr) {
+        printf("  Block [%02d] | Addr: %p | Free: %d | DataSize: %4zu Bytes | Next: %p\n",
+               index++, (void*)curr, curr-&gt;is_free, curr-&gt;size, (void*)curr-&gt;next);
+        curr = curr-&gt;next;
+    }
+    printf("===========================================\n");
+}
+
+int main() {
+    printf("[Init] Size of BlockHeader: %zu, Aligned size: %zu\n", 
+           sizeof(BlockHeader), BLOCK_HEADER_SIZE);
+    
+    // 1. 连续分配 3 块内存
+    int* arr1 = (int*)my_malloc(10 * sizeof(int));      // 40 字节 -&gt; 对齐到 40 字节
+    char* str2 = (char*)my_malloc(100 * sizeof(char));   // 100 字节 -&gt; 对齐到 104 字节
+    double* dbl3 = (double*)my_malloc(5 * sizeof(double)); // 40 字节 -&gt; 对齐到 40 字节
+    
+    print_heap_layout("Step 1: After 3 allocations");
+    
+    // 2. 释放中间的块 str2，制造空闲空洞（外部碎片雏形）
+    printf("\n--&gt; Freeing str2 (中间块)...\n");
+    my_free(str2);
+    print_heap_layout("Step 2: After freeing str2 (Middle void created)");
+    
+    // 3. 申请一个较小的内存块，观察 First-Fit 匹配与 Split 分裂行为
+    printf("\n--&gt; Allocating tmp4 (24 Bytes, fits into str2 slot)...\n");
+    char* tmp4 = (char*)my_malloc(24); // 24 字节正好能放进 104 字节中，并满足分裂条件
+    print_heap_layout("Step 3: After allocating tmp4 (Split occurs)");
+    
+    // 4. 释放 tmp4 和 dbl3，观察相邻物理空闲块的 Coalesce 合并
+    printf("\n--&gt; Freeing tmp4 and dbl3 to trigger coalescing...\n");
+    my_free(tmp4);
+    my_free(dbl3); // 此时堆中会产生连续的空闲区，将触发合并
+    print_heap_layout("Step 4: After freeing tmp4 and dbl3 (Coalescing complete)");
+    
+    // 5. 释放最后剩下的 arr1，堆恢复全空闲且单一节点状态
+    printf("\n--&gt; Freeing arr1 (最后剩下的占用块)...\n");
+    my_free(arr1);
+    print_heap_layout("Step 5: Final State (All merged into one big free block)");
+    
+    return 0;
+}
+</code></pre>
+<h3 id="3-指针算术核心机制深度剖析"><a class="header" href="#3-指针算术核心机制深度剖析">3. 指针算术核心机制深度剖析</a></h3>
+<p>在该自定义分配器中，有两个关键设计支撑着其稳定运行：</p>
+<ul>
+<li><strong>指针平移 <code>(BlockHeader*)ptr - 1</code></strong>：
+在 C 语言的指针算术中，对类型为 <code>T*</code> 的指针加减整数 <code>N</code>，其在内存中的实际地址偏移量是 <code>N * sizeof(T)</code>。由于我们在分配时返回给用户的地址是 <code>block + 1</code>，它在地址上向右偏过了 <code>BLOCK_HEADER_SIZE</code>。在 <code>my_free</code> 时，我们将 <code>void* ptr</code> 先强转为 <code>BlockHeader*</code>，然后减 1，物理地址就会精确向左回退 <code>sizeof(BlockHeader)</code> 字节，完美重新定位到存放控制头的首地址。</li>
+<li><strong>分裂（Split）与合并（Coalesce）的临界条件</strong>：
+在 <code>split_block</code> 中，我们做了一个防御性检查：<code>block-&gt;size &gt;= size + BLOCK_HEADER_SIZE + 8</code>。如果不做此限制，分裂出一个只有 1 字节数据区的空闲块，其所需的控制头却需要占用 24 字节。这种“元数据膨胀”会导致堆区极度低效。因此，只有当剩余空闲块足够大，且除去控制头后至少还能存放 8 字节用户数据时，分裂才被执行。</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../allocators/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../allocators/memory-leaks-traps.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../allocators/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../allocators/memory-leaks-traps.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-c22b7243.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../../__shared_theme/custom-mdbook.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

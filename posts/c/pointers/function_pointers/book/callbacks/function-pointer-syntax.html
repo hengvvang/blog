@@ -1,0 +1,626 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>第一章：函数指针语法与回调函数设计 - Function Pointers, Compiler Optimizations &amp; Routing</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Deep dive into function pointer syntax, indirect branch assembly translation, branch prediction, and state machines.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-0392ca55.css">
+        <link rel="stylesheet" href="../css/chrome-fc474251.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../__shared_theme/custom-mdbook.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-8c5fdc3f.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d30ee117.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Function Pointers, Compiler Optimizations &amp; Routing</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="第一章函数指针语法与回调函数设计"><a class="header" href="#第一章函数指针语法与回调函数设计">第一章：函数指针语法与回调函数设计</a></h1>
+<p>在 C 语言中，指针不仅可以用来操作堆栈或堆内存中的数据，还可以直接指向代码段（Text Segment）中的指令。指向函数的指针（即函数指针）是 C 语言中实现运行时多态性、构建模块化回调系统、设计驱动抽象层（HAL）最核心的工具。然而，复杂的函数指针声明、指针与数组及返回值的结合常使开发者感到头疼。</p>
+<p>本章将从程序的物理存储模型出发，深入解构函数指针的语法本质，提供系统解析复杂声明的“右左法则”（Right-Left Rule），探讨如何用 <code>typedef</code> 重构生产级接口，并展示基于“上下文（Context-Passing）”的防弹级回调函数设计模式。</p>
+<hr>
+<h2 id="1-程序存储模型与函数指针的物理本质"><a class="header" href="#1-程序存储模型与函数指针的物理本质">1. 程序存储模型与函数指针的物理本质</a></h2>
+<p>要真正掌握函数指针，必须理解其在内存中的映射关系。当一个 C 语言程序被编译并加载进内存运行（通常由操作系统或引导装载程序完成）时，其虚拟内存空间具有清晰的区域划分。</p>
+<p>下面是一个标准的 C 语言进程虚拟内存映射示意图：</p>
+<pre><code>+-----------------------------------+ 0xFFFFFFFF (高地址)
+|         内核空间 (Kernel Space)    | (由操作系统保护，应用层不可直接访问)
++-----------------------------------+
+|             栈 (Stack)            | &lt;--- 存放局部变量、函数参数、返回地址、
+|                 |                 |      函数指针变量本身 (例如 `void (*fp)(void)`)
+|                 v                 |      随着函数调用周期动态分配和释放
+|                                   |
+|                 ^                 |
+|                 |                 |
+|             堆 (Heap)             | &lt;--- 动态分配的内存 (malloc/free)，可存放包含
+|                                   |      函数指针的结构体实例
++-----------------------------------+
+|      未初始化数据段 (.bss)         | &lt;--- 全局或静态未初始化的函数指针变量 (默认清零为 NULL)
++-----------------------------------+
+|      已初始化数据段 (.data)        | &lt;--- 全局或静态已初始化的函数指针变量
++-----------------------------------+
+|      只读数据段 (.rodata)          | &lt;--- 字符串常量、虚函数表 (vtable)、只读路由跳转表
++-----------------------------------+
+|         代码段 (.text)            | &lt;--- 具体的函数机器指令 (如 `log_message` 的首地址)
++-----------------------------------+ 0x00000000 (低地址)
+</code></pre>
+<h3 id="11-机器码的首地址"><a class="header" href="#11-机器码的首地址">1.1 机器码的首地址</a></h3>
+<p>当编译器编译一个函数（如 <code>void log_message(const char *msg)</code>）时，会将该函数的 C 语言逻辑翻译为一串连续的 CPU 机器指令，并将它们放置在 ELF 或 PE 可执行文件的 <code>.text</code> 段中。</p>
+<ul>
+<li><strong>函数名</strong>在大多数表达式上下文中会被隐式转换为该函数起始指令的虚拟内存地址（这被称为<strong>函数退化</strong>，类似于数组名退化为首元素指针）。</li>
+<li><strong>函数指针变量</strong>的物理本质是一个大小等于系统字长（32 位系统下为 4 字节，64 位系统下为 8 字节）的内存单元，内部存储的值正是目标函数在 <code>.text</code> 段中的首指令地址。</li>
+</ul>
+<h3 id="12-函数地址的获取与调用"><a class="header" href="#12-函数地址的获取与调用">1.2 函数地址的获取与调用</a></h3>
+<p>在 C 语言中，获取函数地址和通过函数指针调用函数有显式和隐式两种写法：</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+void log_message(const char *msg) {
+    printf("Log: %s\n", msg);
+}
+
+int main(void) {
+    // 1. 声明并初始化函数指针
+    // 显式写法：使用 &amp; 符号获取地址，与声明语法完全呼应
+    void (*fp1)(const char *) = &amp;log_message; 
+    
+    // 隐式写法：函数名退化为指针，直接赋值 (生产环境推荐，更简洁)
+    void (*fp2)(const char *) = log_message;  
+
+    // 2. 调用方式
+    // 显式解引用调用：逻辑严密，指示了 fp1 是一个指针
+    (*fp1)("Hello via explicit dereference!"); 
+    
+    // 隐式调用：语法上更像普通函数调用 (生产环境推荐)
+    fp2("Hello via implicit dereference!");  
+
+    // 趣味探讨：下面的调用能成功吗？
+    // 答案是肯定的。根据 C 语言标准，调用运算符 `()` 的左侧操作数必须是一个“指向函数的指针”。
+    // `fp2` 是指针，`*fp2` 退化回函数，但为了执行调用，编译器又会将其转换为指针。
+    // 因此，无论多少层解引用，最终在机器码层面都等价于 `call` 指令跳转到 `log_message` 的地址。
+    (***fp2)("Hello via multiple dereferences!"); 
+
+    return 0;
+}
+</code></pre>
+<hr>
+<h2 id="2-核心语法解析从普通指针到复杂声明"><a class="header" href="#2-核心语法解析从普通指针到复杂声明">2. 核心语法解析：从普通指针到复杂声明</a></h2>
+<p>C 语言声明语法的难点在于：<strong>运算符的结合优先级不同</strong>。
+特别是函数调用运算符 <code>()</code> 和数组下标运算符 <code>[]</code> 的优先级，均高于指针解引用运算符 <code>*</code>。</p>
+<h3 id="21-指针函数-vs-函数指针"><a class="header" href="#21-指针函数-vs-函数指针">2.1 指针函数 vs 函数指针</a></h3>
+<p>我们对比以下两个基础声明：</p>
+<pre><code class="language-c">int *func1(int a, double b);  // 1. 指针函数 (Pointer-returning Function)
+int (*func2)(int a, double b); // 2. 函数指针 (Function Pointer)
+</code></pre>
+<ul>
+<li><strong><code>func1</code> 的解析</strong>：
+由于 <code>()</code> 的优先级高于 <code>*</code>，<code>func1</code> 首先与 <code>(int a, double b)</code> 结合，表明 <code>func1</code> 是一个<strong>函数</strong>。紧接着，左侧的 <code>int *</code> 表明该函数的返回值是一个指向整型的指针（即 <code>int *</code>）。</li>
+<li><strong><code>func2</code> 的解析</strong>：
+由于圆括号将 <code>*func2</code> 括了起来，解引用运算符强制先生效。这表明 <code>func2</code> 本身是一个<strong>指针</strong>。接着，它与右侧的参数列表 <code>(int a, double b)</code> 结合，表明该指针指向一个函数，最后左侧的 <code>int</code> 指明该函数的返回值是 <code>int</code>。</li>
+</ul>
+<pre><code>直接看对比：
+  func1:  [  func1  ] ---&gt; ( 参数列表 ) ---&gt; 返回 [ int* ]
+  func2:  (*[ func2 ]) ---&gt; 指向函数 ---&gt; ( 参数列表 ) ---&gt; 返回 [ int ]
+</code></pre>
+<hr>
+<h2 id="3-复杂声明的解密利器右左法则"><a class="header" href="#3-复杂声明的解密利器右左法则">3. 复杂声明的解密利器：“右左法则”</a></h2>
+<p>面对高度嵌套的声明，例如含有数组、多级指针和复杂返回值的指针，人脑直觉往往容易出错。为此，C 语言社区总结出了<strong>右左法则（Right-Left Rule）</strong>。这是一套无视嵌套深度、机械化拆解声明的系统级方法。</p>
+<h3 id="31-右左法则的核心步骤"><a class="header" href="#31-右左法则的核心步骤">3.1 右左法则的核心步骤</a></h3>
+<ol>
+<li><strong>定位核心标识符</strong>：从声明的变量名（或标识符）开始阅读。</li>
+<li><strong>向右看</strong>：看标识符右侧紧邻的符号。
+<ul>
+<li>如果是 <code>[]</code>，说明这是一个数组。</li>
+<li>如果是 <code>()</code>，说明这是一个函数。</li>
+</ul>
+</li>
+<li><strong>向左看</strong>：看标识符左侧紧邻的符号。
+<ul>
+<li>如果是 <code>*</code>，说明这是一个指针。</li>
+</ul>
+</li>
+<li><strong>遇括号脱出</strong>：如果遇到包裹当前解析部分的圆括号，说明括号内的内容已经解析为一个完整的语义单元。脱去这层括号，跳转到括号外部，重复步骤 2 和 3。</li>
+<li><strong>归纳基本类型</strong>：直到解析完整个声明，最左侧剩下的就是基础数据类型（如 <code>int</code>, <code>void</code>, <code>char</code>, <code>double</code> 等）。</li>
+</ol>
+<hr>
+<h3 id="32-经典案例演练"><a class="header" href="#32-经典案例演练">3.2 经典案例演练</a></h3>
+<h4 id="案例-1标准库的-signal-函数原型"><a class="header" href="#案例-1标准库的-signal-函数原型">案例 1：标准库的 <code>signal</code> 函数原型</a></h4>
+<pre><code class="language-c">void (*signal(int sig, void (*func)(int)))(int);
+</code></pre>
+<p>我们利用右左法则进行拆解：</p>
+<ol>
+<li><strong>定位核心</strong>：找到变量/函数名 <code>signal</code>。</li>
+<li><strong>右侧视</strong>：右侧是 <code>(int sig, void (*func)(int))</code>。这说明 <code>signal</code> 是一个<strong>函数</strong>。
+<ul>
+<li>该函数有两个参数：一个是 <code>int sig</code>。</li>
+<li>另一个参数是 <code>func</code>。对于 <code>func</code> 再次应用右左法则：右侧无，左侧有 <code>*</code> 说明是<strong>指针</strong>，遇括号脱出，右侧有 <code>(int)</code> 说明指向<strong>接收一个 int 的函数</strong>，左侧有 <code>void</code> 说明<strong>该函数返回 void</strong>。所以，<code>func</code> 是一个指向 <code>void f(int)</code> 形式的函数的指针。</li>
+</ul>
+</li>
+<li><strong>左侧视</strong>：在 <code>(*signal(...))</code> 中，左侧是 <code>*</code>。这说明 <code>signal</code> 函数的<strong>返回值是一个指针</strong>。</li>
+<li><strong>脱括号</strong>：此时，<code>(*signal(...))</code> 整体被解析完毕。脱掉外层括号，向右看。</li>
+<li><strong>右侧视</strong>：右侧是 <code>(int)</code>。这说明刚才得到的返回值指针指向的是一个<strong>接收一个 int 参数的函数</strong>。</li>
+<li><strong>左侧视</strong>：最左侧是 <code>void</code>。说明被指向的那个函数<strong>返回 void</strong>。</li>
+</ol>
+<p><strong>拆解结论</strong>：<code>signal</code> 是一个函数，它接收一个 <code>int</code> 和一个函数指针作为参数，并返回一个指向“接收 <code>int</code> 并返回 <code>void</code> 的函数”的指针。</p>
+<hr>
+<h4 id="案例-2高维回调数组"><a class="header" href="#案例-2高维回调数组">案例 2：高维回调数组</a></h4>
+<pre><code class="language-c">void (*(*f[])(int, void (*)(void)))(int);
+</code></pre>
+<p>拆解步骤如下：</p>
+<ol>
+<li><strong>定位核心</strong>：变量名是 <code>f</code>。</li>
+<li><strong>右侧视</strong>：右侧是 <code>[]</code>。说明 <code>f</code> 是一个<strong>数组</strong>。</li>
+<li><strong>左侧视</strong>：左侧是 <code>*</code>。说明数组 <code>f</code> 的元素是<strong>指针</strong>。</li>
+<li><strong>脱括号</strong>：<code>(*f[])</code> 解析完毕。脱去括号，向右看。</li>
+<li><strong>右侧视</strong>：右侧是 <code>(int, void (*)(void))</code>。说明刚才的指针指向一个<strong>函数</strong>，该函数接收两个参数：一个 <code>int</code> 以及一个无参且返回 <code>void</code> 的函数指针。</li>
+<li><strong>左侧视</strong>：左侧是 <code>*</code>。说明这个函数的<strong>返回值是一个指针</strong>。</li>
+<li><strong>脱括号</strong>：<code>(*(*f[])(...))</code> 解析完毕。脱去括号，向右看。</li>
+<li><strong>右侧视</strong>：右侧是 <code>(int)</code>。说明返回值指针指向另一个<strong>接收单个 int 的函数</strong>。</li>
+<li><strong>左侧视</strong>：最左侧是 <code>void</code>。说明最终被指向的那个函数<strong>返回 void</strong>。</li>
+</ol>
+<p><strong>拆解结论</strong>：<code>f</code> 是一个数组，数组中的每个元素都是一个函数指针。这些函数接收一个 <code>int</code> 和一个无参回调函数，并且它们返回另一个函数指针（指向接收 <code>int</code> 并返回 <code>void</code> 的函数）。</p>
+<hr>
+<h4 id="案例-3操作系统内核中的硬件中断表声明"><a class="header" href="#案例-3操作系统内核中的硬件中断表声明">案例 3：操作系统内核中的硬件中断表声明</a></h4>
+<pre><code class="language-c">int (*(*fp_arr[5])(int *))[10];
+</code></pre>
+<p>拆解步骤如下：</p>
+<ol>
+<li><strong>定位核心</strong>：变量名是 <code>fp_arr</code>。</li>
+<li><strong>右侧视</strong>：右侧是 <code>[5]</code>。说明 <code>fp_arr</code> 是一个<strong>包含 5 个元素的数组</strong>。</li>
+<li><strong>左侧视</strong>：左侧是 <code>*</code>。说明数组的元素是<strong>指针</strong>。</li>
+<li><strong>脱括号</strong>：<code>(*fp_arr[5])</code> 解析完毕，向右看。</li>
+<li><strong>右侧视</strong>：右侧是 <code>(int *)</code>。说明这些指针指向一个<strong>函数</strong>，该函数接收一个指向整型的指针参数 <code>int *</code>。</li>
+<li><strong>左侧视</strong>：左侧是 <code>*</code>。说明该函数的<strong>返回值是一个指针</strong>。</li>
+<li><strong>脱括号</strong>：<code>(*(*fp_arr[5])(int *))</code> 解析完毕，向右看。</li>
+<li><strong>右侧视</strong>：右侧是 <code>[10]</code>。说明返回值指针指向的是一个<strong>包含 10 个整型元素的数组</strong>。</li>
+<li><strong>左侧视</strong>：最左侧是 <code>int</code>。说明这个数组中的元素类型是 <code>int</code>。</li>
+</ol>
+<p><strong>拆解结论</strong>：<code>fp_arr</code> 是一个由 5 个元素组成的数组。每个元素都是一个函数指针，指向接收 <code>int *</code> 参数的函数。该函数返回一个指针，指向一个包含 10 个 <code>int</code> 元素的数组。</p>
+<hr>
+<h2 id="4-使用-typedef-驯服复杂语法"><a class="header" href="#4-使用-typedef-驯服复杂语法">4. 使用 <code>typedef</code> 驯服复杂语法</a></h2>
+<p>在生产实践中，我们<strong>绝对不要</strong>直接在业务代码里书写上述类似 <code>void (*(*f[])(int, void (*)(void)))(int)</code> 的声明。这会严重破坏可读性，并且任何拼写错误都极难通过静态分析排查。</p>
+<p><code>typedef</code> 关键字的作用是定义一种类型别名。编写 <code>typedef</code> 的黄金法则非常简单：</p>
+<blockquote>
+<p><strong>法则</strong>：先按照声明一个普通变量的方式写出该变量的声明，然后在整行最前面加上 <code>typedef</code>，最后将变量名替换为你想要的别名。</p>
+</blockquote>
+<p>我们用此法则重构上面的两个复杂案例：</p>
+<h3 id="41-重构标准库-signal-的声明"><a class="header" href="#41-重构标准库-signal-的声明">4.1 重构标准库 <code>signal</code> 的声明</a></h3>
+<pre><code class="language-c">// 1. 写出普通变量（指针）的声明：
+void (*func_ptr)(int);
+
+// 2. 加上 typedef，将 func_ptr 替换为类型名 SigHandler_t：
+typedef void (*SigHandler_t)(int);
+
+// 3. 此时 SigHandler_t 代表“接收 int 并返回 void 的函数指针”类型
+// 4. 重构 signal 函数声明，使其极其直观：
+SigHandler_t signal(int sig, SigHandler_t func);
+</code></pre>
+<h3 id="42-重构高维回调数组-f"><a class="header" href="#42-重构高维回调数组-f">4.2 重构高维回调数组 <code>f[]</code></a></h3>
+<pre><code class="language-c">// 1. 定义最内层无参回调类型
+typedef void (*VoidCallback_t)(void);
+
+// 2. 定义最终被指向的输出回调类型 (接收 int, 返回 void)
+typedef void (*OutputCallback_t)(int);
+
+// 3. 定义数组元素对应的函数指针类型
+// 它接收 (int, VoidCallback_t)，并返回一个 OutputCallback_t
+typedef OutputCallback_t (*ActionFunc_t)(int, VoidCallback_t);
+
+// 4. 声明包含 10 个元素的函数指针数组，极为简洁：
+ActionFunc_t f[10];
+</code></pre>
+<p>通过将复杂的生命分步进行 <code>typedef</code> 定义，不仅让代码可读性呈数量级上升，更在语义层面清晰地向调用者表达了每一层回调的职责。</p>
+<hr>
+<h2 id="5-生产级实践基于上下文的回调模式设计"><a class="header" href="#5-生产级实践基于上下文的回调模式设计">5. 生产级实践：基于上下文的回调模式设计</a></h2>
+<p>回调函数是软件解耦的核心模式。但是，C 语言初学者在使用回调函数时常常犯下一个严重的系统架构错误：<strong>不传递上下文指针（Context Pointer）</strong>。</p>
+<h3 id="51-为什么必须传递上下文指针"><a class="header" href="#51-为什么必须传递上下文指针">5.1 为什么必须传递上下文指针？</a></h3>
+<p>如果回调函数的签名设计成类似于 <code>void (*on_event)(int event_id)</code>，这就意味着当回调被触发时，接收通知的一端无法获知关于调用上下文的任何细节。为了在回调中处理业务，开发者不得不声明大量的<strong>全局变量</strong>。
+全局变量的引入会带来以下严重后果：</p>
+<ol>
+<li><strong>不可重入性 (Non-reentrancy)</strong>：如果同一个模块在系统中创建了两个实例（例如，两路独立的串口控制），它们的回调函数会互相污染相同的全局变量。</li>
+<li><strong>线程安全隐患</strong>：在多线程或硬中断环境下，读写全局变量会引发激烈的竞态条件，导致死锁或数据损坏。</li>
+<li><strong>破坏解耦</strong>：底层模块被迫感知了上层模块的全局命名空间。</li>
+</ol>
+<p><strong>防弹设计标准</strong>：所有回调函数的签名中，都必须包含一个 <code>void *user_data</code>（或 <code>void *context</code>）参数。该指针通常是回调注册时由上层传入，并在触发回调时原封不动地传回上层。</p>
+<hr>
+<h3 id="52-生产级-c-代码实现温湿度监控报警系统"><a class="header" href="#52-生产级-c-代码实现温湿度监控报警系统">5.2 生产级 C 代码实现：温湿度监控报警系统</a></h3>
+<p>以下代码展示了如何通过传递 <code>user_data</code> 上下文指针，在不使用任何全局变量的情况下，支持多个传感器实例独立监控并向不同的接收者发送回调。</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+// ----------------------------------------------------
+// 底层传感器驱动层 (HAL/Driver)
+// ----------------------------------------------------
+
+// 1. 定义回调函数指针类型，强制携带 void* user_data 上下文指针
+typedef void (*SensorCallback_t)(float temperature, float humidity, void *user_data);
+
+// 传感器控制结构体
+typedef struct {
+    char sensor_name[16];
+    float temp_threshold;
+    SensorCallback_t alarm_cb;  // 注册的回调函数指针
+    void *cb_user_data;         // 注册时传入的上下文数据
+} SensorMonitor_t;
+
+// 初始化传感器监控器
+void sensor_init(SensorMonitor_t *monitor, const char *name, float temp_limit) {
+    if (monitor == NULL) return;
+    strncpy(monitor-&gt;sensor_name, name, sizeof(monitor-&gt;sensor_name) - 1);
+    monitor-&gt;sensor_name[sizeof(monitor-&gt;sensor_name) - 1] = '\0';
+    monitor-&gt;temp_threshold = temp_limit;
+    monitor-&gt;alarm_cb = NULL;
+    monitor-&gt;cb_user_data = NULL;
+}
+
+// 注册回调函数和对应的上下文
+void sensor_register_alarm(SensorMonitor_t *monitor, SensorCallback_t cb, void *user_data) {
+    if (monitor == NULL) return;
+    monitor-&gt;alarm_cb = cb;
+    monitor-&gt;cb_user_data = user_data;
+}
+
+// 模拟传感器采集数据并触发监控判定
+void sensor_poll(SensorMonitor_t *monitor, float current_temp, float current_humi) {
+    if (monitor == NULL) return;
+    
+    printf("[%s] Polling: Temp=%.2f C, Humi=%.2f%%\n", monitor-&gt;sensor_name, current_temp, current_humi);
+    
+    // 如果温度超过阈值且注册了回调，则安全调用回调
+    if (current_temp &gt; monitor-&gt;temp_threshold) {
+        if (monitor-&gt;alarm_cb != NULL) {
+            // 防御性设计：调用前检查，并把用户上下文 user_data 原封不动传回
+            monitor-&gt;alarm_cb(current_temp, current_humi, monitor-&gt;cb_user_data);
+        }
+    }
+}
+
+// ----------------------------------------------------
+// 上层应用业务层 (Application Layer)
+// ----------------------------------------------------
+
+// 业务实例 A 的私有数据上下文
+typedef struct {
+    int alarm_count;
+    char log_filename[32];
+} AppContextA_t;
+
+// 业务实例 B 的私有数据上下文
+typedef struct {
+    float max_temp_recorded;
+    int critical_flag;
+} AppContextB_t;
+
+// 回调接收器 A 的具体实现 (将警报写入特定日志文件)
+void app_callback_a(float temp, float humi, void *user_data) {
+    // 强制转换为注册时的具体类型
+    AppContextA_t *ctx = (AppContextA_t *)user_data;
+    if (ctx == NULL) return;
+    
+    ctx-&gt;alarm_count++;
+    printf("  &gt;&gt; [AppCallback-A] Triggered! Writing to %s. Total Alarms: %d\n", 
+           ctx-&gt;log_filename, ctx-&gt;alarm_count);
+    // 实际生产中这里可能是 fprintf 写入文件
+}
+
+// 回调接收器 B 的具体实现 (更新最大温度并记录状态)
+void app_callback_b(float temp, float humi, void *user_data) {
+    AppContextB_t *ctx = (AppContextB_t *)user_data;
+    if (ctx == NULL) return;
+    
+    if (temp &gt; ctx-&gt;max_temp_recorded) {
+        ctx-&gt;max_temp_recorded = temp;
+    }
+    ctx-&gt;critical_flag = 1;
+    printf("  &gt;&gt; [AppCallback-B] Triggered! Critical Flag Set. Max Temp Recorded: %.2f C\n", 
+           ctx-&gt;max_temp_recorded);
+}
+
+// ----------------------------------------------------
+// 主测试流程
+// ----------------------------------------------------
+int main(void) {
+    // 实例化两个独立的传感器设备
+    SensorMonitor_t sensor_kitchen;
+    SensorMonitor_t sensor_server_room;
+    
+    sensor_init(&amp;sensor_kitchen, "KitchenSensor", 60.0f);     // 厨房报警阈值 60度
+    sensor_init(&amp;sensor_server_room, "ServerRoomSensor", 35.0f); // 机房报警阈值 35度
+
+    // 实例化两个应用层的私有上下文（独立维护各自的数据，无需任何全局变量）
+    AppContextA_t kitchen_context = { .alarm_count = 0, .log_filename = "kitchen_err.log" };
+    AppContextB_t server_context  = { .max_temp_recorded = 0.0f, .critical_flag = 0 };
+
+    // 交叉绑定：注册回调函数，并传入各自对应的上下文结构体指针
+    sensor_register_alarm(&amp;sensor_kitchen, app_callback_a, &amp;kitchen_context);
+    sensor_register_alarm(&amp;sensor_server_room, app_callback_b, &amp;server_context);
+
+    printf("--- Phase 1: Normal Polling ---\n");
+    sensor_poll(&amp;sensor_kitchen, 25.4f, 50.2f);
+    sensor_poll(&amp;sensor_server_room, 28.1f, 40.5f);
+
+    printf("\n--- Phase 2: Alarm Triggering ---\n");
+    // 触发厨房温度超阈值 -&gt; 调用 app_callback_a -&gt; 内部累加 alarm_count 并在厨房上下文生效
+    sensor_poll(&amp;sensor_kitchen, 65.5f, 75.3f);
+    
+    // 触发机房温度超阈值 -&gt; 调用 app_callback_b -&gt; 内部修改 max_temp_recorded 并设置标志位
+    sensor_poll(&amp;sensor_server_room, 38.6f, 33.1f);
+    sensor_poll(&amp;sensor_server_room, 39.2f, 30.0f); // 再次触发
+
+    printf("\n--- Phase 3: Verify Context Data ---\n");
+    printf("Kitchen Context Alarm Count: %d\n", kitchen_context.alarm_count);
+    printf("Server Context Max Temperature: %.2f C (Critical Flag: %d)\n", 
+           server_context.max_temp_recorded, server_context.critical_flag);
+
+    return 0;
+}
+</code></pre>
+<hr>
+<h2 id="6-调用约定-calling-conventions-与-abi-兼容性"><a class="header" href="#6-调用约定-calling-conventions-与-abi-兼容性">6. 调用约定 (Calling Conventions) 与 ABI 兼容性</a></h2>
+<p>在高级多模块 C/C++ 编程或与动态库（DLL/SO）进行交互时，还有一个隐蔽而致命的陷阱：<strong>调用约定不一致导致的栈损坏</strong>。</p>
+<h3 id="61-什么是调用约定"><a class="header" href="#61-什么是调用约定">6.1 什么是调用约定？</a></h3>
+<p>调用约定（Calling Convention）属于二进制应用程序接口（ABI）的一部分，它定义了以下规则：</p>
+<ol>
+<li><strong>参数传递方式</strong>：参数是通过 CPU 寄存器传递，还是压入内存栈（Stack）中？如果是压栈，是自右向左（<code>__stdcall</code>, <code>__cdecl</code>）还是自左向右？</li>
+<li><strong>栈帧清理责任</strong>：函数返回时，是由**调用者（Caller）<strong>还是被</strong>调用函数（Callee）**来清理堆栈中的参数空间？</li>
+<li><strong>名字修饰规则</strong>：编译器在目标代码中如何对函数符号进行命名。</li>
+</ol>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th style="text-align: left">调用约定</th><th style="text-align: left">参数压栈顺序</th><th style="text-align: left">栈清理责任者</th><th style="text-align: left">常用场景</th></tr>
+</thead>
+<tbody>
+<tr><td style="text-align: left"><strong><code>__cdecl</code></strong></td><td style="text-align: left">自右向左</td><td style="text-align: left"><strong>调用者 (Caller)</strong></td><td style="text-align: left">C/C++ 默认，支持可变参数（如 <code>printf</code>）</td></tr>
+<tr><td style="text-align: left"><strong><code>__stdcall</code></strong></td><td style="text-align: left">自右向左</td><td style="text-align: left"><strong>被调用者 (Callee)</strong></td><td style="text-align: left">Windows API 核心，调用处生成的汇编代码体积更小</td></tr>
+<tr><td style="text-align: left"><strong><code>__fastcall</code></strong></td><td style="text-align: left">优先寄存器(ECX, EDX)，其余自右向左压栈</td><td style="text-align: left"><strong>被调用者 (Callee)</strong></td><td style="text-align: left">高性能局部计算</td></tr>
+<tr><td style="text-align: left"><strong>System V AMD64 ABI</strong></td><td style="text-align: left">优先 6 个寄存器 (RDI, RSI, RDX, RCX, R8, R9)</td><td style="text-align: left"><strong>调用者 (Caller)</strong></td><td style="text-align: left">x86-64 Linux/macOS 默认标准</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="62-调用约定不匹配的灾难"><a class="header" href="#62-调用约定不匹配的灾难">6.2 调用约定不匹配的灾难</a></h3>
+<p>如果你的函数指针声明中没有指定调用约定，而你将一个具有其他调用约定的函数地址赋值给了它，程序在编译时可能只是报一个类型警告甚至通过，但在运行时调用该指针时会发生致命错误。</p>
+<p>例如，在 32 位 Windows 系统中：</p>
+<pre><code class="language-c">// 1. 声明一个默认调用约定（__cdecl）的函数指针
+typedef void (*DefaultCallback)(int, int);
+
+// 2. 一个显式采用 Windows 核心调用约定（__stdcall）的实际函数
+void __stdcall target_function(int a, int b) {
+    // 业务代码
+}
+
+void trigger(DefaultCallback cb) {
+    cb(10, 20); // 间接调用
+}
+</code></pre>
+<ul>
+<li><strong>执行过程中的灾难</strong>：
+<ol>
+<li><code>trigger</code> 按照 <code>__cdecl</code> 规则，将参数自右向左压入堆栈，并通过 <code>call</code> 指令跳转。</li>
+<li><code>target_function</code> 接收调用，但由于它是 <code>__stdcall</code>，在执行 <code>ret</code> 返回指令时，它会<strong>在自己内部清空堆栈中的两个参数（8 字节）</strong>。</li>
+<li>函数返回到 <code>trigger</code> 内部。<code>trigger</code> 作为 <code>__cdecl</code> 约定的维护者，在其 <code>call</code> 之后，<strong>会再次清理堆栈中的那 8 字节参数</strong>。</li>
+<li>这导致堆栈指针（ESP 寄存器）被<strong>双重释放</strong>，导致栈顶指针彻底错位，随后读取局部变量或返回地址时直接指向无效垃圾数据，引发不可避免的<strong>访问违规（Access Violation）或崩溃</strong>。</li>
+</ol>
+</li>
+</ul>
+<p><strong>防御性指南</strong>：在编写跨平台的库接口或动态链接库（DLL）的对外导出回调时，<strong>务必在函数指针声明与实现上均显式书写一致的宏定义（如 <code>CALLBACK</code> 或 <code>__stdcall</code>）</strong>，规避因默认编译选项不一致而诱发的恶性栈溢出 Bug。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../callbacks/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../optimizations/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../callbacks/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../optimizations/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-c22b7243.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../../__shared_theme/custom-mdbook.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

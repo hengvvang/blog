@@ -1,0 +1,765 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>第三章：函数指针分发表与状态机架构设计 - Function Pointers, Compiler Optimizations &amp; Routing</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Deep dive into function pointer syntax, indirect branch assembly translation, branch prediction, and state machines.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-0392ca55.css">
+        <link rel="stylesheet" href="../css/chrome-fc474251.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../../../__shared_theme/custom-mdbook.css">
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-8c5fdc3f.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d30ee117.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Function Pointers, Compiler Optimizations &amp; Routing</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="第三章函数指针分发表与状态机架构设计"><a class="header" href="#第三章函数指针分发表与状态机架构设计">第三章：函数指针分发表与状态机架构设计</a></h1>
+<p>在前两章中，我们掌握了函数指针的语法声明，并深入探究了间接分支跳转在硬件与编译器底层的执行代价与优化手段。本章我们将回归系统设计，探讨如何将函数指针应用于构建工业级的高性能、低耦合软件架构。我们将深入剖析并实现三个生产级别的架构模式：<strong>表驱动有限状态机（Tabular FSM）</strong>、<strong>带二分查找优化的动态命令行路由分发器</strong>，以及<strong>跨平台动态链接库（Shared Library）插件系统</strong>。</p>
+<hr>
+<h2 id="1-工业级表驱动有限状态机fsm设计"><a class="header" href="#1-工业级表驱动有限状态机fsm设计">1. 工业级表驱动有限状态机（FSM）设计</a></h2>
+<p>有限状态机（Finite State Machine, FSM）是嵌入式控制系统、通信协议栈（如 TCP/IP、蓝牙）、网络协议解析和工控系统的架构基石。</p>
+<h3 id="11-嵌套分支-vs-表驱动"><a class="header" href="#11-嵌套分支-vs-表驱动">1.1 嵌套分支 vs 表驱动</a></h3>
+<p>传统的状态机实现往往依靠巨型的、双重嵌套的 <code>switch-case</code> 或 <code>if-else</code> 分支结构：</p>
+<pre><code class="language-c">// 糟糕的传统嵌套式状态机示例
+void fsm_dispatch_legacy(Context_t *ctx, Event_t event) {
+    switch (ctx-&gt;state) {
+        case STATE_DISCONNECTED:
+            if (event == EV_CONNECT) {
+                do_connect(ctx);
+                ctx-&gt;state = STATE_CONNECTING;
+            }
+            break;
+        case STATE_CONNECTING:
+            if (event == EV_CONN_SUCCESS) {
+                do_success(ctx);
+                ctx-&gt;state = STATE_CONNECTED;
+            } else if (event == EV_CONN_FAIL) {
+                do_fail(ctx);
+                ctx-&gt;state = STATE_DISCONNECTED;
+            }
+            break;
+        // ... 无尽的 case 嵌套
+    }
+}
+</code></pre>
+<h4 id="嵌套分支的弊端"><a class="header" href="#嵌套分支的弊端">嵌套分支的弊端：</a></h4>
+<ol>
+<li><strong>极差的可维护性</strong>：当状态超过 10 个，事件超过 10 个时，代码行数轻松破千，逻辑嵌套如同迷宫。</li>
+<li><strong>执行效率不稳定</strong>：巨型 <code>switch-case</code> 被翻译为二叉判定树或跳转表，执行路径取决于当前状态，导致分支预测效率低下，时间复杂度在最坏情况下为 $O(N)$。</li>
+<li><strong>违反开闭原则</strong>：每增加一个新的状态或事件，都必须深入修改核心分发引擎的代码。</li>
+</ol>
+<h4 id="表驱动的优势"><a class="header" href="#表驱动的优势">表驱动的优势：</a></h4>
+<p>将状态转移逻辑抽象成一张静态的<strong>二维矩阵配置表</strong>（行代表当前状态，列代表事件）。单元格内存储“下一状态”和“触发动作函数指针”。引擎分发逻辑只需要一行 $O(1)$ 的查表操作即可完成全部跳转动作，逻辑与配置彻底解耦。</p>
+<hr>
+<h3 id="12-状态转移流程图"><a class="header" href="#12-状态转移流程图">1.2 状态转移流程图</a></h3>
+<p>我们以一个工业级网络连接控制器（Connection Controller）为例，其包含 4 个状态和 4 个事件：</p>
+<pre><code>                    EV_CONNECT
+    +---------------------------------------+
+    |                                       v
+[DISCONNECTED]                      [CONNECTING] --+ EV_CONN_FAIL
+    ^   ^                                |   |     |
+    |   |         EV_CONN_FAIL           |   |     v
+    |   +--------------------------------+   |   [DISCONNECTED]
+    |                                        |
+    |                                        | EV_CONN_SUCCESS
+    |             EV_DISCONNECT              v
+[DISCONNECTED] &lt;----------------------- [CONNECTED]
+</code></pre>
+<h3 id="13-状态转移矩阵的内存物理结构"><a class="header" href="#13-状态转移矩阵的内存物理结构">1.3 状态转移矩阵的内存物理结构</a></h3>
+<p>在内存中，状态转移表是一个扁平化的二维数组，每个单元格是一个 <code>Transition_t</code> 结构体：</p>
+<pre><code>                事件 (Event_t) ---&gt;
+            +-------------------+-------------------+-------------------+
+ 状  STATE  | EV_CONNECT        | EV_CONN_SUCCESS   | EV_CONN_FAIL      |
+ 态  DISCONN| {CONNECTING,      | {DISCONNECTED,    | {DISCONNECTED,    |
+            |  &amp;do_connect}     |  &amp;do_nothing}     |  &amp;do_nothing}     |
+ (|)        +-------------------+-------------------+-------------------+
+     STATE  | {CONNECTING,      | {CONNECTED,       | {DISCONNECTED,    |
+ v   CONNECT|  &amp;do_nothing}     |  &amp;do_conn_success}|  &amp;do_conn_fail}   |
+            +-------------------+-------------------+-------------------+
+     STATE  | {CONNECTED,       | {CONNECTED,       | {DISCONNECTED,    |
+     ACTIVE |  &amp;do_nothing}     |  &amp;do_nothing}     |  &amp;do_conn_fail}   |
+            +-------------------+-------------------+-------------------+
+</code></pre>
+<hr>
+<h3 id="14-生产级表驱动状态机-c-代码实现"><a class="header" href="#14-生产级表驱动状态机-c-代码实现">1.4 生产级表驱动状态机 C 代码实现</a></h3>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;stdbool.h&gt;
+
+// ----------------------------------------------------
+// 状态机基本定义
+// ----------------------------------------------------
+
+// 1. 定义状态枚举
+typedef enum {
+    STATE_DISCONNECTED,
+    STATE_CONNECTING,
+    STATE_CONNECTED,
+    STATE_DISCONNECTING,
+    STATE_MAX // 标识状态总数，用于校验边界
+} State_t;
+
+// 2. 定义事件枚举
+typedef enum {
+    EV_CONNECT,
+    EV_CONN_SUCCESS,
+    EV_CONN_FAIL,
+    EV_DISCONNECT,
+    EV_MAX // 标识事件总数，用于校验边界
+} Event_t;
+
+// 状态机上下文，存储状态机的持久化运行数据
+typedef struct {
+    State_t current_state;
+    int retry_count;
+    void *user_data;
+} FsmContext_t;
+
+// 3. 定义动作回调函数指针类型
+typedef void (*ActionFunc_t)(FsmContext_t *ctx);
+
+// 4. 定义状态转换条目
+typedef struct {
+    State_t next_state;   // 跳转的目标状态
+    ActionFunc_t action;  // 状态转移时执行的动作
+} Transition_t;
+
+// ----------------------------------------------------
+// 具体动作函数实现 (通常位于业务逻辑源文件)
+// ----------------------------------------------------
+
+void do_connect(FsmContext_t *ctx) {
+    printf("  [Action] Initiating socket connection, resetting retry counter...\n");
+    ctx-&gt;retry_count = 0;
+}
+
+void do_conn_success(FsmContext_t *ctx) {
+    printf("  [Action] TCP Handshake complete. Authenticated. Socket active.\n");
+}
+
+void do_conn_fail(FsmContext_t *ctx) {
+    ctx-&gt;retry_count++;
+    printf("  [Action] Link layer reported failure. Retry count incremented to: %d\n", ctx-&gt;retry_count);
+}
+
+void do_disconnect(FsmContext_t *ctx) {
+    printf("  [Action] Sending FIN packet, flushing buffers, closing descriptor.\n");
+}
+
+void do_nothing(FsmContext_t *ctx) {
+    // 哑动作 (Dummy Action)，用于过滤非法事件，不做任何处理
+    (void)ctx;
+}
+
+// ----------------------------------------------------
+// 静态转移矩阵 (利用 C99 指定初始化语法，极其安全且直观)
+// ----------------------------------------------------
+const Transition_t fsm_table[STATE_MAX][EV_MAX] = {
+    [STATE_DISCONNECTED] = {
+        [EV_CONNECT]      = { STATE_CONNECTING,   do_connect },
+        [EV_CONN_SUCCESS] = { STATE_DISCONNECTED, do_nothing }, 
+        [EV_CONN_FAIL]    = { STATE_DISCONNECTED, do_nothing },
+        [EV_DISCONNECT]   = { STATE_DISCONNECTED, do_nothing }
+    },
+    [STATE_CONNECTING] = {
+        [EV_CONNECT]      = { STATE_CONNECTING,   do_nothing },
+        [EV_CONN_SUCCESS] = { STATE_CONNECTED,    do_conn_success },
+        [EV_CONN_FAIL]    = { STATE_DISCONNECTED, do_conn_fail },
+        [EV_DISCONNECT]   = { STATE_DISCONNECTING,do_disconnect }
+    },
+    [STATE_CONNECTED] = {
+        [EV_CONNECT]      = { STATE_CONNECTED,    do_nothing },
+        [EV_CONN_SUCCESS] = { STATE_CONNECTED,    do_nothing },
+        [EV_CONN_FAIL]    = { STATE_DISCONNECTED, do_conn_fail }, 
+        [EV_DISCONNECT]   = { STATE_DISCONNECTING,do_disconnect }
+    },
+    [STATE_DISCONNECTING] = {
+        [EV_CONNECT]      = { STATE_DISCONNECTING,do_nothing },
+        [EV_CONN_SUCCESS] = { STATE_DISCONNECTING,do_nothing },
+        [EV_CONN_FAIL]    = { STATE_DISCONNECTED, do_nothing }, 
+        [EV_DISCONNECT]   = { STATE_DISCONNECTING,do_nothing }
+    }
+};
+
+// 5. 核心分发引擎 (核心代码，状态和事件增加时无需修改此处)
+void fsm_dispatch(FsmContext_t *ctx, Event_t event) {
+    // 防御性安全检查
+    if (ctx == NULL) {
+        fprintf(stderr, "FSM Error: Context pointer is NULL.\n");
+        return;
+    }
+    if (ctx-&gt;current_state &gt;= STATE_MAX || event &gt;= EV_MAX) {
+        fprintf(stderr, "FSM Error: Invalid state (%d) or event (%d).\n", ctx-&gt;current_state, event);
+        return;
+    }
+
+    // 从静态二维跳转矩阵中检索转换规则 (O(1) 效率，极快)
+    Transition_t transition = fsm_table[ctx-&gt;current_state][event];
+
+    printf("FSM System: [State: %d] --(Event: %d)--&gt; [Next State: %d]\n",
+           ctx-&gt;current_state, event, transition.next_state);
+
+    // 执行状态转移伴随动作 (间接调用)
+    if (transition.action != NULL) {
+        transition.action(ctx);
+    }
+
+    // 状态机状态变迁
+    ctx-&gt;current_state = transition.next_state;
+}
+
+// ----------------------------------------------------
+// 验证驱动测试流程
+// ----------------------------------------------------
+int main(void) {
+    FsmContext_t wifi_connection = {
+        .current_state = STATE_DISCONNECTED,
+        .retry_count = 0,
+        .user_data = NULL
+    };
+
+    printf("=== Starting Wireless FSM Demonstration ===\n");
+    fsm_dispatch(&amp;wifi_connection, EV_CONNECT);       // 期待状态: Connecting
+    fsm_dispatch(&amp;wifi_connection, EV_CONN_SUCCESS); // 期待状态: Connected
+    fsm_dispatch(&amp;wifi_connection, EV_DISCONNECT);   // 期待状态: Disconnecting
+    fsm_dispatch(&amp;wifi_connection, EV_CONN_FAIL);    // 期待状态: Disconnected
+
+    return 0;
+}
+</code></pre>
+<hr>
+<h2 id="2-动态命令行路由分发器设计"><a class="header" href="#2-动态命令行路由分发器设计">2. 动态命令行路由分发器设计</a></h2>
+<p>在嵌入式设备调试终端、工业路由器 Console 控制台或串口 shell 交互中，解析并转发用户输入的命令（如 <code>set-ip 192.168.1.1</code>）是高频业务。我们将基于<strong>结构体数组存储路由规则</strong>，并通过**二分查找（Binary Search）**优化路由速度，提供防御性异常参数检查。</p>
+<h3 id="21-路由匹配二分查找原理"><a class="header" href="#21-路由匹配二分查找原理">2.1 路由匹配二分查找原理</a></h3>
+<p>当系统注册的调试命令数多达几十甚至上百个时，传统的遍历匹配算法（$O(N)$）会损耗不必要的 CPU 算力。我们将命令表按字母升序排列，这样我们就可以使用 <code>bsearch</code> 工具函数在 $O(\log N)$ 时间内命中命令回调函数。</p>
+<hr>
+<h3 id="22-生产级二分路由解析器代码"><a class="header" href="#22-生产级二分路由解析器代码">2.2 生产级二分路由解析器代码</a></h3>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;stdbool.h&gt;
+
+// 1. 定义命令回调函数指针类型
+// args 参数指向命令行中剔除了命令字本身以后的剩余参数子串
+typedef void (*CmdHandler_t)(const char *args);
+
+// 2. 定义路由表条目结构体
+typedef struct {
+    const char *cmd_name;   // 命令字（必须保持小写，用于二分查找）
+    CmdHandler_t handler;   // 执行回调的函数指针
+    const char *help_desc;  // 帮助信息说明
+} CmdRoute_t;
+
+// 3. 具体命令回调实现
+void handle_help(const char *args);
+void handle_reboot(const char *args);
+void handle_set_ip(const char *args);
+void handle_status(const char *args);
+
+// 4. 定义路由表 (必须保证 cmd_name 字符串按 ASCII 字母升序严格排列以支持二分查找)
+static const CmdRoute_t command_router[] = {
+    { "help",   handle_help,   "Display system help menu" },
+    { "reboot", handle_reboot, "Execute soft CPU hardware reset" },
+    { "set-ip", handle_set_ip, "Configure system static IP address" },
+    { "status", handle_status, "Retrieve CPU &amp; Memory utilization" }
+};
+
+#define ROUTE_TABLE_SIZE (sizeof(command_router) / sizeof(command_router[0]))
+
+// 用于 bsearch 的比较回调函数
+static int compare_commands(const void *key, const void *element) {
+    const char *search_key = (const char *)key;
+    const CmdRoute_t *route = (const CmdRoute_t *)element;
+    return strcmp(search_key, route-&gt;cmd_name);
+}
+
+// 5. 命令路由解析引擎 (核心防御性设计)
+void route_command(const char *input_line) {
+    if (input_line == NULL) return;
+
+    // 为防篡改，复制只读输入到栈局部缓冲区
+    char line_buffer[128];
+    strncpy(line_buffer, input_line, sizeof(line_buffer) - 1);
+    line_buffer[sizeof(line_buffer) - 1] = '\0';
+
+    // 剥离末尾换行符
+    line_buffer[strcspn(line_buffer, "\r\n")] = '\0';
+
+    // 剔除前导空格
+    char *start = line_buffer;
+    while (*start == ' ') start++;
+
+    if (strlen(start) == 0) return;
+
+    // 解析提取第一个空格前的命令字 (Command Token)
+    char *cmd_token = strtok(start, " ");
+    if (cmd_token == NULL) return;
+
+    // 提取剩余的所有参数字符串 (Arguments Token)
+    char *args_token = strtok(NULL, ""); 
+    
+    // 如果有参数，剥离其前导空格
+    if (args_token != NULL) {
+        while (*args_token == ' ') args_token++;
+        if (strlen(args_token) == 0) {
+            args_token = NULL;
+        }
+    }
+
+    // 利用标准库二分查找在路由表中快速检索命令条目 (时间复杂度 O(log N))
+    CmdRoute_t *matched_route = (CmdRoute_t *)bsearch(
+        cmd_token,
+        command_router,
+        ROUTE_TABLE_SIZE,
+        sizeof(CmdRoute_t),
+        compare_commands
+    );
+
+    // 路由分发
+    if (matched_route != NULL) {
+        if (matched_route-&gt;handler != NULL) {
+            // 防御性调用注册的回调函数
+            matched_route-&gt;handler(args_token);
+        } else {
+            printf("Routing Error: Command '%s' registered with NULL handler.\n", cmd_token);
+        }
+    } else {
+        printf("Routing Error: Unknown command '%s'. Enter 'help' for instructions.\n", cmd_token);
+    }
+}
+
+// ----------------------------------------------------
+// 业务命令回调的具体代码实现
+// ----------------------------------------------------
+
+void handle_help(const char *args) {
+    (void)args;
+    printf("=== CLI Available Routing Console Commands ===\n");
+    for (size_t i = 0; i &lt; ROUTE_TABLE_SIZE; i++) {
+        printf("  %-10s - %s\n", command_router[i].cmd_name, command_router[i].help_desc);
+    }
+}
+
+void handle_reboot(const char *args) {
+    (void)args;
+    printf("[System Alert] Rebooting hardware via Watchdog reset register...\n");
+}
+
+void handle_set_ip(const char *args) {
+    if (args == NULL) {
+        printf("[Error] Missing IP argument. Usage: set-ip &lt;ip_address&gt;\n");
+        return;
+    }
+    // 防御性缓冲区边界检查，阻断 IP 注入缓冲区溢出攻击
+    if (strlen(args) &gt; 15) {
+         printf("[Error] Invalid IP address string length.\n");
+         return;
+    }
+    printf("[Success] Local NIC configured. IP set to: %s\n", args);
+}
+
+void handle_status(const char *args) {
+    (void)args;
+    printf("[System status] CPU: 12.4%%, Memory: 64.2MB/128MB, Uptime: 34500s\n");
+}
+
+// ----------------------------------------------------
+// 测试主程序
+// ----------------------------------------------------
+int main(void) {
+    printf("=== Initializing Secure Shell Command Router ===\n");
+    
+    // 测试路由用例
+    route_command("help");
+    route_command("   status"); // 验证前导空格过滤
+    route_command("set-ip 192.168.1.100");
+    route_command("set-ip"); // 验证缺参防护
+    route_command("set-ip 192.168.1.100-malicious-long-buffer-injection"); // 溢出防御
+    route_command("reboot");
+    route_command("erase-flash"); // 验证未知命令过滤
+
+    return 0;
+}
+</code></pre>
+<hr>
+<h2 id="3-跨平台动态链接库插件系统回调机制"><a class="header" href="#3-跨平台动态链接库插件系统回调机制">3. 跨平台动态链接库（插件系统）回调机制</a></h2>
+<p>在服务端架构或可插拔客户端软件中，常需要在运行时动态加载外部插件（Linux 下的 <code>.so</code> 动态库，Windows 下的 <code>.dll</code>）。下面我们将构建一个手动的 C 语言<strong>虚函数表（Virtual Table）</strong>，演示如何加载它。</p>
+<h3 id="31-跨平台动态库加载与符号解析原理"><a class="header" href="#31-跨平台动态库加载与符号解析原理">3.1 跨平台动态库加载与符号解析原理</a></h3>
+<ul>
+<li><strong>Linux/macOS</strong>：利用 <code>&lt;dlfcn.h&gt;</code> 中的 <code>dlopen</code> 打开动态链接库，使用 <code>dlsym</code> 定位接口导出函数的地址，最后用 <code>dlclose</code> 卸载。</li>
+<li><strong>Windows</strong>：利用 <code>&lt;windows.h&gt;</code> 中的 <code>LoadLibraryA</code> 加载库，<code>GetProcAddress</code> 检索符号，<code>FreeLibrary</code> 释放句柄。</li>
+</ul>
+<h3 id="32-插件系统通信架构设计"><a class="header" href="#32-插件系统通信架构设计">3.2 插件系统通信架构设计</a></h3>
+<p>主程序和外部独立编译的动态库之间，通过一个统一约定的头文件进行契约通信。主程序通过读取动态库内部构建的包含一整套函数指针的“虚函数结构体（Vtable）”来实现功能路由。</p>
+<pre><code>+-------------------------------------------------------+
+|                       主程序                           |
+|  1. 调用 dlopen("plugin.so") 加载共享库                 |
+|  2. 调用 dlsym("get_plugin_vtable") 获取工厂函数指针      |
++---------------------------+---------------------------+
+                            |
+                            | 3. 执行工厂函数，获得
+                            v vtable 结构体指针
++---------------------------+---------------------------+
+|               PluginInterface_t Vtable                |
+|  - .name = "DataEncryptor"                            |
+|  - .on_init      = &amp;plugin_init_func                  |
+|  - .process_data = &amp;plugin_encrypt_func               |
++---------------------------+---------------------------+
+                            |
+                            | 4. 间接调用具体的插件实现
+                            v
++---------------------------+---------------------------+
+|                    插件机器指令段                      |
++-------------------------------------------------------+
+</code></pre>
+<hr>
+<h3 id="33-跨平台插件机制-c-源码"><a class="header" href="#33-跨平台插件机制-c-源码">3.3 跨平台插件机制 C 源码</a></h3>
+<h4 id="头文件契约-plugin_interfaceh"><a class="header" href="#头文件契约-plugin_interfaceh">头文件契约 <code>plugin_interface.h</code></a></h4>
+<pre><code class="language-c">// plugin_interface.h
+#ifndef PLUGIN_INTERFACE_H
+#define PLUGIN_INTERFACE_H
+
+// 统一的虚函数结构体契约
+typedef struct {
+    const char *name;
+    int version;
+    
+    // 注册的插件生命周期及功能函数指针
+    void (*on_init)(void);
+    int  (*process_data)(const char *input, char *output, int max_len);
+    void (*on_destroy)(void);
+} PluginInterface_t;
+
+// 导出工厂函数类型声明：用于导出上述结构体指针
+typedef PluginInterface_t* (*GetPluginVtable_t)(void);
+
+#endif // PLUGIN_INTERFACE_H
+</code></pre>
+<h4 id="主程序装载控制逻辑"><a class="header" href="#主程序装载控制逻辑">主程序装载控制逻辑</a></h4>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include "plugin_interface.h"
+
+// 根据平台引入特定的动态库操作 API
+#ifdef _WIN32
+#include &lt;windows.h&gt;
+#define LIB_HANDLE HMODULE
+#define LOAD_LIB(path) LoadLibraryA(path)
+#define GET_SYMBOL(handle, name) GetProcAddress(handle, name)
+#define CLOSE_LIB(handle) FreeLibrary(handle)
+#else
+#include &lt;dlfcn.h&gt;
+#define LIB_HANDLE void*
+#define LOAD_LIB(path) dlopen(path, RTLD_LAZY)
+#define GET_SYMBOL(handle, name) dlsym(handle, name)
+#define CLOSE_LIB(handle) dlclose(handle)
+#endif
+
+// 插件安全执行引擎
+void execute_plugin_vtable(const char *plugin_path) {
+    if (plugin_path == NULL) return;
+
+    printf("[Main] Attempting to load dynamic plugin: %s\n", plugin_path);
+    LIB_HANDLE handle = LOAD_LIB(plugin_path);
+    if (!handle) {
+#ifdef _WIN32
+        fprintf(stderr, "[Main Error] Failed to load DLL. Code: %lu\n", GetLastError());
+#else
+        fprintf(stderr, "[Main Error] Failed to load SO: %s\n", dlerror());
+#endif
+        return;
+    }
+
+    // 1. 获取工厂导出符号的地址
+    GetPluginVtable_t get_vtable = (GetPluginVtable_t)GET_SYMBOL(handle, "get_plugin_vtable");
+    if (!get_vtable) {
+        fprintf(stderr, "[Main Error] Failed to resolve factory function 'get_plugin_vtable'.\n");
+        CLOSE_LIB(handle);
+        return;
+    }
+
+    // 2. 执行工厂函数，拉取插件实现的虚表指针 (间接跳转调用)
+    PluginInterface_t *plugin = get_vtable();
+    if (!plugin) {
+        fprintf(stderr, "[Main Error] Factory returned NULL vtable.\n");
+        CLOSE_LIB(handle);
+        return;
+    }
+
+    printf("[Main] Loaded Plugin Info: Name='%s', Version=%d\n", plugin-&gt;name, plugin-&gt;version);
+
+    // 3. 安全调用插件生命周期初始化
+    if (plugin-&gt;on_init != NULL) {
+        plugin-&gt;on_init();
+    }
+
+    // 4. 调用核心处理函数
+    if (plugin-&gt;process_data != NULL) {
+        char output_buffer[256];
+        int processed_bytes = plugin-&gt;process_data("MainSourceData", output_buffer, sizeof(output_buffer));
+        printf("[Main] Data returned from plugin (%d bytes): %s\n", processed_bytes, output_buffer);
+    }
+
+    // 5. 销毁生命周期
+    if (plugin-&gt;on_destroy != NULL) {
+        plugin-&gt;on_destroy();
+    }
+
+    // 6. 卸载关闭动态库句柄，释放系统内存
+    CLOSE_LIB(handle);
+    printf("[Main] Plugin unloaded successfully.\n");
+}
+</code></pre>
+<hr>
+<h2 id="4-防御性编程指南安全使用函数指针的铁律"><a class="header" href="#4-防御性编程指南安全使用函数指针的铁律">4. 防御性编程指南：安全使用函数指针的铁律</a></h2>
+<p>函数指针由于直接操作 CPU 指令跳转，一旦失控会立刻导致严重的系统级破坏。在编写具有高健壮性要求的系统软件时，务必将以下规则列入你的代码审查（Code Review）检查项中：</p>
+<h3 id="41-铁律-1非空判定null-pointer-checking"><a class="header" href="#41-铁律-1非空判定null-pointer-checking">4.1 铁律 1：非空判定（NULL-Pointer Checking）</a></h3>
+<p>在执行任何间接调用前，<strong>必须进行 <code>NULL</code> 校验</strong>。</p>
+<pre><code class="language-c">// 绝对禁止的写法：直接调用
+handler(args);
+
+// 防弹级写法：先检验，再安全调用
+if (handler != NULL) {
+    handler(args);
+} else {
+    // 异常兜底逻辑，输出警报
+}
+</code></pre>
+<ul>
+<li><strong>物理原因</strong>：当函数指针变量的值为 <code>0</code> (NULL) 时，调用它会迫使 CPU 尝试去 <code>0x00000000</code> 虚拟地址处获取指令。这会立刻触发页错误（Page Fault），在 Linux 下引发段错误（Segmentation Fault / SIGSEGV），在嵌入式 Bare-Metal 系统中导致进入 <code>HardFault</code> 硬件死锁异常。</li>
+</ul>
+<h3 id="42-铁律-2规避-void-滥用坚守强类型约束"><a class="header" href="#42-铁律-2规避-void-滥用坚守强类型约束">4.2 铁律 2：规避 <code>void*</code> 滥用，坚守强类型约束</a></h3>
+<p>在传递函数指针时，为了省事，初学者有时会将其强制类型转换为 <code>void*</code>，在接收端再强转回来。这完全摧毁了编译器的静态类型安全检查：</p>
+<pre><code class="language-c">// 毁灭级的危险写法
+void register_callback(void *generic_fp);
+
+// 此时如果把一个 double(*)(double) 的指针传给了一个 int(*)(int, int) 的回调，
+// 编译器不仅无法阻拦，甚至连警告都不会报。
+</code></pre>
+<ul>
+<li><strong>灾难后果</strong>：当接收端用不一致的函数签名强转执行时，调用者和被调用者对寄存器与堆栈参数空间（如 x86-64 的 RDI, RSI, RDX 与栈顶）的预期不一致。这会导致<strong>栈帧损坏（Stack Frame Alignment Corruption）</strong>，函数返回时直接跳转到随机地址导致崩溃。</li>
+<li><strong>解决对策</strong>：始终使用明确的 <code>typedef</code> 别名定义你的函数指针，坚持静态类型系统约束。</li>
+</ul>
+<h3 id="43-铁律-3重视重入性reentrancy与多线程安全"><a class="header" href="#43-铁律-3重视重入性reentrancy与多线程安全">4.3 铁律 3：重视重入性（Reentrancy）与多线程安全</a></h3>
+<p>当函数指针作为外部库的回调使用时，注册的回调函数很可能被外部线程或高优先级硬中断（ISR）并发调用。</p>
+<ul>
+<li><strong>并发漏洞</strong>：如果回调函数内部访问了共享的全局非线程安全资源，且没有加锁保护，或者在中断上下文中执行了阻塞式操作（如 <code>malloc</code>、锁等待），系统会瞬间发生不可预测的崩溃。</li>
+<li><strong>最佳实践</strong>：在回调中坚持只访问通过 <code>user_data</code> 上下文传入的、受互斥锁保护的实例级数据，或者仅操作局部栈变量。在中端和低端 MCU 裸机开发中，严禁在中断上下文回调中调用包含耗时长的轮询延迟函数。</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../dispatch/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../dispatch/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-c22b7243.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../../__shared_theme/custom-mdbook.js"></script>
+
+
+
+    </div>
+    </body>
+</html>
