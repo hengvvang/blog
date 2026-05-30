@@ -5,5 +5,5 @@ description = "Introduction to Rust lifetimes, reference scopes, borrow checker 
 src = "src"
 
 [output.html]
-additional-css = ["../../../.theme/custom-mdbook.css"]
-additional-js = ["../../../.theme/custom-mdbook.js"]
+additional-css = ["../../../shared-theme/custom-mdbook.css"]
+additional-js = ["../../../shared-theme/custom-mdbook.js"]

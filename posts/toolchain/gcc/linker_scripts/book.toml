@@ -5,5 +5,5 @@ authors = ["hengvvang"]
 description = "Comprehensive guide to GNU ld linking scripts, MEMORY allocation blocks, sections layout, and loading symbols in C."
 
 [output.html]
-additional-css = ["../../../.theme/custom-mdbook.css"]
-additional-js = ["../../../.theme/custom-mdbook.js"]
+additional-css = ["../../../shared-theme/custom-mdbook.css"]
+additional-js = ["../../../shared-theme/custom-mdbook.js"]

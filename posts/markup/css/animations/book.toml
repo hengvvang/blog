@@ -5,5 +5,5 @@ description = "In-depth guide to CSS transitions, keyframes, compositor executio
 language = "zh-CN"
 
 [output.html]
-additional-css = ["../../../.theme/custom-mdbook.css"]
-additional-js = ["../../../.theme/custom-mdbook.js"]
+additional-css = ["../../../shared-theme/custom-mdbook.css"]
+additional-js = ["../../../shared-theme/custom-mdbook.js"]
