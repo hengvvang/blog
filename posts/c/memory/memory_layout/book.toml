@@ -4,5 +4,5 @@ authors = ["hengvvang"]
 description = "Production-grade guide on memory layout and alignment in embedded systems."
 
 [output.html]
-additional-css = ["../../../shared-theme/custom-mdbook.css"]
-additional-js = ["../../../shared-theme/custom-mdbook.js"]
+additional-css = ["../../../__shared_theme/custom-mdbook.css"]
+additional-js = ["../../../__shared_theme/custom-mdbook.js"]

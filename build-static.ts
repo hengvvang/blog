@@ -225,12 +225,12 @@ async function buildStatic() {
 `;
 
   // Write central theme once in source for mdBook compiler
-  const centralThemeDir = "./posts/shared-theme";
+  const centralThemeDir = "./posts/__shared_theme";
   await mkdir(centralThemeDir, { recursive: true });
   await safeWriteFile(join(centralThemeDir, "custom-mdbook.css"), customCss);
 
   // Write central theme to public folder for deployment at runtime
-  const publicThemeDir = "./public/books/shared-theme";
+  const publicThemeDir = "./public/books/__shared_theme";
   await mkdir(publicThemeDir, { recursive: true });
   await safeWriteFile(join(publicThemeDir, "custom-mdbook.css"), customCss);
 
@@ -418,24 +418,24 @@ async function buildStatic() {
         updated = true;
       }
       
-      // Ensure additional-css = ["../../../shared-theme/custom-mdbook.css"]
-      if (!bookToml.includes('additional-css = ["../../../shared-theme/custom-mdbook.css"]')) {
+      // Ensure additional-css = ["../../../__shared_theme/custom-mdbook.css"]
+      if (!bookToml.includes('additional-css = ["../../../__shared_theme/custom-mdbook.css"]')) {
         const cssLinePattern = /additional-css\s*=\s*\[[^\]]+\]\r?\n?/g;
         if (cssLinePattern.test(bookToml)) {
-          bookToml = bookToml.replace(cssLinePattern, 'additional-css = ["../../../shared-theme/custom-mdbook.css"]\n');
+          bookToml = bookToml.replace(cssLinePattern, 'additional-css = ["../../../__shared_theme/custom-mdbook.css"]\n');
         } else {
-          bookToml = bookToml.replace("[output.html]", '[output.html]\nadditional-css = ["../../../shared-theme/custom-mdbook.css"]');
+          bookToml = bookToml.replace("[output.html]", '[output.html]\nadditional-css = ["../../../__shared_theme/custom-mdbook.css"]');
         }
         updated = true;
       }
       
-      // Ensure additional-js = ["../../../shared-theme/custom-mdbook.js"]
-      if (!bookToml.includes('additional-js = ["../../../shared-theme/custom-mdbook.js"]')) {
+      // Ensure additional-js = ["../../../__shared_theme/custom-mdbook.js"]
+      if (!bookToml.includes('additional-js = ["../../../__shared_theme/custom-mdbook.js"]')) {
         const jsLinePattern = /additional-js\s*=\s*\[[^\]]+\]\r?\n?/g;
         if (jsLinePattern.test(bookToml)) {
-          bookToml = bookToml.replace(jsLinePattern, 'additional-js = ["../../../shared-theme/custom-mdbook.js"]\n');
+          bookToml = bookToml.replace(jsLinePattern, 'additional-js = ["../../../__shared_theme/custom-mdbook.js"]\n');
         } else {
-          bookToml = bookToml.replace("[output.html]", '[output.html]\nadditional-js = ["../../../shared-theme/custom-mdbook.js"]');
+          bookToml = bookToml.replace("[output.html]", '[output.html]\nadditional-js = ["../../../__shared_theme/custom-mdbook.js"]');
         }
         updated = true;
       }
@@ -449,7 +449,7 @@ async function buildStatic() {
     await rm(join(bookSrc, "custom-mdbook.css"), { force: true });
     await rm(join(bookSrc, "custom-mdbook.js"), { force: true });
     await rm(join(bookSrc, "theme"), { recursive: true, force: true });
-    await rm(join(bookSrc, "shared-theme"), { recursive: true, force: true });
+    await rm(join(bookSrc, "__shared_theme"), { recursive: true, force: true });
 
     console.log(`Compiling mdbook: "${bookSrc}" -> "${destDir}"`);
     try {
