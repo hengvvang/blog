@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "ESP32 蓝牙 BLE GATT 服务器开发流程与原理"
+src = "src"
+title = "ESP32 BLE GATT Server Development"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Deep dive into BLE GATT server architecture, initialization database tables, and callback event processing using ESP-IDF."
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

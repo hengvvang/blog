@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "Zephyr 线程栈分析器与内存泄漏调试指南"
+title = "Zephyr Thread Stack Analyzer & Leakage Debugging"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Complete manual on monitoring thread stack watermarks, arming stack protectors (MPU/Canary), and debugging dynamic heap leaks."
+language = "zh-CN"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "Python Asyncio 异步协程并发编程实战"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "In-depth guide to Python event loops, native coroutines, asyncio task concurrency, and thread execution integration."
+src = "src"
+title = "Python asyncio"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

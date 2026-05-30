@@ -1,8 +1,6 @@
-[book]
-src = "."
-title = "Git 底层原理：三类核心对象 blob, tree, commit"
+title = "Git Object Model"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Deep dive into Git repository directory architecture, plumbing vs porcelain, content addressable files, and SHA-1 serialization."
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

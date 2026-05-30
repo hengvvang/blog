@@ -1,24 +1,19 @@
 book:
   src: posts/git
   path: workflow/trunk_based.html
-category: toolchain
-subcategory: git
-subtopic: workflow
+category: git
+subcategory: workflow
+subtopic: others
 timeline:
-  publishTime: 2026-05-24 18:15
-  lastUpdated: 2026-05-25 02:30
+  publishTime: "2026-05-30 22:15"
 cover:
-  title: Trunk-Based 主干开发模式与 CI/CD 契合
-  summary: 探究一种追求高频合并与持续集成的单主干开发流模式，分析其相较于传统分支开发流的优劣。
-  tags:
-    - GIT
-    - WORKFLOW
-    - VCS
-    - Workflow
+  title: "Git Trunk Based 主干开发工作流"
+  summary: "利用系统的线程监控组件，实时输出每个任务栈的最高水位线，防范栈溢出引起的内核崩溃。"
+  tags: ["GIT", "WORKFLOW", "Trunk-Based", "CI/CD"]
   image:
-    src: https://images.unsplash.com/photo-1618401471353-b98aedd07871?w=800&auto=format&fit=crop
+    src: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop"
     text:
-      content: GIT | WORKFLOW
-      position: topRight
+      content: "GIT | WORKFLOW"
+      position: "bottomRight"
     brightness: 0.75
     scale: 1.08

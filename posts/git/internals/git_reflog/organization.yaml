@@ -1,24 +1,19 @@
 book:
   src: posts/git
   path: internals/git_reflog.html
-category: toolchain
-subcategory: git
-subtopic: internals
+category: git
+subcategory: internals
+subtopic: others
 timeline:
-  publishTime: 2026-05-24 18:25
-  lastUpdated: 2026-05-25 02:30
+  publishTime: "2026-05-30 21:30"
 cover:
-  title: Git Reflog 误删分支与未提交代码灾难恢复
-  summary: 教你使用引用日志来拯救那些被意外重置或强制删除的提交，是日常开发中必不可少的急救手册。
-  tags:
-    - GIT
-    - INTERNALS
-    - VCS
-    - Workflow
+  title: "Git Reflog 原理与提交丢失恢复机制"
+  summary: "利用系统的线程监控组件，实时输出每个任务栈的最高水位线，防范栈溢出引起的内核崩溃。"
+  tags: ["GIT", "INTERNALS", "Reflog", "Recovery"]
   image:
-    src: https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop
+    src: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop"
     text:
-      content: GIT | INTERNALS
-      position: bottomLeft
+      content: "GIT | REFLEX"
+      position: "bottomRight"
     brightness: 0.75
     scale: 1.08

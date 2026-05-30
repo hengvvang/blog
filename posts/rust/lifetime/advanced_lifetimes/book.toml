@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "Rust 高级生命周期约束与 HRTB 详解"
+src = "src"
+title = "Rust Advanced Lifetimes & HRTB"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Deep dive into reference subtyping, variance principles, Higher-Rank Trait Bounds, and self-referential structures."
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

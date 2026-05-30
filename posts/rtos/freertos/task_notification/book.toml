@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "FreeRTOS 任务通知替代信号量之高性能优化"
+title = "FreeRTOS High Performance Task Notifications"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Analysis of TCB-embedded direct task notifications, API operations, and performance comparison to semaphores."
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

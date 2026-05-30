@@ -1,8 +1,9 @@
 [book]
-src = "."
-title = "Python 带参数的高阶装饰器与类装饰器"
+title = "Python Advanced Decorators"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Exploration of closures, parameterized class-based decorators, metadata preservation, and dynamic attribute wrapping."
+language = "zh-CN"
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

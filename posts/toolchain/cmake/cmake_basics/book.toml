@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "CMake 构建宏编写与自动化 CI/CD 环境结合运用"
+title = "CMake Basics & Project Structuring"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Deep dive into CMake syntax, variables, directory layout management, and CI/CD integration."
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

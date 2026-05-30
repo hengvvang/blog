@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "深入浅出 Rust 生命周期核心技术指南"
+title = "Rust Lifetime Fundamentals"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Introduction to Rust lifetimes, reference scopes, borrow checker rules, struct lifetime annotation, and lifetime elision rules."
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

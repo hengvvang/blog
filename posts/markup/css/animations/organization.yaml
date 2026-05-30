@@ -5,18 +5,15 @@ category: markup
 subcategory: css
 subtopic: others
 timeline:
-  publishTime: 2026-05-24 15:40
-  lastUpdated: 2026-05-25 02:30
+  publishTime: "2026-05-30 20:00"
 cover:
-  title: CSS 关键帧动画 Keyframes 与微交互设计优化
-  summary: 结合丰富的动效实例，精讲 @keyframes 的时间步长分配以及 transition 在交互状态下的平滑演变控制。
-  tags:
-    - MARKUP
-    - CSS
+  title: "CSS 动画设计与微动画实现"
+  summary: "利用 CSS transition 与 keyframes 进行动效建模，优化三维变形（transform）与透明度通道以激活 GPU 硬件加速。"
+  tags: ["MARKUP", "CSS", "Animations", "UI"]
   image:
-    src: https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop
+    src: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop"
     text:
-      content: MARKUP | CSS
-      position: topLeft
+      content: "CSS | ANIMATIONS"
+      position: "topRight"
     brightness: 0.75
     scale: 1.08

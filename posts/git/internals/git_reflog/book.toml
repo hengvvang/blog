@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "Git Reflog 误删分支与未提交代码灾难恢复"
+src = "src"
+title = "Git Reflog"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Low-level guide to Git HEAD reference changes logs, recovering dangling commits, reset safety, and reflog expiration policies."
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

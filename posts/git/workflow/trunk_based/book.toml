@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "Trunk-Based 主干开发模式与 CI/CD 契合"
+title = "Git Trunk Based Development"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Exploration of Trunk-Based continuous integration, Feature Flags decoupling, branch-by-abstraction, and deployment pipelines."
+language = "zh-CN"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

@@ -1,9 +1,11 @@
 [book]
-src = "."
-title = "CMake 生成静态库与动态库目标规范管理"
+title = "CMake Library Targets Management"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Deep dive into target linking, visibility rules, static vs dynamic targets, and modern CMake library interfaces."
+language = "zh-CN"
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]
 additional-js = ["../../../.theme/custom-mdbook.js"]
+git-repository-icon = "fa-github"

@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "静态博客 Front Matter 头部数据段语法指南"
+title = "Markdown Frontmatter Guide"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Deep dive into YAML/TOML metadata headers, static site generator parsing, schema validation, and SEO integrations."
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "CSS 关键帧动画 Keyframes 与微交互设计优化"
+title = "CSS Animations"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "In-depth guide to CSS transitions, keyframes, compositor execution, hardware acceleration, and micro-animations."
+language = "zh-CN"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

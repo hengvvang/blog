@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "Git Rebase 交互式变基精讲"
+title = "Git Interactive Rebase"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Manual on merging history, cherry-picking replays, squash/fixup workflows, splitting commits, and conflict resolution."
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

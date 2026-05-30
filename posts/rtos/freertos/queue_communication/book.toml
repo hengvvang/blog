@@ -1,8 +1,9 @@
 [book]
-src = "."
-title = "FreeRTOS 队列通信机制与数据拷贝深度剖析"
+title = "FreeRTOS Queue Communication & Thread Safety"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Exploration of FreeRTOS Queue_t buffer control structures, by-value copy mechanisms, and ISR-safe task communications."
+src = "src"
+language = "zh-CN"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

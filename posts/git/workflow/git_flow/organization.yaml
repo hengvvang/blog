@@ -1,24 +1,19 @@
 book:
   src: posts/git
   path: workflow/git_flow.html
-category: toolchain
-subcategory: git
-subtopic: workflow
+category: git
+subcategory: workflow
+subtopic: others
 timeline:
-  publishTime: 2026-05-24 18:10
-  lastUpdated: 2026-05-25 02:30
+  publishTime: "2026-05-30 22:00"
 cover:
-  title: Git Flow 分支管理工作流最佳实践
-  summary: 解析经典的 Git 分支开发模型，详细阐述 master、develop、feature、release 和 hotfix 各分支的协作规范。
-  tags:
-    - GIT
-    - WORKFLOW
-    - VCS
-    - Workflow
+  title: "Git Flow 分支管理模型实践"
+  summary: "利用系统的线程监控组件，实时输出每个任务栈的最高水位线，防范栈溢出引起的内核崩溃。"
+  tags: ["GIT", "WORKFLOW", "Git Flow", "Topologies"]
   image:
-    src: https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop
+    src: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop"
     text:
-      content: GIT | WORKFLOW
-      position: bottomRight
+      content: "GIT | WORKFLOW"
+      position: "topLeft"
     brightness: 0.75
     scale: 1.08

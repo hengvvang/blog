@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "Markdown 深度定制与现代排版引擎实践"
+title = "Markdown Style Guide"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Manual on typography structures, lists formatting, table alignment, mdBook CSS style overrides, and accessibility."
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

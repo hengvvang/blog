@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "Git Flow 分支管理工作流最佳实践"
+title = "Git Flow Workflow"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Detailed guide to long-lived branch topologies, feature/release/hotfix branching policies, and pull request loops."
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

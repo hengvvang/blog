@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "GCC 编译器三级优化选项与内联汇编详解"
+title = "GCC Compiler Optimizations & Assembly"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Analysis of GCC compilation optimization options, loop transformations, inlining barriers, and inline assembly constraints."
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

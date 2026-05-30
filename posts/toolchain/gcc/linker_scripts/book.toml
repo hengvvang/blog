@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "链接器脚本高级命令与自定义 Section 分配"
+src = "src"
+title = "Embedded Linker Scripts & Section Allocation"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Comprehensive guide to GNU ld linking scripts, MEMORY allocation blocks, sections layout, and loading symbols in C."
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

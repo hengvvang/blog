@@ -5,19 +5,15 @@ category: lang
 subcategory: python
 subtopic: oop
 timeline:
-  publishTime: 2026-05-24 18:45
-  lastUpdated: 2026-05-25 02:30
+  publishTime: "2026-05-30 23:55"
 cover:
-  title: Python 元类 Metaclasses 与动态类创建原理
-  summary: 剖析 Python 的 __new__ 与 __init__，了解如何拦截类创建过程并在类实例化之前修改其属性与行为。
-  tags:
-    - PYTHON
-    - OOP
-    - Scripting
+  title: "Python 元类与动态类创建"
+  summary: "说明 class 声明背后的 type() 构造逻辑，阐述自定义 metaclass 拦截类构建、校验成员属性以及注册子类的精妙过程。"
+  tags: ["PYTHON", "OOP", "Metaclasses", "Type"]
   image:
-    src: https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&auto=format&fit=crop
+    src: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=800&auto=format&fit=crop"
     text:
-      content: PYTHON | OOP
-      position: topRight
+      content: "PYTHON | OOP"
+      position: "topRight"
     brightness: 0.75
     scale: 1.08

@@ -1,8 +1,10 @@
 [book]
-src = "."
-title = "Rust 多线程并发编程与通道机制"
+title = "Rust Multi-Threaded Concurrency"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Exploration of OS thread creation, scoped tasks, Send/Sync properties, Arc/Mutex layouts, and message channels."
+language = "zh-CN"
+src = "src"
+
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

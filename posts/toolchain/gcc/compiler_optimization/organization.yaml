@@ -5,20 +5,15 @@ category: toolchain
 subcategory: gcc
 subtopic: others
 timeline:
-  publishTime: 2026-05-24 16:40
-  lastUpdated: 2026-05-25 02:30
+  publishTime: "2026-05-30 19:30"
 cover:
-  title: GCC 编译器三级优化选项与内联汇编详解
-  summary: 全方位对比 GCC 的各类编译优化等级，分析其在循环展开、死代码消除、函数内联及二进制体积上的抉择。
-  tags:
-    - TOOLCHAIN
-    - GCC
-    - Build
-    - Compiler
+  title: "GCC 编译器三级优化选项与内联汇编详解"
+  summary: "全方位对比 GCC 的各类编译优化等级，分析其在循环展开、死代码消除、函数内联及二进制体积上的抉择。"
+  tags: ["TOOLCHAIN", "GCC", "Build", "Compiler"]
   image:
-    src: https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop
+    src: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop"
     text:
-      content: TOOLCHAIN | GCC
-      position: bottomRight
+      content: "TOOLCHAIN | GCC"
+      position: "bottomRight"
     brightness: 0.75
     scale: 1.08

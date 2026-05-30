@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "深入探讨 Rust 借用检查器与所有权模型"
+title = "Rust Ownership & Borrow Checker Internals"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Exploration of Rust memory management, RAII, ownership moves, borrow checker rules, and the Polonius borrow checker engine."
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

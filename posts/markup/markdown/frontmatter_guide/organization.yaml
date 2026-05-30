@@ -5,18 +5,15 @@ category: markup
 subcategory: markdown
 subtopic: others
 timeline:
-  publishTime: 2026-05-24 16:00
-  lastUpdated: 2026-05-25 02:30
+  publishTime: "2026-05-30 20:30"
 cover:
-  title: 静态博客 Front Matter 头部数据段语法指南
-  summary: 规范阐述如何在 Markdown 顶部配置 YAML 参数，实现主题样式、发布日期和自定义分类信息的结构化管理。
-  tags:
-    - MARKUP
-    - MARKDOWN
+  title: "Markdown Frontmatter 元数据属性指南"
+  summary: "阐述 YAML / TOML 头信息块的格式规范，讲解 Jekyll、Hugo、Astro 等静态生成器的解析提取和 SEO 数据注入。"
+  tags: ["MARKUP", "MARKDOWN", "Frontmatter", "SEO"]
   image:
-    src: https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop
+    src: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&auto=format&fit=crop"
     text:
-      content: MARKUP | MARKDOWN
-      position: center
+      content: "MARKDOWN | METADATA"
+      position: "topLeft"
     brightness: 0.75
     scale: 1.08

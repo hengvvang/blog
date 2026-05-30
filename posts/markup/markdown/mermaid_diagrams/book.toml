@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "Markdown 深度实践：使用 Mermaid 绘制流程图"
+src = "src"
+title = "Markdown Mermaid Diagrams"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Complete manual on Mermaid diagram parsing, flowcharting, sequence flow modeling, state diagrams, and layout rendering."
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

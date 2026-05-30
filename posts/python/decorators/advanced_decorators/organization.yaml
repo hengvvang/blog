@@ -5,20 +5,15 @@ category: lang
 subcategory: python
 subtopic: decorators
 timeline:
-  publishTime: 2026-05-24 18:35
-  lastUpdated: 2026-05-25 02:30
+  publishTime: "2026-05-30 23:15"
 cover:
-  title: Python 带参数的高阶装饰器与类装饰器
-  summary: 超越常规无参装饰器，深入探讨类级包装器与带配置参数闭包的三层嵌套实现原理。
-  tags:
-    - PYTHON
-    - DECORATORS
-    - OOP
-    - Scripting
+  title: "Python 装饰器高级设计与原理"
+  summary: "深入讲解闭包机制、带参数的类装饰器设计、装饰器嵌套执行顺序，以及元数据丢失的底层成因与防范方案。"
+  tags: ["PYTHON", "DECORATORS", "Meta", "Advanced"]
   image:
-    src: https://images.unsplash.com/photo-1527474305487-b87b222841cc?w=800&auto=format&fit=crop
+    src: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop"
     text:
-      content: PYTHON | DECORATORS
-      position: bottomLeft
+      content: "PYTHON | DECORATORS"
+      position: "bottomLeft"
     brightness: 0.75
     scale: 1.08

@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "Python 元类 Metaclasses 与动态类创建原理"
+title = "Python Metaclasses"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Exploration of dynamic type construction, custom metaclass compilation, namespace configurations, and real-world validation frameworks."
+src = "src"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

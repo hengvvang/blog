@@ -1,8 +1,8 @@
 [book]
-src = "."
-title = "Zephyr RTOS 设备树 (Devicetree) 架构精讲"
+src = "src"
+title = "Zephyr RTOS Devicetree Configuration Decoupling"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Exploration of Zephyr's Devicetree syntax, bindings matching, compile-time header macro generation, and C API access layers."
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]

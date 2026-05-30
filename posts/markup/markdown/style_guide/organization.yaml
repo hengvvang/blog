@@ -5,18 +5,15 @@ category: markup
 subcategory: markdown
 subtopic: others
 timeline:
-  publishTime: 2026-05-24 15:10
-  lastUpdated: 2026-05-25 02:30
+  publishTime: "2026-05-30 21:00"
 cover:
-  title: Markdown 深度定制与现代排版引擎实践
-  summary: 整理出一套通用的 Markdown 书写格式指引，包括空行标准、标点符号规范和中英文混排美化细节。
-  tags:
-    - MARKUP
-    - MARKDOWN
+  title: "Markdown 排版规范与样式指南"
+  summary: "规定标题层级、列表嵌套空格缩进、表格排版以及在 mdBook 编译中挂载自定义全局 CSS 的样式指南。"
+  tags: ["MARKUP", "MARKDOWN", "Style", "Aesthetics"]
   image:
-    src: https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=800&auto=format&fit=crop
+    src: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop"
     text:
-      content: MARKUP | MARKDOWN
-      position: topRight
+      content: "MARKDOWN | STYLE"
+      position: "topRight"
     brightness: 0.75
     scale: 1.08

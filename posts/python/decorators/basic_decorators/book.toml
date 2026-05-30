@@ -1,8 +1,10 @@
-[book]
-src = "."
-title = "Python 装饰器基础与函数运行时计时器"
+title = "Python Basic Decorators"
 authors = ["hengvvang"]
-description = "Compiled Article Book"
+description = "Fundamentals of closures, lexical scopes, standard @ syntax wrapping, and generic parameter passing."
+
+[book]
+src = "src"
+language = "zh-CN"
 
 [output.html]
 additional-css = ["../../../.theme/custom-mdbook.css"]
