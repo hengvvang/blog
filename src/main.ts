@@ -180,26 +180,14 @@ function renderPartition() {
     subcats = ["all", ...Array.from(subcatsSet).sort()];
   }
   
-  // Render Left Sidebar HTML
-  const sidebarItemsHTML = subcats.map(sub => {
-    const activeClass = currentSubcat === sub ? 'active' : '';
-    const displayLabel = sub === 'all' ? '全部' : sub.toUpperCase();
-    return `
-      <button class="genshin-sidebar-item ${activeClass}" data-action="select-subcat" data-sub="${sub}">
-        <span class="genshin-sidebar-diamond"></span>
-        <span class="genshin-sidebar-text">${displayLabel}</span>
-      </button>
-    `;
-  }).join('');
-  
-  const sidebarHTML = `
-    <div class="genshin-sidebar">
-      <div class="genshin-sidebar-line"></div>
-      <div class="genshin-sidebar-items">
-        ${sidebarItemsHTML}
-      </div>
-    </div>
-  `;
+  // Render Subcategory Tabs HTML (same style as toolchain-tabs)
+  const subcatTabsHTML = `<div class="toolchain-tabs">` + 
+    subcats.map(sub => {
+      const activeClass = currentSubcat === sub ? 'active' : '';
+      const displayLabel = sub === 'all' ? '全部' : sub.toUpperCase();
+      return `<button class="toolchain-tab ${activeClass}" data-action="select-subcat" data-sub="${sub}">${displayLabel}</button>`;
+    }).join('') +
+  `</div>`;
   
   // Filter articles and handle subtopic tabs for all categories
   let filteredArticles: Article[] = [];
@@ -254,17 +242,15 @@ function renderPartition() {
     : '';
     
   articleGrid.innerHTML = `
-    <!-- Left Sidebar -->
-    <div class="genshin-sidebar-container">
-      ${sidebarHTML}
-    </div>
-    
     <!-- Right Content Area -->
     <div class="genshin-content-container">
+      <!-- Category Tabs (Horizontal Pills) -->
+      ${subcatTabsHTML}
+
       <!-- Top Featured section -->
       ${featuredHTML}
       
-      <!-- Subtopic Tabs (only for lang) -->
+      <!-- Subtopic Tabs -->
       ${tabsHTML}
       
       <!-- Vertical List of regular cards -->
