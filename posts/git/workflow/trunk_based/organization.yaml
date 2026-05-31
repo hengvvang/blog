@@ -8,7 +8,7 @@ timeline:
   publishTime: "2026-05-30 22:15"
 cover:
   title: "Git Trunk Based 主干开发工作流"
-  summary: "利用系统的线程监控组件，实时输出每个任务栈的最高水位线，防范栈溢出引起的内核崩溃。"
+  summary: "探讨主干开发模型的持续集成、特性开关运行时控制与合并队列门禁系统的工业级架构设计与实践。"
   tags: ["GIT", "WORKFLOW", "Trunk-Based", "CI/CD"]
   image:
     src: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop"

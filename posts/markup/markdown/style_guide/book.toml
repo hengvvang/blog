@@ -5,5 +5,7 @@ description = "Manual on typography structures, lists formatting, table alignmen
 src = "src"
 
 [output.html]
+additional-js = ["../../../__shared_theme/custom-mdbook.js"]
+additional-css = ["../../../__shared_theme/custom-mdbook.css"]
 smart-punctuation = true
 mathjax-support = true

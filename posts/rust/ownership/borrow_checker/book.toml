@@ -5,5 +5,7 @@ description = "Exploration of Rust memory management, RAII, ownership moves, bor
 src = "src"
 
 [output.html]
+additional-js = ["../../../__shared_theme/custom-mdbook.js"]
+additional-css = ["../../../__shared_theme/custom-mdbook.css"]
 smart-punctuation = true
 mathjax-support = true

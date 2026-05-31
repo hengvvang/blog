@@ -8,7 +8,7 @@ timeline:
   publishTime: "2026-05-30 22:00"
 cover:
   title: "Git Flow 分支管理模型实践"
-  summary: "利用系统的线程监控组件，实时输出每个任务栈的最高水位线，防范栈溢出引起的内核崩溃。"
+  summary: "系统化解析 Git Flow 的主干/开发/辅助分支拓扑、预发布冷冻与双向合并，并探讨团队 PR 网关与自动化 CI/CD 流水线工程实践。"
   tags: ["GIT", "WORKFLOW", "Git Flow", "Topologies"]
   image:
     src: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop"

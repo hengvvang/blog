@@ -5,5 +5,7 @@ description = "Exploration of Trunk-Based continuous integration, Feature Flags 
 language = "zh-CN"
 
 [output.html]
-additional-css = ["../../../__shared_theme/custom-mdbook.css"]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
+additional-css = ["../../../__shared_theme/custom-mdbook.css"]
+smart-punctuation = true
+mathjax-support = true

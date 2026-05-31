@@ -1,14 +1,14 @@
-# Git 四大核心对象深度剖析
+# 第二章：Blob、Tree、Commit 三大对象深度剖析
 
-Git 绝非一个黑盒，它的底层对象数据库极其透明且极具工业美感。在 Git 的世界中，所有的数据（包括文件内容、目录结构、提交记录、发布标签）都存储为**内容寻址对象（Content-Addressable Objects）**。
+Git 并非黑盒，它的底层数据库极其透明、规整且极具工业美感。在 Git 的世界中，所有的数据（包括文件内容、目录结构、提交历史以及发布标签）都存储为**内容寻址对象（Content-Addressable Objects）**。
 
-本章将深入探讨这四大对象（Blob、Tree、Commit、Tag）的物理存储格式、二进制报文协议、SHA-1 计算细节，并最终编写一个纯 Python 脚本，在不依赖 Git 原生命令行工具的情况下直接对 `.git/objects/` 进行读取解析与写入。
+本章将深入探讨这四大对象（Blob、Tree、Commit、Tag）的物理存储格式、二进制报文协议、SHA-1 计算细节，展示对象生成与压缩的物理流向，并最终编写一个纯 Python 脚本，在不依赖 Git 原生命令行工具的情况下直接对 `.git/objects/` 进行读取解析与写入。
 
 ---
 
 ## 1. 内容寻址存储与 SHA-1 计算机制
 
-在 Git 中，对象的名称是一个 40 位的十六进制字符串（例如：`bd6f9a0c...`），它是对对象内容执行 **SHA-1** 哈希算法生成的校验和（Checksum）。
+在 Git 中，对象的唯一标识是一个 40 位的十六进制字符串（例如：`bd6f9a0c...`），它是对对象内容执行 **SHA-1** 哈希算法生成的校验和（Checksum）。
 
 ### 1.1 为什么是“内容寻址”？
 在传统文件系统中，我们通过文件的“路径”或“名称”来寻找文件（例如 `C:\Users\doc\notes.txt`）。而在 Git 中，我们只关心文件的**内容**。
@@ -18,17 +18,17 @@ Git 绝非一个黑盒，它的底层对象数据库极其透明且极具工业�
 ### 1.2 SHA-1 校验和的计算公式
 Git 在对数据进行 SHA-1 计算时，并不是直接对原始文件字节流做哈希，而是必须在前面拼装一个**标准对象头部（Object Header）**。头部格式为：
 
-$$\text{header} = \text{type} + \text{" "} + \text{size\_in\_bytes} + \text{"\textbackslash 0"}$$
+$$\text{Header} = \text{Type} + \text{" "} + \text{Size\_in\_Bytes} + \text{"\textbackslash 0"}$$
 
 其中：
-*   `type`：对象类型，可取值为 `blob`、`tree` , `commit` 或 `tag`。
+*   `Type`：对象类型，可取值为 `blob`、`tree`、`commit` 或 `tag`。
 *   ` `：一个空格字符。
-*   `size_in_bytes`：对象实际内容（Payload）的字节长度，用十进制 ASCII 字符串表示。
+*   `Size_in_Bytes`：对象实际内容（Payload）的字节长度，用十进制 ASCII 字符串表示。
 *   `\0`：即 `0x00`（Null 字符），作为头部结束与内容开始的二进制分隔符。
 
 因此，Git 计算出的 SHA-1 实际为：
 
-$$\text{SHA-1} = \text{SHA-1}(\text{type} + \text{" "} + \text{size} + \text{0x00} + \text{payload})$$
+$$\text{SHA-1} = \text{SHA-1}(\text{Type} + \text{" "} + \text{Size} + \text{0x00} + \text{Payload})$$
 
 这种设计确保了：
 1.  **类型防混淆**：相同内容的文件（Blob）与相同内容的提交信息（Commit）计算出的哈希值截然不同。
@@ -36,11 +36,32 @@ $$\text{SHA-1} = \text{SHA-1}(\text{type} + \text{" "} + \text{size} + \text{0x0
 
 ---
 
-## 2. 四大核心对象的二进制报文格式
+## 2. SHA-1 对象生成与压缩存盘物理流向图
+
+下面是 Git 对象从原始数据流转换为 `.git/objects/` 下物理松散文件的全链路流向图：
+
+```mermaid
+flowchart TD
+    RawData["1. 原始文件数据 (Payload)<br>e.g., 'hello world\n' (12 字节)"] --> JoinHeader["2. 拼接标准头部<br>'blob 12\0'"]
+    JoinHeader --> CombinedData["3. 组合完整字节流<br>'blob 12\0hello world\n' (17 字节)"]
+    
+    CombinedData -->|计算哈希| CalcSHA1["4. 计算 SHA-1 哈希值<br>'3b18e512dba79e4c8300dd08aeb37f8e728b8dad'"]
+    CalcSHA1 --> SplitHash["5. 切分哈希为路径名<br>前 2 位: '3b'<br>后 38 位: '18e512...'"]
+    
+    CombinedData -->|zlib 压缩| ZlibCompress["6. zlib 默认 6 级压缩<br>生成物理二进制数据 (约 25 字节)"]
+    
+    SplitHash --> CreatePath["7. 确定落盘路径<br>'.git/objects/3b/18e512...'"]
+    ZlibCompress --> WriteDisk["8. 写入物理文件"]
+    CreatePath --> WriteDisk
+```
+
+---
+
+## 3. 四大核心对象的二进制报文格式
 
 接下来，我们依次拆解这四类对象在解压后的实际字节流布局。
 
-### 2.1 Blob 对象：最纯粹的文件内容包裹
+### 3.1 Blob 对象：纯粹的文件内容包裹
 
 Blob（Binary Large Object）是最基础的对象，它只包含文件数据，不包含任何文件名、修改时间或权限信息。
 
@@ -56,48 +77,51 @@ Blob（Binary Large Object）是最基础的对象，它只包含文件数据，
 
 ---
 
-### 2.2 Tree 对象：目录结构的映射
+### 3.2 Tree 对象：目录结构的映射
 
 Tree 对象对应文件系统中的**目录**。它记录了当前目录下所有子文件（Blob）和子目录（Tree）的元数据。
 
-#### Tree 对象的 Payload 结构
-Tree 对象的 Payload 由一个或多个“记录条目（Directory Entries）”紧密排列组成。**每个条目的结构非常特殊**，采用文本与二进制混合的模式：
+#### Tree 对象的 Payload 结构与设计理念
+Tree 对象的 Payload 由一个或多个“目录条目（Directory Entries）”紧密排列组成。**每个条目的内部结构非常特殊**，采用文本与二进制混合的模式：
 
 ```text
-[file_mode] [file/directory_name]\0[20-byte binary SHA-1]
+[file_mode][space][file_name]\0[20-byte binary SHA-1]
 ```
 
-详细拆解：
+##### 详细拆解：
 1.  **`file_mode`**：文件模式，用八进制 ASCII 字符串表示（非固定长度，如 `100644` 代表普通文件，`100755` 代表可执行文件，`40000` 代表子目录/树，`120000` 代表符号链接）。
-2.  **` `**（空格）：分隔符。
-3.  **`file/directory_name`**：文件名或目录名。
-4.  **`\0`**（Null 字节）：分隔符，表示文件名的结束。
-5.  **`20-byte binary SHA-1`**：**注意！** 这里的 SHA-1 哈希值不是我们平时看到的 40 位十六进制字符，而是**原始的 20 字节二进制数据**。这是为了节省空间（1 字节可以表示 2 个十六进制字符）。
+2.  **` `**（空格）：物理分隔符。
+3.  **`file_name`**：文件名或目录名，UTF-8 编码。
+4.  **`\0`**（Null 字节）：物理分隔符，表示文件名的结束。
+5.  **`20-byte binary SHA-1`**：**注意！** 这里的 SHA-1 哈希值不是我们平时看到的 40 位十六进制字符，而是**原始的 20 字节二进制数据（Binary Raw SHA-1）**。
 
-#### Tree 对象的内存布局图
+##### 为什么设计为 20 字节二进制形式？
+在计算机中，一个字节可以表示两个十六进制字符。如果将哈希保存为 40 字节的十六进制 ASCII 文本，需要两倍的空间。对于包含成千上万个文件条目的巨大项目（如 Linux 内核源码树），Tree 对象会频繁地在内存与磁盘间读取。使用 20 字节的二进制原生数据可以使 Tree 对象的体积缩小约 30%，极大提升了目录树遍历的 I/O 效率。
+
+#### Tree 对象的字节流物理布局图
 
 ```text
-+-----------------------------------------------------------------------------------+
-| tree <size>\0                                                                     |
-+-----------+-----------------+----+------------------------+-----------------------+
-| File Mode | Name            | \0 | Binary SHA-1 (20B)     | Next Entry File Mode...
-+-----------+-----------------+----+------------------------+-----------------------+
-| 100644    | main.c          | 00 | \x1a\xbf\x3c...        | 40000...
-+-----------+-----------------+----+------------------------+-----------------------+
++---------------------------------------------------------------------------------------+
+| tree <size>\0                                                                         |
++-------------+----+-------------+----+--------------------------+-----------------------+
+| File Mode   | ' ' | Name        | \0 | Binary SHA-1 (20B)       | Next Entry File Mode...
++-------------+----+-------------+----+--------------------------+-----------------------+
+| 100644      | 20 | main.c      | 00 | \x1a\xbf\x3c\x8d...      | 40000...
++-------------+----+-------------+----+--------------------------+-----------------------+
 ```
 
-由于 20 字节二进制 SHA-1 往往包含不可读字符，因此如果直接在终端中 `cat` 一个 Tree 对象文件，屏幕上会出现大量乱码。
+由于 20 字节二进制 SHA-1 往往包含不可读字符，因此如果直接在终端中 `cat` 一个 Tree 对象物理文件，屏幕上会出现大量乱码。
 
 ---
 
-### 2.3 Commit 对象：版本快照的元数据
+### 3.3 Commit 对象：版本快照的元数据
 
 Commit 对象记录了某次提交的所有上下文信息。它的格式为纯文本，结构如下：
 
 ```text
 tree <40-char hex SHA-1 of root tree>
 parent <40-char hex SHA-1 of parent commit 1>
-parent <40-char hex SHA-1 of parent commit 2> (若为 Merge 提交则有多行)
+parent <40-char hex SHA-1 of parent commit 2> (如果是 Merge 提交则有多行 parent)
 author <Name> <Email> <unix_timestamp> <timezone_offset>
 committer <Name> <Email> <unix_timestamp> <timezone_offset>
 
@@ -107,14 +131,14 @@ committer <Name> <Email> <unix_timestamp> <timezone_offset>
 #### 关键字段剖析：
 *   **`tree`**：指向该提交所对应项目根目录的 Tree 对象（40 位十六进制）。
 *   **`parent`**：指向父提交的哈希。首次提交（Root Commit）没有 parent 行；常规提交有 1 行 parent；合并提交（Merge Commit）会有 2 行或更多 parent 行。
-*   **时间戳格式**：采用 Unix 时间戳（自 1970-01-01 以来的秒数）加时区偏移量。例如 `1685412345 +0800`，代表北京时间 2023-05-30 10:05:45。
-*   **双空行分隔**：头部元数据与下方的 Commit Message 之间用一个连续的换行符（`\n\n`）进行分隔。
+*   **时间戳格式**：采用 Unix 时间戳（自 1970-01-01 以来的秒数）加时区偏移量。例如 `1780000000 +0800`。
+*   **双空行分隔**：头部元数据与下方的 Commit Message 之间用一个连续的换行符（`\n\n`）进行物理分隔。
 
 ---
 
-### 2.4 Tag 对象：附注标签
+### 3.4 Tag 对象：附注标签
 
-Tag 对象用于对某个特定的提交（或其它任意对象）打上一个不可变的“附注标签（Annotated Tag）”。其结构与 Commit 非常相似：
+Tag 对象用于对某个特定的对象（通常是 Commit）打上一个不可变的“附注标签（Annotated Tag）”。其结构与 Commit 非常相似：
 
 ```text
 object <40-char hex SHA-1 of target object>
@@ -125,31 +149,38 @@ tagger <Name> <Email> <unix_timestamp> <timezone_offset>
 <Tag Message>
 ```
 
-*   **对象指针的泛化**：虽然 99% 的标签都指向一个 `commit` 对象，但从协议层面上，Tag 对象的 `type` 字段可以是 `tree` 或 `blob`，甚至可以让一个 Tag 指向另一个 Tag（嵌套标签）。
+*   **对象指针的泛化**：从协议层面上，Tag 对象的 `type` 字段可以是 `tree` 或 `blob`，甚至可以让一个 Tag 指向另一个 Tag（嵌套标签）。
 
 ---
 
-## 3. 松散对象（Loose Objects）的 zlib 压缩与落盘
+## 4. Git 对象 DAG 拓扑关系图
 
-为避免磁盘碎片并提升读写吞吐，Git 会在写入对象之前，将经过拼接后的完整字节流使用 **zlib 算法（Deflate 压缩，默认级别为 6）** 进行压缩，然后将其写入物理文件。
+下面展示一个包含两次连续提交的 Git 仓库底层对象依赖 DAG（有向无环图）。可以看出，每次 Commit 指向一个根 Tree，而 Tree 则像文件树一样向下分支：
 
-例如，一个内容为 "hello world\n" 的文件：
-1.  拼接头部：`blob 12\0hello world\n`，长度为 17 字节。
-2.  对这 17 字节计算 SHA-1，得到 `3b18e512dba79e4c8300dd08aeb37f8e728b8dad`。
-3.  将这 17 字节用 zlib 压缩，得到约 25 字节的压缩数据。
-4.  在磁盘上创建 `.git/objects/3b/` 目录，将压缩数据保存为 `18e512dba79e4c8300dd08aeb37f8e728b8dad` 文件。
+```mermaid
+graph TD
+    Commit2["Commit 2<br>(新提交)"] -->|parent| Commit1["Commit 1<br>(首次提交)"]
+    Commit2 -->|tree| Tree2["Tree 2<br>(根目录新快照)"]
+    
+    Commit1 -->|tree| Tree1["Tree 1<br>(根目录旧快照)"]
+    
+    Tree2 -->|file.txt| Blob2["Blob 2<br>(新内容: version 2)"]
+    Tree2 -->|lib/| TreeSub["Tree Sub<br>(子目录)"]
+    
+    TreeSub -->|utils.c| BlobUtils["Blob Utils<br>(内容)"]
+    
+    Tree1 -->|file.txt| Blob1["Blob 1<br>(旧内容: version 1)"]
+```
 
 ---
 
-## 4. 实践：Python 纯脚本解析与生成 Git 对象
+## 5. Python 脚本实战：纯底层解析与生成松散对象
 
 下面我们将编写一个无需调用任何 `git` 命令行、纯 Python 标准库编写的工具。它能够：
-1.  **读取并解析** 任意一个松散对象文件（支持 Blob, Commit, Tree, Tag）。
+1.  **读取并解析** 任意一个松散对象文件（支持 Blob, Commit, Tree, Tag），并结构化地展示其二进制数据。
 2.  **手动生成** 一个标准的 Blob 对象并安全写入 `.git/objects/`。
 
-### 4.1 Python 解析器代码 (`git_parser.py`)
-
-将以下代码保存为 `git_parser.py`。
+### 5.1 Python 解析器代码 (`git_parser.py`)
 
 ```python
 #!/usr/bin/env python3
@@ -294,13 +325,13 @@ if __name__ == "__main__":
 
 ---
 
-### 4.2 验证我们的 Python 脚本
+### 5.2 验证我们的 Python 脚本
 
 让我们在一个 Git 仓库中测试这个脚本：
 
 #### 步骤一：使用脚本手动写入一个 Blob
 ```bash
-# 在之前创建的 git-internals-demo 仓库中运行
+# 写入自定义的文本，绕过 git add 直接向对象库注入 Blob
 python git_parser.py write "Hello, this is a custom raw object!"
 ```
 输出：
@@ -321,29 +352,3 @@ git cat-file -p d7f06536cf2a2559b152d80d2cf93ebdfef5520e
 # 输出: Hello, this is a custom raw object!
 ```
 这证明我们绕过了 `git add`，成功纯手工向 Git 对象数据库中插入了一个合法的 Blob！
-
-#### 步骤三：使用脚本解析一个由 Git 原生生成的 Tree 对象
-我们在仓库中做一次正式的提交：
-```bash
-git add file.txt
-git commit -m "Commit for tree test"
-```
-使用 `git log` 获取刚刚生成的提交中对应的 Tree 对象的哈希值（可以通过 `git cat-file -p HEAD` 查看 Tree 哈希）。
-假设 Tree 的哈希为 `8c3b2f...`，那么它在文件系统中的路径为：
-`.git/objects/8c/3b2f...`
-
-运行我们的脚本来解析它：
-```bash
-python git_parser.py parse .git/objects/8c/3b2f... (补全哈希剩余部分)
-```
-输出：
-```text
-============================================================
-[*] 对象类型: TREE
-[*] 数据大小: 37 字节 (实际 Payload 大小: 37 字节)
-============================================================
-[Tree 目录项列表]:
-  Mode: 100644 | Name: file.txt            | SHA-1: a1b2c3d...
-```
-
-通过这一章的细致研究，我们已经掌握了 Git 对象的物理面貌。在下一章中，我们将进一步释放底层命令（Plumbing）的威力，完全手动模拟一次真实的提交流程。

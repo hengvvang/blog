@@ -5,5 +5,7 @@ description = "Deep dive into cross compilation toolchain files, MCU targets, an
 src = "src"
 
 [output.html]
+additional-js = ["../../../__shared_theme/custom-mdbook.js"]
+additional-css = ["../../../__shared_theme/custom-mdbook.css"]
 smart-punctuation = true
 mathjax-support = true

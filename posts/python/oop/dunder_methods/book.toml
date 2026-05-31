@@ -5,5 +5,7 @@ description = "Deep dive into __new__ vs __init__, operator overloading, contain
 src = "src"
 
 [output.html]
+additional-js = ["../../../__shared_theme/custom-mdbook.js"]
+additional-css = ["../../../__shared_theme/custom-mdbook.css"]
 smart-punctuation = true
 mathjax-support = true

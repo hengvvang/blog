@@ -5,5 +5,7 @@ authors = ["hengvvang"]
 description = "Deep dive into reference subtyping, variance principles, Higher-Rank Trait Bounds, and self-referential structures."
 
 [output.html]
+additional-js = ["../../../__shared_theme/custom-mdbook.js"]
+additional-css = ["../../../__shared_theme/custom-mdbook.css"]
 smart-punctuation = true
 mathjax-support = true

@@ -1,7 +1,10 @@
+[book]
 title = "Git Object Model"
 authors = ["hengvvang"]
 description = "Deep dive into Git repository directory architecture, plumbing vs porcelain, content addressable files, and SHA-1 serialization."
 
 [output.html]
-additional-css = ["../../../__shared_theme/custom-mdbook.css"]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
+additional-css = ["../../../__shared_theme/custom-mdbook.css"]
+smart-punctuation = true
+mathjax-support = true
