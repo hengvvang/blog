@@ -236,14 +236,29 @@ async function buildStatic() {
 
 
   const customJs = `window.addEventListener('DOMContentLoaded', async () => {
+  // 1. Add home button to left buttons
+  const menuBar = document.querySelector('.left-buttons');
+  if (menuBar) {
+    const homeBtn = document.createElement('a');
+    homeBtn.href = '/';
+    homeBtn.title = 'Back to Blog Home';
+    homeBtn.className = 'icon-button';
+    homeBtn.innerHTML = '<span class="fa-svg" style="display: inline-flex; align-items: center; justify-content: center; height: 100%;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span>';
+    menuBar.insertBefore(homeBtn, menuBar.firstChild);
+  }
+
+  // 2. Add floating breadcrumbs
   try {
     const res = await fetch('/api/articles.json');
     if (!res.ok) throw new Error("Failed to load articles list");
     const articles = await res.json();
     
-    // Find matching article based on pathname
-    const pathname = window.location.pathname;
-    const article = articles.find(a => pathname.endsWith(a.path) || pathname.includes(a.path));
+    // Find matching article based on pathname (normalize both to support Cloudflare Pretty URLs)
+    const pathname = window.location.pathname.replace(/\\/index\\.html$/, '').replace(/\\/$/, '');
+    const article = articles.find(a => {
+      const cleanPath = a.path.replace(/\\/index\\.html$/, '').replace(/\\/$/, '');
+      return pathname === cleanPath || pathname.endsWith(cleanPath) || pathname.includes(cleanPath);
+    });
     if (!article) return; // Not a registered article book page
     
     const category = article.category;
@@ -418,24 +433,28 @@ async function buildStatic() {
         updated = true;
       }
       
-      // Ensure additional-css = ["../../../__shared_theme/custom-mdbook.css"]
-      if (!bookToml.includes('additional-css = ["../../../__shared_theme/custom-mdbook.css"]')) {
+      // Dynamically calculate theme paths relative to the book's root
+      const relCss = relative(bookSrc, "posts/__shared_theme/custom-mdbook.css").replace(/\\/g, "/");
+      const relJs = relative(bookSrc, "posts/__shared_theme/custom-mdbook.js").replace(/\\/g, "/");
+
+      // Ensure additional-css = ["${relCss}"]
+      if (!bookToml.includes(`additional-css = ["${relCss}"]`)) {
         const cssLinePattern = /additional-css\s*=\s*\[[^\]]+\]\r?\n?/g;
         if (cssLinePattern.test(bookToml)) {
-          bookToml = bookToml.replace(cssLinePattern, 'additional-css = ["../../../__shared_theme/custom-mdbook.css"]\n');
+          bookToml = bookToml.replace(cssLinePattern, `additional-css = ["${relCss}"]\n`);
         } else {
-          bookToml = bookToml.replace("[output.html]", '[output.html]\nadditional-css = ["../../../__shared_theme/custom-mdbook.css"]');
+          bookToml = bookToml.replace("[output.html]", `[output.html]\nadditional-css = ["${relCss}"]`);
         }
         updated = true;
       }
       
-      // Ensure additional-js = ["../../../__shared_theme/custom-mdbook.js"]
-      if (!bookToml.includes('additional-js = ["../../../__shared_theme/custom-mdbook.js"]')) {
+      // Ensure additional-js = ["${relJs}"]
+      if (!bookToml.includes(`additional-js = ["${relJs}"]`)) {
         const jsLinePattern = /additional-js\s*=\s*\[[^\]]+\]\r?\n?/g;
         if (jsLinePattern.test(bookToml)) {
-          bookToml = bookToml.replace(jsLinePattern, 'additional-js = ["../../../__shared_theme/custom-mdbook.js"]\n');
+          bookToml = bookToml.replace(jsLinePattern, `additional-js = ["${relJs}"]\n`);
         } else {
-          bookToml = bookToml.replace("[output.html]", '[output.html]\nadditional-js = ["../../../__shared_theme/custom-mdbook.js"]');
+          bookToml = bookToml.replace("[output.html]", `[output.html]\nadditional-js = ["${relJs}"]`);
         }
         updated = true;
       }

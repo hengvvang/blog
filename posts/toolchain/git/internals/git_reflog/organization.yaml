@@ -1,9 +1,9 @@
 book:
-  src: posts/git
-  path: internals/git_reflog.html
-category: git
-subcategory: internals
-subtopic: others
+  src: posts/toolchain
+  path: git/internals/git_reflog.html
+category: toolchain
+subcategory: git
+subtopic: internals
 timeline:
   publishTime: "2026-05-30 21:30"
 cover:

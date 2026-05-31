@@ -5,7 +5,7 @@ description = "Manual on merging history, cherry-picking replays, squash/fixup w
 src = "src"
 
 [output.html]
-additional-js = ["../../../__shared_theme/custom-mdbook.js"]
-additional-css = ["../../../__shared_theme/custom-mdbook.css"]
+additional-js = ["../../../../__shared_theme/custom-mdbook.js"]
+additional-css = ["../../../../__shared_theme/custom-mdbook.css"]
 smart-punctuation = true
 mathjax-support = true

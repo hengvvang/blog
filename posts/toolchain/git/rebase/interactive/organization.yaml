@@ -1,9 +1,9 @@
 book:
-  src: posts/git
-  path: rebase/interactive.html
-category: git
-subcategory: rebase
-subtopic: others
+  src: posts/toolchain
+  path: git/rebase/interactive.html
+category: toolchain
+subcategory: git
+subtopic: rebase
 timeline:
   publishTime: "2026-05-30 21:45"
 cover:

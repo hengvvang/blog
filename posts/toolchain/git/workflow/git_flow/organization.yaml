@@ -1,9 +1,9 @@
 book:
-  src: posts/git
-  path: workflow/git_flow.html
-category: git
-subcategory: workflow
-subtopic: others
+  src: posts/toolchain
+  path: git/workflow/git_flow.html
+category: toolchain
+subcategory: git
+subtopic: workflow
 timeline:
   publishTime: "2026-05-30 22:00"
 cover:

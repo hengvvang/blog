@@ -5,7 +5,7 @@ description = "Detailed guide to long-lived branch topologies, feature/release/h
 src = "src"
 
 [output.html]
-additional-js = ["../../../__shared_theme/custom-mdbook.js"]
-additional-css = ["../../../__shared_theme/custom-mdbook.css"]
+additional-js = ["../../../../__shared_theme/custom-mdbook.js"]
+additional-css = ["../../../../__shared_theme/custom-mdbook.css"]
 smart-punctuation = true
 mathjax-support = true
