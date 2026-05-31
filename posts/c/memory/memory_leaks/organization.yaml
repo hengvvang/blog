@@ -6,6 +6,8 @@ subcategory: c
 subtopic: memory
 timeline:
   publishTime: "2026-05-30 09:30"
+time:
+  lastUpdatedTime: "2026-05-31 09:30"
 cover:
   title: "C语言动态内存分配、内存泄漏与 Valgrind 排查"
   summary: "系统讲解 C 语言中的堆内存分配原理（malloc/free 源码逻辑）、常见泄漏场景与排查技巧，以及在 Linux/嵌入式目标上利用 Valgrind Memcheck 工具链进行深度调试的实战流程。"

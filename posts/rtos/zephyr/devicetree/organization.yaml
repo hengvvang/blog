@@ -6,6 +6,8 @@ subcategory: zephyr
 subtopic: others
 timeline:
   publishTime: "2026-05-30 17:00"
+time:
+  lastUpdatedTime: "2026-05-31 21:30"
 cover:
   title: "Zephyr RTOS 设备树 (Devicetree) 架构精讲"
   summary: "解读 DTS 设备树的树状继承与属性定义，展示 Zephyr 编译阶段如何根据设备树生成相应的外设驱动宏定义。"

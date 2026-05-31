@@ -6,6 +6,8 @@ subcategory: python
 subtopic: oop
 timeline:
   publishTime: "2026-05-30 23:45"
+time:
+  lastUpdatedTime: "2026-05-31 19:00"
 cover:
   title: "Python 魔术方法与自定义对象行为"
   summary: "系统整理双下划线方法的调用契机，通过重载算术与比较运算符、构建自定义迭代容器与上下文管理器接管系统级操作。"

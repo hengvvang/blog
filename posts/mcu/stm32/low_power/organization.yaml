@@ -6,6 +6,8 @@ subcategory: stm32
 subtopic: others
 timeline:
   publishTime: "2026-05-30 13:30"
+time:
+  lastUpdatedTime: "2026-05-31 17:00"
 cover:
   title: "物联网 MCU 低功耗模式与底电流改善实战"
   summary: "细致对比运行模式下各种唤醒源、外设时钟挂载与不同低功耗状态下的毫安级乃至微安级电流消耗。"

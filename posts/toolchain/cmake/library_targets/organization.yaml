@@ -6,6 +6,8 @@ subcategory: cmake
 subtopic: others
 timeline:
   publishTime: "2026-05-30 19:00"
+time:
+  lastUpdatedTime: "2026-06-01 02:00"
 cover:
   title: "CMake 生成静态库与动态库目标规范管理"
   summary: "演示如何使用 target_link_libraries 进行现代 CMake 构建，精确管理目标之间的头文件及库链接关系。"

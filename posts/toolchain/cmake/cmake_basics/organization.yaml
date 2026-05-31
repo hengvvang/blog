@@ -6,6 +6,8 @@ subcategory: cmake
 subtopic: others
 timeline:
   publishTime: "2026-05-30 18:00"
+time:
+  lastUpdatedTime: "2026-06-01 01:00"
 cover:
   title: "CMake 构建宏编写与自动化 CI/CD 环境结合运用"
   summary: "从 CMakeLists.txt 的基础指令开始，构建一个从单文件编译到多层目录结构项目的工程范本。"

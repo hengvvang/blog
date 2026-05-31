@@ -16,6 +16,7 @@ export async function compileArticleToContent(article: ArticleMetadata): Promise
     html,
     title: article.title,
     publishTime: article.publishTime,
+    lastUpdatedTime: article.lastUpdatedTime,
     category: article.category,
     subcategory: article.subcategory,
     subtopic: article.subtopic,

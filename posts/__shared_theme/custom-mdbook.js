@@ -12,9 +12,14 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   // 2. Add floating breadcrumbs
   try {
-    const res = await fetch('/api/articles.json');
-    if (!res.ok) throw new Error("Failed to load articles list");
-    const articles = await res.json();
+    const [articlesRes, taxonomyRes] = await Promise.all([
+      fetch('/api/articles.json'),
+      fetch('/api/taxonomy.json')
+    ]);
+    if (!articlesRes.ok) throw new Error("Failed to load articles list");
+    if (!taxonomyRes.ok) throw new Error("Failed to load taxonomy");
+    const articles = await articlesRes.json();
+    const taxonomy = await taxonomyRes.json();
     
     // Find matching article based on pathname (normalize both to support Cloudflare Pretty URLs)
     const pathname = window.location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '');
@@ -27,29 +32,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     const category = article.category;
     const subcat = article.subcategory;
     const subtopic = article.subtopic;
-    
-    // Build taxonomy mapping
-    const taxonomy = {};
-    articles.forEach(art => {
-      const cat = art.category || "";
-      const sub = art.subcategory || "";
-      const topic = art.subtopic || "";
-      if (cat) {
-        if (!taxonomy[cat]) {
-          taxonomy[cat] = { subcategories: {} };
-        }
-        if (sub) {
-          if (!taxonomy[cat].subcategories[sub]) {
-            taxonomy[cat].subcategories[sub] = [];
-          }
-          if (topic) {
-            if (!taxonomy[cat].subcategories[sub].includes(topic)) {
-              taxonomy[cat].subcategories[sub].push(topic);
-            }
-          }
-        }
-      }
-    });
     
     const separatorSVG = `<svg class="breadcrumb-separator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
     const arrowSVG = `<svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
@@ -65,7 +47,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     `;
     
     // Category dropdown
-    const categories = Object.keys(taxonomy).sort();
+    const categories = (taxonomy.categories || []).map(cat => cat.key);
     const categoryDropdownHTML = categories.map(cat => {
       const activeClass = cat === category ? 'active-link' : '';
       return `<a href="/#/category/${cat}?subcat=all&subtopic=all" target="_parent" class="${activeClass}">${cat.toUpperCase()}</a>`;
@@ -82,7 +64,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     
     // Subcategory dropdown
     if (subcat) {
-      const subcategories = Object.keys(taxonomy[category]?.subcategories || {}).sort();
+      const categoryEntry = (taxonomy.categories || []).find(c => c.key === category);
+      const subcategories = (categoryEntry?.subcategories || []).map(sub => sub.key);
       const subcatDropdownHTML = subcategories.map(sub => {
         const activeClass = sub === subcat ? 'active-link' : '';
         return `<a href="/#/category/${category}?subcat=${sub}&subtopic=all" target="_parent" class="${activeClass}">${sub.toUpperCase()}</a>`;
@@ -100,7 +83,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     
     // Subtopic dropdown
     if (subtopic) {
-      const subtopics = (taxonomy[category]?.subcategories[subcat] || []).sort();
+      const categoryEntry = (taxonomy.categories || []).find(c => c.key === category);
+      const subcatEntry = (categoryEntry?.subcategories || []).find(s => s.key === subcat);
+      const subtopics = (subcatEntry?.subtopics || []).map(topic => topic.key);
       const subtopicDropdownHTML = subtopics.map(topic => {
         const activeClass = topic === subtopic ? 'active-link' : '';
         return `<a href="/#/category/${category}?subcat=${subcat}&subtopic=${topic}" target="_parent" class="${activeClass}">${topic.toUpperCase()}</a>`;

@@ -6,6 +6,8 @@ subcategory: gcc
 subtopic: others
 timeline:
   publishTime: "2026-05-30 19:30"
+time:
+  lastUpdatedTime: "2026-06-01 02:30"
 cover:
   title: "GCC 编译器三级优化选项与内联汇编详解"
   summary: "全方位对比 GCC 的各类编译优化等级，分析其在循环展开、死代码消除、函数内联及二进制体积上的抉择。"

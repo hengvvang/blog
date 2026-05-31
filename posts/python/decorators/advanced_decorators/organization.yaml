@@ -6,6 +6,8 @@ subcategory: python
 subtopic: decorators
 timeline:
   publishTime: "2026-05-30 23:15"
+time:
+  lastUpdatedTime: "2026-05-31 18:00"
 cover:
   title: "Python 装饰器高级设计与原理"
   summary: "深入讲解闭包机制、带参数的类装饰器设计、装饰器嵌套执行顺序，以及元数据丢失的底层成因与防范方案。"

@@ -1,6 +1,6 @@
 import { mkdir, rm, writeFile, readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { loadArticles } from "./src/backend/parser";
+import { loadArticles, ArticleMetadata } from "./src/backend/parser";
 import { compileArticleToContent } from "./src/backend/compiler";
 import { execSync } from "node:child_process";
 import { relative, join } from "node:path";
@@ -30,9 +30,81 @@ async function safeWriteFile(path: string, content: string) {
   }
 }
 
+function compareTimeDesc(a: string, b: string): number {
+  return new Date(b).getTime() - new Date(a).getTime();
+}
+
+type TaxonomyNode = {
+  key: string;
+  latestTime: string;
+  subcategories?: TaxonomyNode[];
+  subtopics?: TaxonomyNode[];
+};
+
+type Taxonomy = {
+  categories: TaxonomyNode[];
+};
+
+function buildTaxonomy(articles: ArticleMetadata[]): Taxonomy {
+  const categoryMap = new Map<string, { latestTime: string; subcategories: Map<string, { latestTime: string; subtopics: Map<string, { latestTime: string }> }> }>();
+
+  for (const art of articles) {
+    const cat = art.category || "";
+    const subcat = art.subcategory || "";
+    const subtopic = art.subtopic || "";
+    const sortTime = art.sortTime;
+    if (!cat) continue;
+
+    if (!categoryMap.has(cat)) {
+      categoryMap.set(cat, { latestTime: sortTime, subcategories: new Map() });
+    }
+    const catEntry = categoryMap.get(cat)!;
+    if (compareTimeDesc(sortTime, catEntry.latestTime) < 0) {
+      catEntry.latestTime = sortTime;
+    }
+
+    if (subcat) {
+      if (!catEntry.subcategories.has(subcat)) {
+        catEntry.subcategories.set(subcat, { latestTime: sortTime, subtopics: new Map() });
+      }
+      const subEntry = catEntry.subcategories.get(subcat)!;
+      if (compareTimeDesc(sortTime, subEntry.latestTime) < 0) {
+        subEntry.latestTime = sortTime;
+      }
+
+      if (subtopic) {
+        if (!subEntry.subtopics.has(subtopic)) {
+          subEntry.subtopics.set(subtopic, { latestTime: sortTime });
+        }
+        const topicEntry = subEntry.subtopics.get(subtopic)!;
+        if (compareTimeDesc(sortTime, topicEntry.latestTime) < 0) {
+          topicEntry.latestTime = sortTime;
+        }
+      }
+    }
+  }
+
+  const categories: TaxonomyNode[] = Array.from(categoryMap.entries()).map(([key, value]) => {
+    const subcategories: TaxonomyNode[] = Array.from(value.subcategories.entries()).map(([subKey, subValue]) => {
+      const subtopics: TaxonomyNode[] = Array.from(subValue.subtopics.entries()).map(([topicKey, topicValue]) => ({
+        key: topicKey,
+        latestTime: topicValue.latestTime
+      }));
+      subtopics.sort((a, b) => compareTimeDesc(a.latestTime, b.latestTime));
+      return { key: subKey, latestTime: subValue.latestTime, subtopics };
+    });
+    subcategories.sort((a, b) => compareTimeDesc(a.latestTime, b.latestTime));
+    return { key, latestTime: value.latestTime, subcategories };
+  });
+
+  categories.sort((a, b) => compareTimeDesc(a.latestTime, b.latestTime));
+  return { categories };
+}
+
 async function buildStatic() {
   console.log("Starting static site generation...");
   const articles = await loadArticles();
+  const taxonomy = buildTaxonomy(articles);
   
   // Clean up legacy theme folder
   await rm("./public/books/theme", { recursive: true, force: true });
@@ -44,6 +116,8 @@ async function buildStatic() {
   const clientList = articles.map(({ filePath, bookSrc, ...rest }) => rest);
   await safeWriteFile("./public/api/articles.json", JSON.stringify(clientList));
   console.log(`Generated: public/api/articles.json (${clientList.length} articles)`);
+  await safeWriteFile("./public/api/taxonomy.json", JSON.stringify(taxonomy));
+  console.log(`Generated: public/api/taxonomy.json (${taxonomy.categories.length} categories)`);
   
   // Create output article-content directory inside public/api/
   await mkdir("./public/api/article-content", { recursive: true });
@@ -62,31 +136,12 @@ async function buildStatic() {
   }
   console.log(`Pre-rendered content for ${articles.length} articles inside public/api/article-content/`);
   
-  // Aggregate unique books to compile and build blog taxonomy
+  // Aggregate unique books to compile
   const uniqueBookSrcs = new Set<string>();
-  const taxonomy: Record<string, { subcategories: Record<string, string[]> }> = {};
   
   for (const art of articles) {
     if (art.bookSrc) {
       uniqueBookSrcs.add(art.bookSrc);
-    }
-    const cat = art.category || "";
-    const subcat = art.subcategory || "";
-    const subtopic = art.subtopic || "";
-    if (cat) {
-      if (!taxonomy[cat]) {
-        taxonomy[cat] = { subcategories: {} };
-      }
-      if (subcat) {
-        if (!taxonomy[cat].subcategories[subcat]) {
-          taxonomy[cat].subcategories[subcat] = [];
-        }
-        if (subtopic) {
-          if (!taxonomy[cat].subcategories[subcat].includes(subtopic)) {
-            taxonomy[cat].subcategories[subcat].push(subtopic);
-          }
-        }
-      }
     }
   }
   
@@ -249,9 +304,14 @@ async function buildStatic() {
 
   // 2. Add floating breadcrumbs
   try {
-    const res = await fetch('/api/articles.json');
-    if (!res.ok) throw new Error("Failed to load articles list");
-    const articles = await res.json();
+    const [articlesRes, taxonomyRes] = await Promise.all([
+      fetch('/api/articles.json'),
+      fetch('/api/taxonomy.json')
+    ]);
+    if (!articlesRes.ok) throw new Error("Failed to load articles list");
+    if (!taxonomyRes.ok) throw new Error("Failed to load taxonomy");
+    const articles = await articlesRes.json();
+    const taxonomy = await taxonomyRes.json();
     
     // Find matching article based on pathname (normalize both to support Cloudflare Pretty URLs)
     const pathname = window.location.pathname.replace(/\\/index\\.html$/, '').replace(/\\/$/, '');
@@ -264,29 +324,6 @@ async function buildStatic() {
     const category = article.category;
     const subcat = article.subcategory;
     const subtopic = article.subtopic;
-    
-    // Build taxonomy mapping
-    const taxonomy = {};
-    articles.forEach(art => {
-      const cat = art.category || "";
-      const sub = art.subcategory || "";
-      const topic = art.subtopic || "";
-      if (cat) {
-        if (!taxonomy[cat]) {
-          taxonomy[cat] = { subcategories: {} };
-        }
-        if (sub) {
-          if (!taxonomy[cat].subcategories[sub]) {
-            taxonomy[cat].subcategories[sub] = [];
-          }
-          if (topic) {
-            if (!taxonomy[cat].subcategories[sub].includes(topic)) {
-              taxonomy[cat].subcategories[sub].push(topic);
-            }
-          }
-        }
-      }
-    });
     
     const separatorSVG = \`<svg class="breadcrumb-separator-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>\`;
     const arrowSVG = \`<svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>\`;
@@ -302,7 +339,7 @@ async function buildStatic() {
     \`;
     
     // Category dropdown
-    const categories = Object.keys(taxonomy).sort();
+    const categories = (taxonomy.categories || []).map(cat => cat.key);
     const categoryDropdownHTML = categories.map(cat => {
       const activeClass = cat === category ? 'active-link' : '';
       return \`<a href="/#/category/\${cat}?subcat=all&subtopic=all" target="_parent" class="\${activeClass}">\${cat.toUpperCase()}</a>\`;
@@ -319,7 +356,8 @@ async function buildStatic() {
     
     // Subcategory dropdown
     if (subcat) {
-      const subcategories = Object.keys(taxonomy[category]?.subcategories || {}).sort();
+      const categoryEntry = (taxonomy.categories || []).find(c => c.key === category);
+      const subcategories = (categoryEntry?.subcategories || []).map(sub => sub.key);
       const subcatDropdownHTML = subcategories.map(sub => {
         const activeClass = sub === subcat ? 'active-link' : '';
         return \`<a href="/#/category/\${category}?subcat=\${sub}&subtopic=all" target="_parent" class="\${activeClass}">\${sub.toUpperCase()}</a>\`;
@@ -337,7 +375,9 @@ async function buildStatic() {
     
     // Subtopic dropdown
     if (subtopic) {
-      const subtopics = (taxonomy[category]?.subcategories[subcat] || []).sort();
+      const categoryEntry = (taxonomy.categories || []).find(c => c.key === category);
+      const subcatEntry = (categoryEntry?.subcategories || []).find(s => s.key === subcat);
+      const subtopics = (subcatEntry?.subtopics || []).map(topic => topic.key);
       const subtopicDropdownHTML = subtopics.map(topic => {
         const activeClass = topic === subtopic ? 'active-link' : '';
         return \`<a href="/#/category/\${category}?subcat=\${subcat}&subtopic=\${topic}" target="_parent" class="\${activeClass}">\${topic.toUpperCase()}</a>\`;

@@ -6,6 +6,8 @@ subcategory: git
 subtopic: internals
 timeline:
   publishTime: "2026-05-30 21:30"
+time:
+  lastUpdatedTime: "2026-06-01 04:00"
 cover:
   title: "Git Reflog 原理与提交丢失恢复机制"
   summary: "利用系统的线程监控组件，实时输出每个任务栈的最高水位线，防范栈溢出引起的内核崩溃。"

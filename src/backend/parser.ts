@@ -12,6 +12,8 @@ export interface ArticleMetadata {
   subtopic?: string;
   contentSnippet: string;
   publishTime: string;
+  lastUpdatedTime?: string;
+  sortTime: string;
   filePath: string;
   cover?: CoverConfig;
   path: string;
@@ -124,11 +126,13 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
     }
     
     const timeline = meta.timeline || {};
-    let publishTime = timeline.publishTime ? String(timeline.publishTime).trim() : "";
+    const publishTime = timeline.publishTime ? String(timeline.publishTime).trim() : "";
     if (!publishTime) {
-      const fileStat = await stat(file);
-      publishTime = fileStat.mtime.toISOString().replace("T", " ").substring(0, 16);
+      throw new Error(`Missing timeline.publishTime in ${yamlFile}`);
     }
+    const timeMeta = meta.time || {};
+    const lastUpdatedTime = timeMeta.lastUpdatedTime ? String(timeMeta.lastUpdatedTime).trim() : "";
+    const sortTime = lastUpdatedTime || publishTime;
     
     const coverMeta = meta.cover || {};
     const title = coverMeta.title || "";
@@ -149,6 +153,8 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
       subtopic,
       contentSnippet: snippet,
       publishTime,
+      lastUpdatedTime: lastUpdatedTime || undefined,
+      sortTime,
       filePath: file,
       cover,
       path,
@@ -156,5 +162,5 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
     });
   }
   
-  return articles.sort((a, b) => new Date(b.publishTime).getTime() - new Date(a.publishTime).getTime());
+  return articles.sort((a, b) => new Date(b.sortTime).getTime() - new Date(a.sortTime).getTime());
 }

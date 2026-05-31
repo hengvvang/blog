@@ -6,6 +6,8 @@ subcategory: rust
 subtopic: lifetime
 timeline:
   publishTime: "2026-05-30 21:30"
+time:
+  lastUpdatedTime: "2026-05-31 23:30"
 cover:
   title: "Rust 高级生命周期约束与 HRTB 详解"
   summary: "探究生命周期的子类型关系、型变特征以及 for<'a> 高阶生命周期边界在复杂泛型函数中的限制。"

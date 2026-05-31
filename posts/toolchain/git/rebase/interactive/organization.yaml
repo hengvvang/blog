@@ -6,6 +6,8 @@ subcategory: git
 subtopic: rebase
 timeline:
   publishTime: "2026-05-30 21:45"
+time:
+  lastUpdatedTime: "2026-06-01 04:30"
 cover:
   title: "Git 交互式变基 Rebase 与历史整理"
   summary: "详解 git rebase -i 的各项调度指令（pick、squash、edit等），演示如何拆分、合并以及精简提交历史。"

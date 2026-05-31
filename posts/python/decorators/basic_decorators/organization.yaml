@@ -6,6 +6,8 @@ subcategory: python
 subtopic: decorators
 timeline:
   publishTime: "2026-05-30 23:30"
+time:
+  lastUpdatedTime: "2026-05-31 18:30"
 cover:
   title: "Python 基础装饰器与闭包"
   summary: "从变量作用域和第一类对象起步，说明闭包在内存中的表现，并实现记录日志和计算函数运行时间的入门装饰器。"

@@ -21,9 +21,21 @@ import {
   renderDetailViewHTML
 } from "./components";
 
+type TaxonomyNode = {
+  key: string;
+  latestTime: string;
+  subcategories?: TaxonomyNode[];
+  subtopics?: TaxonomyNode[];
+};
+
+type Taxonomy = {
+  categories: TaxonomyNode[];
+};
+
 // State management
-let CATEGORIES: string[] = ['lang', 'rtos', 'mcu', 'markup', 'toolchain'];
+let CATEGORIES: string[] = [];
 let ARTICLES: Article[] = [];
+let TAXONOMY: Taxonomy | null = null;
 let currentCategory = 'home';
 let currentSubcat = 'all';
 let currentSubtopic = 'all';
@@ -32,6 +44,25 @@ let pageSize = 5;
 // DOM references
 const navBar = document.getElementById('nav-bar');
 const articleGrid = document.getElementById('article-grid');
+
+function getCategoryEntry(category: string): TaxonomyNode | undefined {
+  return TAXONOMY?.categories.find(cat => cat.key === category);
+}
+
+function getSubcategoryKeys(category: string): string[] {
+  const entry = getCategoryEntry(category);
+  return (entry?.subcategories || []).map(sub => sub.key);
+}
+
+function getSubtopicKeys(category: string, subcategory: string): string[] {
+  const entry = getCategoryEntry(category);
+  const subEntry = (entry?.subcategories || []).find(sub => sub.key === subcategory);
+  return (subEntry?.subtopics || []).map(topic => topic.key);
+}
+
+function getSortTime(article: Article): string {
+  return article.sortTime || article.lastUpdatedTime || article.publishTime;
+}
 
 // Global Click Event Delegation
 document.body.addEventListener('click', (event) => {
@@ -171,13 +202,9 @@ function renderPartition() {
   const allArticles = ARTICLES.filter(a => a.category === currentCategory);
   
   // Determine subcategories for left sidebar
-  let subcats: string[] = [];
-  if (currentCategory === "lang") {
-    subcats = ["all", "rust", "c", "python"].filter(sub => sub === "all" || allArticles.some(a => a.subcategory === sub));
-  } else {
-    const subcatsSet = new Set<string>();
-    allArticles.forEach(a => { if (a.subcategory) subcatsSet.add(a.subcategory); });
-    subcats = ["all", ...Array.from(subcatsSet).sort()];
+  const subcats = ["all", ...getSubcategoryKeys(currentCategory)];
+  if (!subcats.includes(currentSubcat)) {
+    currentSubcat = "all";
   }
   
   // Render Subcategory Tabs HTML (same style as toolchain-tabs)
@@ -197,16 +224,25 @@ function renderPartition() {
     ? allArticles
     : allArticles.filter(a => a.subcategory === currentSubcat);
 
-  // Sort subcategory articles by publishTime descending first
-  subcatArticles.sort((a, b) => new Date(b.publishTime).getTime() - new Date(a.publishTime).getTime());
+  // Sort subcategory articles by sortTime descending first
+  subcatArticles.sort((a, b) => new Date(getSortTime(b)).getTime() - new Date(getSortTime(a)).getTime());
   
   // Find unique subtopics for this subcategory
-  const topicsSet = new Set<string>();
-  subcatArticles.forEach(a => { if (a.subtopic) topicsSet.add(a.subtopic); });
-  const hasTopics = topicsSet.size > 0;
+  const topicsMap = new Map<string, string>();
+  subcatArticles.forEach(a => {
+    if (!a.subtopic) return;
+    const current = topicsMap.get(a.subtopic);
+    const candidate = getSortTime(a);
+    if (!current || new Date(candidate).getTime() > new Date(current).getTime()) {
+      topicsMap.set(a.subtopic, candidate);
+    }
+  });
+  const hasTopics = topicsMap.size > 0;
   
   if (hasTopics) {
-    const topics = ['all', ...Array.from(topicsSet).sort()];
+    const topics = currentSubcat === 'all'
+      ? ['all', ...Array.from(topicsMap.entries()).sort((a, b) => new Date(b[1]).getTime() - new Date(a[1]).getTime()).map(([topic]) => topic)]
+      : ['all', ...getSubtopicKeys(currentCategory, currentSubcat)];
     tabsHTML = `<div class="toolchain-tabs">` + 
       topics.map(topic => `
         <button class="toolchain-tab ${currentSubtopic === topic ? 'active' : ''}" data-action="select-subtopic" data-topic="${topic}">` +
@@ -214,6 +250,9 @@ function renderPartition() {
         `</button>
       `).join('') +
     `</div>`;
+    if (!topics.includes(currentSubtopic)) {
+      currentSubtopic = 'all';
+    }
   }
   
   filteredArticles = (currentSubtopic === 'all')
@@ -313,7 +352,7 @@ async function loadAndShowArticle(id: number) {
     const metaBoxEl = detailView.querySelector('#sidebar-meta-box');
     if (metaBoxEl) {
       const author = data.author || 'hengvvang';
-      const pTime = data.publishTime || article.publishTime;
+      const pTime = data.lastUpdatedTime || article.lastUpdatedTime || data.publishTime || article.publishTime;
       const formattedDate = formatEnglishDate(pTime);
       
       const tagsHtml = data.tags && data.tags.length > 0 
@@ -438,21 +477,23 @@ function handleRouting() {
 // App bootstrapping
 async function initBlog() {
   try {
-    const res = await fetch("/api/articles.json");
-    if (!res.ok) throw new Error("Fetch articles failed");
-    ARTICLES = await res.json();
+    const [articlesRes, taxonomyRes] = await Promise.all([
+      fetch("/api/articles.json"),
+      fetch("/api/taxonomy.json")
+    ]);
+    if (!articlesRes.ok) throw new Error("Fetch articles failed");
+    if (!taxonomyRes.ok) throw new Error("Fetch taxonomy failed");
+    ARTICLES = await articlesRes.json();
+    TAXONOMY = await taxonomyRes.json();
     
-    // Parse categories from articles
-    const scannedCats = new Set<string>();
-    ARTICLES.forEach(a => {
-      if (a.category) scannedCats.add(a.category);
-    });
-    
-    const defaultCats = ['lang', 'rtos', 'mcu', 'markup', 'toolchain'];
-    const allCats = new Set([...defaultCats, ...Array.from(scannedCats)]);
-    CATEGORIES = Array.from(allCats).filter(cat => ARTICLES.some(a => a.category === cat));
+    CATEGORIES = (TAXONOMY?.categories || []).map(cat => cat.key)
+      .filter(cat => ARTICLES.some(a => a.category === cat));
     if (CATEGORIES.length === 0) {
-      CATEGORIES = defaultCats;
+      const scannedCats = new Set<string>();
+      ARTICLES.forEach(a => {
+        if (a.category) scannedCats.add(a.category);
+      });
+      CATEGORIES = Array.from(scannedCats);
     }
     
     // Initialize slideshow configurations

@@ -6,6 +6,8 @@ subcategory: freertos
 subtopic: others
 timeline:
   publishTime: "2026-05-30 16:30"
+time:
+  lastUpdatedTime: "2026-05-31 21:00"
 cover:
   title: "FreeRTOS 任务通知替代信号量之高性能优化"
   summary: "展示如何直接通过任务控制块（TCB）中的通知值，实现零内存开销的高速单向唤醒，避免创建多余的信号量。"

@@ -6,6 +6,8 @@ subcategory: c
 subtopic: pointers
 timeline:
   publishTime: "2026-05-30 11:30"
+time:
+  lastUpdatedTime: "2026-05-31 11:30"
 cover:
   title: "C语言函数指针与分支优化设计"
   summary: "深入剖析函数指针声明、间接分支在汇编层面的机器表示与分支预测行为，探讨基于函数指针数组的状态机分发与命令路由表的优雅开发设计。"

@@ -6,6 +6,8 @@ subcategory: freertos
 subtopic: others
 timeline:
   publishTime: "2026-05-30 14:00"
+time:
+  lastUpdatedTime: "2026-05-31 20:00"
 cover:
   title: "实时操作系统 RTOS 任务调度与优先级翻转"
   summary: "从 PendSV 中断与堆栈恢复的角度，层层剥离汇编代码，还原 FreeRTOS 任务调度器在 CPU 寄存器上的保存流程。"

@@ -6,6 +6,8 @@ subcategory: python
 subtopic: oop
 timeline:
   publishTime: "2026-05-30 23:55"
+time:
+  lastUpdatedTime: "2026-05-31 19:30"
 cover:
   title: "Python 元类与动态类创建"
   summary: "说明 class 声明背后的 type() 构造逻辑，阐述自定义 metaclass 拦截类构建、校验成员属性以及注册子类的精妙过程。"

@@ -6,6 +6,8 @@ subcategory: css
 subtopic: others
 timeline:
   publishTime: "2026-05-30 20:15"
+time:
+  lastUpdatedTime: "2026-05-31 13:00"
 cover:
   title: "CSS Flexbox 与 Grid 响应式布局"
   summary: "全面梳理弹性盒与网格布局的属性，通过 auto-fit 和 minmax() 编写出无需媒体查询的自适应多终端网格。"

@@ -6,6 +6,8 @@ subcategory: markdown
 subtopic: others
 timeline:
   publishTime: "2026-05-30 20:30"
+time:
+  lastUpdatedTime: "2026-05-31 13:30"
 cover:
   title: "Markdown Frontmatter 元数据属性指南"
   summary: "阐述 YAML / TOML 头信息块的格式规范，讲解 Jekyll、Hugo、Astro 等静态生成器的解析提取和 SEO 数据注入。"

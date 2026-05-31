@@ -6,6 +6,8 @@ subcategory: esp32
 subtopic: others
 timeline:
   publishTime: "2026-05-30 15:00"
+time:
+  lastUpdatedTime: "2026-05-31 15:00"
 cover:
   title: "ESP32 蓝牙 BLE GATT 服务器开发流程与原理"
   summary: "使用 ESP-IDF 建立 GATT 结构，演示如何定义服务与特征，实现主机与从机间的高效蓝牙数据传输。"

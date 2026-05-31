@@ -6,6 +6,8 @@ subcategory: c
 subtopic: memory
 timeline:
   publishTime: "2026-05-30 10:00"
+time:
+  lastUpdatedTime: "2026-05-31 10:00"
 cover:
   title: "深入理解 C 语言栈溢出攻击与防御防范"
   summary: "详细剖析函数递归调用、局部变量在硬件栈帧上的空间编排、栈缓冲区溢出覆写返回地址的底层机理，以及编译器 Canary 哨兵、系统 DEP/ASLR 和硬件 MPU 对栈溢出的防御规避实践。"

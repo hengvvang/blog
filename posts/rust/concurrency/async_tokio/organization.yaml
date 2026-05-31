@@ -6,6 +6,8 @@ subcategory: rust
 subtopic: concurrency
 timeline:
   publishTime: "2026-05-30 20:30"
+time:
+  lastUpdatedTime: "2026-05-31 22:30"
 cover:
   title: "Rust Tokio 异步运行时入门与任务调度"
   summary: "详细剖析 Tokio 内部的多线程调度队列、工作窃取（Work-Stealing）算法与异步 IO 事件监听核心。"

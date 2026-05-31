@@ -6,6 +6,8 @@ subcategory: rust
 subtopic: concurrency
 timeline:
   publishTime: "2026-05-30 21:00"
+time:
+  lastUpdatedTime: "2026-05-31 23:00"
 cover:
   title: "Rust 多线程并发编程与通道机制"
   summary: "从 OS 线程创建说起，精讲 Rust 的 Send/Sync 特质，以及如何通过 mpsc 通道在线程间安全传输消息。"

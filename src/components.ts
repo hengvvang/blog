@@ -87,6 +87,10 @@ function renderCoverHTML(cover: Article['cover'], categoryColor: string, default
   `;
 }
 
+function getDisplayTime(art: Article): string {
+  return art.lastUpdatedTime || art.publishTime;
+}
+
 function renderBadgeHTML(art: Article): string {
   const subcatStr = (art.subcategory || art.category).toUpperCase();
   if (art.subtopic) {
@@ -110,7 +114,7 @@ export function renderFeaturedCardHTML(art: Article, categoryColor: string): str
       <div class="card-cover-wrapper" style="height: auto; display: flex; flex-direction: column; gap: 6px; padding: 8px 12px 10px 12px;">
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 2px; line-height: 1.2;">
           ${renderBadgeHTML(art)}
-          <span class="featured-date" style="font-size: 11px; color: var(--text-light, #888);">${art.publishTime}</span>
+          <span class="featured-date" style="font-size: 11px; color: var(--text-light, #888);">${getDisplayTime(art)}</span>
         </div>
         <div class="featured-cover" style="position: relative; overflow: hidden; height: 110px; border-radius: 4px;">
           ${renderCoverHTML(art.cover, categoryColor, '14px')}
@@ -147,7 +151,7 @@ export function renderListCardHTML(art: Article, categoryColor: string): string 
         <div class="list-card-info" style="padding: 0; flex-grow: 1;">
           <div class="list-card-header">
             ${renderBadgeHTML(art)}
-            <span class="list-card-date">${art.publishTime}</span>
+            <span class="list-card-date">${getDisplayTime(art)}</span>
           </div>
           <h4 class="list-card-title">${art.title}</h4>
           <p class="list-card-snippet">${art.contentSnippet}</p>
@@ -180,7 +184,7 @@ export function renderRelatedCardHTML(rel: Article): string {
           </div>
           <div class="sidebar-item-info">
             <p class="sidebar-item-title">${rel.title}</p>
-            <p class="sidebar-item-date">${rel.publishTime.split(' ')[0].replace(/-/g, '年').concat('日') /* localized inline */}</p>
+            <p class="sidebar-item-date">${getDisplayTime(rel).split(' ')[0].replace(/-/g, '年').concat('日') /* localized inline */}</p>
           </div>
         </div>
       </div>

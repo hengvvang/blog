@@ -26,6 +26,8 @@ export interface Article {
   subtopic?: string;
   contentSnippet: string;
   publishTime: string;
+  lastUpdatedTime?: string;
+  sortTime: string;
   cover?: CoverConfig;
   path?: string;
 }
@@ -34,6 +36,7 @@ export interface ArticleContent {
   html: string;
   title: string;
   publishTime: string;
+  lastUpdatedTime?: string;
   category: string;
   subcategory?: string;
   subtopic?: string;

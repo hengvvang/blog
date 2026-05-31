@@ -6,6 +6,8 @@ subcategory: css
 subtopic: others
 timeline:
   publishTime: "2026-05-30 20:00"
+time:
+  lastUpdatedTime: "2026-05-31 12:30"
 cover:
   title: "CSS 动画设计与微动画实现"
   summary: "利用 CSS transition 与 keyframes 进行动效建模，优化三维变形（transform）与透明度通道以激活 GPU 硬件加速。"
