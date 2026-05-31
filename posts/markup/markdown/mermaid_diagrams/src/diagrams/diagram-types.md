@@ -1,28 +1,37 @@
-# 主流图表语法与多场景建模
+# 第二章：核心图表类型语法与实例深度解析
 
-在本章中，我们将深入探讨 Mermaid 中最常用的五种系统设计图表。所有示例均采用真实生产场景（如高并发架构、OAuth 2.0 认证流、订单状态机及电商数据模型），并附带详细的行级注释与设计考量。
+在本章中，我们将深入探讨 Mermaid 中最常用的五种核心系统设计图表。所有示例均基于真实生产场景（如高并发双写缓存架构、OAuth 2.0 授权码流、并发订单状态机、电商交易数据模型以及策略设计模式），并附带详细的行级注释与架构设计考量。
 
 ---
 
 ## 1. 流程图（Flowcharts）
 
-流程图是表达拓扑结构、业务决策控制流最直观的工具。在 Mermaid 中，流程图通过 `graph` 或 `flowchart` 声明。建议使用最新版本的 `flowchart`，它在渲染算法和节点边框连接上更具优化。
+流程图是表达拓扑结构、业务决策控制流以及数据流转逻辑最直观的工具。在 Mermaid 中，流程图通过 `flowchart` 声明（比旧版的 `graph` 提供了更好的连接线绘制与子图嵌套性能）。
 
-### 1.1 核心语法与形状速查
-*   **布局方向**：`TB` (Top to Bottom), `BT` (Bottom to Top), `LR` (Left to Right), `RL` (Right to Left)。
-*   **节点形状**：
-    *   矩形：`id[Text]`
-    *   圆角矩形：`id(Text)`
-    *   体育场形：`id([Text])`
-    *   圆柱形（数据库）：`id[(Text)]`
-    *   菱形（决策分支）：`id{Text}`
-    *   平行四边形：`id[\Text\]` 或 `id[/Text/]`
-*   **连线样式**：
-    *   实线带箭头：`A --> B`
-    *   粗实线：`A ==> B`
-    *   虚线：`A -.-> B`
-    *   无箭头连线：`A --- B`
-    *   带文本的连线：`A -->|描述| B` 或 `A -- 描述 --> B`
+### 1.1 状态循环控制流的 ASCII 抽象
+在具有失败重试与退避策略（Backoff Retry）的复杂状态环路中，控制流的拓扑如下所示：
+
+```text
+                  +--------------------------------+
+                  |      1. Initiate Request       |
+                  +--------------------------------+
+                                  |
+                                  v
++------------+    +--------------------------------+
+|  5. Sleep  | <--|    3. Fail (Retry < Max)       |
+|  (Backoff) |    +--------------------------------+
++------------+                    ^
+      |                           |
+      v                           |
++------------+    +--------------------------------+
+|  4. Retry  | -->|     2. Execute Task / API      |
++------------+    +--------------------------------+
+                                  |
+                                  v
+                  +--------------------------------+
+                  |  6. Success (Exit & Return)    |
+                  +--------------------------------+
+```
 
 ### 1.2 生产级案例：多级缓存与写穿透拓扑
 
@@ -31,7 +40,7 @@
 ```mermaid
 flowchart TD
     %% ----------------------------------------------------
-    %% 定义全局样式类
+    %% 定义全局样式类 (Class Definitions)
     %% ----------------------------------------------------
     classDef clientClass fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1;
     classDef gateClass fill:#efebe9,stroke:#4e342e,stroke-width:2px,color:#3e2723;
@@ -40,7 +49,7 @@ flowchart TD
     classDef alertClass fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#b71c1c;
 
     %% ----------------------------------------------------
-    %% 客户端与网关层
+    %% 客户端与网关层节点定义
     %% ----------------------------------------------------
     User([客户端浏览器]):::clientClass
     Gateway{API 网关决策}:::gateClass
@@ -48,17 +57,17 @@ flowchart TD
     User -->|HTTPS Request| Gateway
 
     %% ----------------------------------------------------
-    %% 子图：缓存系统
+    %% 子图一：分布式缓存系统 (Redis Cluster)
     %% ----------------------------------------------------
     subgraph CacheSystem["分布式缓存系统 (Redis Cluster)"]
         direction LR
         RedisMaster[(Redis 主节点)]:::cacheClass
         RedisSlave[(Redis 从节点)]:::cacheClass
-        RedisMaster -->|主从复制| RedisSlave
+        RedisMaster -->|主从同步复制| RedisSlave
     end
 
     %% ----------------------------------------------------
-    %% 子图：持久化存储层
+    %% 子图二：持久化存储层 (MySQL & CDC)
     %% ----------------------------------------------------
     subgraph StorageLayer["持久化数据层"]
         direction TB
@@ -67,24 +76,27 @@ flowchart TD
         BinlogReceiver[Binlog 监听器]:::dbClass
         
         MySQL_Master -->|异步复制| MySQL_Replica
-        MySQL_Master -->|日志变更| BinlogReceiver
+        MySQL_Master -->|日志订阅| BinlogReceiver
     end
 
     %% ----------------------------------------------------
-    %% 业务流转与判定
+    %% 业务逻辑流转关系定义
     %% ----------------------------------------------------
     Gateway -->|1. 读操作| RedisSlave
-    RedisSlave -.->|2. Cache Hit| Gateway
+    RedisSlave -.->|2. 缓存命中 (Cache Hit)| Gateway
     
-    RedisSlave -->|3. Cache Miss| MySQL_Replica
-    MySQL_Replica -.->|4. 返回数据并写入缓存| RedisMaster
+    RedisSlave -->|3. 缓存失效 (Cache Miss)| MySQL_Replica
+    MySQL_Replica -.->|4. 返回数据并写回缓存| RedisMaster
 
     Gateway -->|5. 写操作| MySQL_Master
-    MySQL_Master -.->|6. Write OK| Gateway
+    MySQL_Master -.->|6. 写入完成 (Write OK)| Gateway
     
-    BinlogReceiver -->|7. 触发缓存失效| RedisMaster:::alertClass
+    %% 使用 Canal 或 Debezium 监听 Binlog 自动失效缓存，防止双写不一致
+    BinlogReceiver -->|7. 异步触发缓存失效 (Evict)| RedisMaster:::alertClass
 
-    %% 连线注释与样式微调
+    %% ----------------------------------------------------
+    %% 关键连接线样式调优 (Link Styling)
+    %% ----------------------------------------------------
     linkStyle 4 stroke:#2e7d32,stroke-width:2px;
     linkStyle 7 stroke:#c62828,stroke-width:2px,stroke-dasharray: 5 5;
 ```
@@ -98,12 +110,12 @@ flowchart TD
 ### 2.1 核心语法要素
 *   **参与者声明**：`participant` 或 `actor`，可通过 `as` 关键字定义别名。
 *   **消息箭头**：
-    *   实线带实心箭头（同步调用）：`->>`
-    *   虚线带实心箭头（同步返回）：`-->>`
-    *   实线带非实心箭头（异步调用）：`->`
-    *   虚线带非实心箭头（异步返回）：`-->`
+    *   `->>`：同步调用（实线实心箭头）。
+    *   `-->>`：同步返回（虚线实心箭头）。
+    *   `->`：异步消息发送（实线非实心箭头）。
+    *   `-->`：异步返回（虚线非实心箭头）。
 *   **激活区间**：在发送端或接收端使用 `activate` 和 `deactivate`，或直接在箭头后追加 `+` 和 `-`。
-*   **条件分支与循环**：使用 `alt/else` 表示分支逻辑，使用 `loop` 表示循环逻辑，使用 `opt` 表示可选步骤。
+*   **条件分支与循环**：使用 `alt/else` 表示条件分支，`loop` 表示循环，`opt` 表示可选步骤。
 *   **并行计算**：使用 `par` 块包围并发操作。
 
 ### 2.2 生产级案例：OAuth 2.0 授权码模式交互流
@@ -112,6 +124,7 @@ flowchart TD
 
 ```mermaid
 sequenceDiagram
+    %% 开启自动编号，方便在技术文档中引用对应步骤
     autonumber
     
     %% 声明参与者并自定义显示标签
@@ -120,7 +133,9 @@ sequenceDiagram
     participant Backend as 业务后端 (Backend Server)
     participant AuthServer as 授权服务器 (Auth Server)
 
-    %% 流程开始
+    %% ----------------------------------------------------
+    %% 第一阶段：获取授权码
+    %% ----------------------------------------------------
     User->>Client: 1. 点击“使用第三方账号登录”
     activate Client
     Client-->>User: 2. 重定向至授权登录页 (带 Client_ID, Redirect_URI)
@@ -131,12 +146,15 @@ sequenceDiagram
     AuthServer-->>User: 4. 发送授权码 (Authorization Code) 并重定向
     deactivate AuthServer
 
+    %% ----------------------------------------------------
+    %% 第二阶段：交换 Access Token
+    %% ----------------------------------------------------
     User->>Client: 5. 携带 Authorization Code 访问 Redirect_URI
     activate Client
     Client->>Backend: 6. 传递 Authorization Code 至后端
     activate Backend
     
-    note over Backend, AuthServer: 后端使用 Code 与 AppSecret 向授权服务发起请求
+    note over Backend, AuthServer: 后端在内网安全环境下使用 Code 与 AppSecret 向授权服务发起请求
     
     Backend->>AuthServer: 7. POST /oauth/token (code, client_secret)
     activate AuthServer
@@ -152,6 +170,9 @@ sequenceDiagram
     deactivate Backend
     deactivate Client
 
+    %% ----------------------------------------------------
+    %% 第三阶段：数据交互循环
+    %% ----------------------------------------------------
     loop 维持心跳与会话
         Client->>Backend: 10. 带有 JWT 的业务请求 (Authorization Header)
         activate Client
@@ -183,7 +204,7 @@ stateDiagram-v2
     %% 初始状态至创建中
     [*] --> Created : 1. 用户提交购物车
     
-    %% 状态：未支付
+    %% 状态：未支付（复合状态）
     state Created {
         [*] --> Unpaid
         Unpaid --> Expired : 30分钟超时未支付
@@ -192,7 +213,7 @@ stateDiagram-v2
 
     Expired --> [*] : 自动取消订单并归还库存
 
-    %% 状态：已支付，开启并行分支处理
+    %% 状态：已支付，开启并行分支处理（并发复合状态）
     state Paid {
         %% 分支一：财务入账与发票开具
         state FinancialTracking {
@@ -225,13 +246,13 @@ stateDiagram-v2
 
 ## 4. 实体关系图（ER Diagrams）
 
-在设计关系型数据库时，ER 图用于表示数据表之间的物理或逻辑关系。
+在设计关系型数据库时，ER 图用于表示数据表之间的物理或逻辑关系，能够直接转译为 DDL。
 
-### 4.1 关系基数符号
-*   `||--||`：一且仅有一（One and only one）
-*   `||--o{`：零个或多个（Zero or many）
-*   `||--|{`：一个或多个（One or many）
-*   `o|--|{`：一个或多个（非强依赖）
+### 4.1 关系基数符号定义
+- `||--||`：一且仅有一（One and only one）
+- `||--o{`：零个或多个（Zero or many）
+- `||--|{`：一个或多个（One or many）
+- `o|--|{`：一个或多个（非强依赖）
 
 ### 4.2 生产级案例：电商交易系统核心模型
 
@@ -240,7 +261,7 @@ stateDiagram-v2
 ```mermaid
 erDiagram
     %% ----------------------------------------------------
-    %% 定义实体属性与类型
+    %% 定义实体属性与约束条件 (PK/FK/UK)
     %% ----------------------------------------------------
     USER {
         bigint user_id PK "用户全局唯一标识"
@@ -275,7 +296,7 @@ erDiagram
     }
 
     %% ----------------------------------------------------
-    %% 定义实体间映射关系
+    %% 声明基数对应关系 (Relationships)
     %% ----------------------------------------------------
     USER ||--o{ ORDER : "一个用户可以拥有0个或多个订单"
     ORDER ||--|{ ORDER_ITEM : "一个订单必须包含1个或多个商品行项"
@@ -290,13 +311,13 @@ erDiagram
 
 ### 5.1 生产级案例：策略设计模式（Strategy Pattern）的实现
 
-以下是一个支付系统中使用策略模式（Strategy Pattern）进行结算的面向对象类图设计：
+以下是一个支付系统中使用策略模式进行结算的面向对象类图设计：
 
 ```mermaid
 classDiagram
     direction BT
     
-    %% 定义接口与抽象类
+    %% 定义接口与上下文类
     class PaymentContext {
         -PaymentStrategy strategy
         +setStrategy(PaymentStrategy strategy) void
@@ -308,6 +329,7 @@ classDiagram
         +pay(double amount) boolean
     }
     
+    %% 具体策略子类
     class AlipayStrategy {
         -String alipayUserId
         -String signType
@@ -327,11 +349,41 @@ classDiagram
         +pay(double amount) boolean
     }
 
-    %% 实现与依赖关系表达
+    %% 关系声明
     AlipayStrategy ..|> PaymentStrategy : "实现"
     WechatPayStrategy ..|> PaymentStrategy : "实现"
     CreditCardStrategy ..|> PaymentStrategy : "实现"
-    PaymentContext --> PaymentStrategy : "关联 (Association)"
+    PaymentContext --> PaymentStrategy : "聚合关联 (Association)"
+```
+
+---
+
+## 6. 甘特图（Gantt Charts）
+
+甘特图对于表达工程进度、版本上线里程碑以及任务依赖非常有用。
+
+### 6.1 生产级案例：微服务重构版本发布甘特图
+
+```mermaid
+gantt
+    title 微服务重构与版本发布进度计划
+    dateFormat  YYYY-MM-DD
+    axisFormat  %m-%d
+    
+    section 架构设计与调研
+    方案评审及技术选型           :active, des1, 2026-06-01, 5d
+    数据库分库分表方案设计       : des2, after des1, 7d
+    
+    section 核心开发阶段
+    订单模块重构与接口改造      :critical, dev1, 2026-06-08, 12d
+    支付网关对接与灰度逻辑开发   : dev2, after des2, 10d
+    
+    section 质量保障与灰度测试
+    自动化集成测试与性能压测     :active, test1, after dev1, 5d
+    灰度环境部署及 1% 流量导入   : test2, after test1, 4d
+    
+    section 生产发布与监控
+    全量上线与历史数据割接       : mil1, after test2, 3d
 ```
 
 通过这一章的代码实例，你可以直接拷贝这些结构模板到你的 Markdown 文件中，并根据实际业务快速替换节点信息。在下一章，我们将讨论在大型项目中文档可视化排版的最优工程实践。

@@ -5,5 +5,5 @@ authors = ["hengvvang"]
 description = "Complete manual on Mermaid diagram parsing, flowcharting, sequence flow modeling, state diagrams, and layout rendering."
 
 [output.html]
-additional-css = ["../../../__shared_theme/custom-mdbook.css"]
-additional-js = ["../../../__shared_theme/custom-mdbook.js"]
+smart-punctuation = true
+mathjax-support = true

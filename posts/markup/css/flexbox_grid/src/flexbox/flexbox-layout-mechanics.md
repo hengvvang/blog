@@ -1,4 +1,4 @@
-# 第一章：Flexbox 布局机制与对齐原理
+# 第一章：Flexbox 轴向机制与伸缩因子计算原理
 
 CSS Flexible Box (Flexbox) 是一种专门为一维空间（行或列）设计的高级对齐与空间分配引擎。在 Flexbox 的世界里，子元素的排列、尺寸收缩和膨胀均由一组严密的几何坐标与数学分配算法控制。
 
@@ -8,19 +8,28 @@ CSS Flexible Box (Flexbox) 是一种专门为一维空间（行或列）设计�
 
 Flexbox 的基础是**双轴系统**：**主轴（Main Axis）**与**交叉轴（Cross Axis）**。与传统的物理坐标系（X 轴/Y 轴）不同，Flexbox 的坐标系是动态旋转且高度抽象的。
 
-```mermaid
-graph LR
-    subgraph flex-direction: row (默认水平主轴)
-        A[flex-start] -->|主轴 Main Axis | B[flex-end]
-        C[flex-start] -->|交叉轴 Cross Axis| D[flex-end]
-    end
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#f9f,stroke:#333,stroke-width:2px
-    style C fill:#ccf,stroke:#333,stroke-width:2px
-    style D fill:#ccf,stroke:#333,stroke-width:2px
+### 1.1 双轴空间划分示意图
+
+```
+                   主轴正方向 (Main Axis Direction) ──────────────────────────>
+           
+           main-start                                                      main-end
+               │                                                              │
+        +──────▼────────────────────── Flex Container ────────────────────────▼──────+
+        |                                                                            |
+        |   +-------------------+      +-------------------+      +---------------+  |
+        |   |    Flex Item 1    |      |    Flex Item 2    |      |  Flex Item 3  |  |
+        |   |                   |      |                   |      |               |  |
+        |   +-------------------+      +-------------------+      +---------------+  |
+  cross-│       ▲                          ▲                          ▲              │
+  start │       │                          │                          │              │
+    │   +───────┼──────────────────────────┼──────────────────────────┼──────────────+
+    │           │                          │                          │
+    ▼       cross-start               cross-center                cross-end
+  交叉轴正方向 (Cross Axis Direction) ──> 垂直于主轴向下
 ```
 
-### 轴向的动态旋转 (`flex-direction`)
+### 1.2 轴向的动态旋转 (`flex-direction`)
 
 通过设置 `flex-direction` 属性，主轴的方向与起止方向会发生根本改变：
 
@@ -29,12 +38,12 @@ graph LR
 * **`column`**：主轴旋转 90 度变为垂直方向（从上到下），交叉轴旋转为水平方向（从左到右）。
 * **`column-reverse`**：主轴为垂直方向，但起点与终点对调（从下到上）。
 
-### 书写模式（Writing Modes）对轴向的影响
+### 1.3 书写模式（Writing Modes）对轴向的影响
 
 值得注意的是，主轴的起点（`main-start`）和终点（`main-end`）并不是绝对的物理方位，而是取决于容器的**书写模式**（如 `writing-mode`）以及**文本排版方向**（如 `direction`）：
 
 * 在从右往左的书写系统（如阿拉伯语 `direction: rtl`）中，即便 `flex-direction` 设为 `row`，主轴的起点（`main-start`）也是在**物理右侧**，子项会默认从右侧开始向左排列。
-* 在垂直书写模式（如 `writing-mode: vertical-rl`）中，`row` 的主轴会自动变为**垂直向下**，与传统的物理主轴发生置换。
+* 在垂直书写模式（如 `writing-mode: vertical-rl`）中，`row` 的主轴会自动变为**垂直向下**，与传统的物理主轴发生置换。这实现了布局轴向与多国语言书写系统的原生解耦。
 
 ---
 
@@ -42,27 +51,20 @@ graph LR
 
 Flex 容器控制子项排列的核心属性可以分为三类：主轴对齐、交叉轴对齐（单行）以及交叉轴对齐（多行）。
 
-### 主轴上的空间分布：`justify-content`
+### 2.1 主轴上的空间分布：`justify-content`
 
 `justify-content` 属性定义了浏览器如何分配主轴上的剩余空白空间。
 
 ```
-[Item A][Item B]-----------------  <- flex-start (默认)
------------------[Item A][Item B]  <- flex-end
---------[Item A][Item B]---------  <- center
-[Item A]---------[Item B]--------  <- space-between (两端对齐)
-----[Item A]--------[Item B]-----  <- space-around (环绕对齐)
-------[Item A]------[Item B]-----  <- space-evenly (均匀对齐)
+[Item A][Item B]-----------------  <- flex-start (所有项向主轴起点对齐，多余空间在末尾)
+-----------------[Item A][Item B]  <- flex-end   (所有项向主轴终点对齐，多余空间在开头)
+--------[Item A][Item B]---------  <- center     (所有项居中对齐，多余空间均分于两端)
+[Item A]---------[Item B]--------  <- space-between (首尾紧贴边界，项之间均分剩余空间)
+----[Item A]--------[Item B]-----  <- space-around  (每个项两侧间距均等，故项间距是边界间距的两倍)
+------[Item A]------[Item B]-----  <- space-evenly  (包含项间距以及首尾边界间距在内，所有空白完全等宽)
 ```
 
-1. **`flex-start`**：所有子项紧贴主轴起点排列，剩余空间堆积在主轴终点。
-2. **`flex-end`**：所有子项紧贴主轴终点排列，剩余空间堆积在主轴起点。
-3. **`center`**：所有子项在主轴居中排列，剩余空间均分在主轴的两端。
-4. **`space-between`**：首个子项对齐起点，末尾子项对齐终点，其余子项均匀分布，子项之间的间距完全相等。
-5. **`space-around`**：子项均匀分布，但每个子项两侧分配相等的空白。这意味着相邻子项之间的空白是子项与边界之间空白的两倍。
-6. **`space-evenly`**：所有空隙（包括子项之间、以及子项与边界之间）在数学上完全等宽。
-
-### 交叉轴单行对齐：`align-items`
+### 2.2 交叉轴单行对齐：`align-items`
 
 当 Flex 容器只有单行子项时，`align-items` 决定了子项在交叉轴上的位置。
 
@@ -72,7 +74,7 @@ Flex 容器控制子项排列的核心属性可以分为三类：主轴对齐、
 * **`center`**：子项在交叉轴方向上完美居中。
 * **`baseline`**：子项以各自的**第一行文本基线（Baseline）**对齐。对于高度不同且内部文字大小不一的按钮组、导航条而言，这是保证视觉流畅度的核心属性。
 
-### 多行容器对齐：`flex-wrap` 与 `align-content`
+### 2.3 多行容器对齐：`flex-wrap` 与 `align-content`
 
 默认情况下，Flex 容器是单行且不换行的（`flex-wrap: nowrap`），一旦子项宽度超出，它们会根据缩紧因子被压缩。
 
@@ -80,15 +82,16 @@ Flex 容器控制子项排列的核心属性可以分为三类：主轴对齐、
 
 > [!IMPORTANT]
 > **`align-items` 与 `align-content` 的区别**：
-> `align-items` 控制**每一行内部**的子项如何在这一行的虚拟交叉轴高度内对齐；而 `align-content` 控制的是**多行作为一个整体**，在整个容器的多余交叉轴空间内如何分布。如果容器只有单行，`align-content` 将毫无效果。
+> - `align-items` 控制**每一行内部**的子项如何在这一行的虚拟交叉轴高度内对齐（针对单行内部子项的高矮调整）。
+> - `align-content` 控制的是**多行作为一个整体**，在整个容器的多余交叉轴空间内如何分布。如果容器只有单行，`align-content` 将毫无效果。
 
-### 间距控制：`gap`
+### 2.4 间距控制：`gap`
 
 现代 CSS 允许在 Flex 容器上使用 `gap`（以及 `row-gap`、`column-gap`）属性。它用于显式定义子项之间的最小物理距离，且不会在容器边缘引入多余的缝隙，比传统子项的 `margin` 更好控制。
 
 ---
 
-## 3. 弹性伸缩算法与数学模型（Flex Factor Layout Algorithm）
+## 3. 弹性伸缩算法与数学模型
 
 Flexbox 最核心的威力在于子项的“可伸缩性”。浏览器在解析 Flex 布局时，通过 `flex-basis`、`flex-grow` 和 `flex-shrink` 三个关键属性，计算出每个子项的最终物理尺寸。
 
@@ -96,7 +99,7 @@ Flexbox 最核心的威力在于子项的“可伸缩性”。浏览器在解析
 
 `flex-basis` 定义了子项在进行多余空间分配或不足空间压缩前的**基准主轴尺寸**。
 * 默认值为 `auto`。此时，浏览器会首先查找子项是否设定了主轴物理尺寸（如 `width` 或 `height`）。如果有，则以该物理尺寸为基准；如果没有，则由子项的内容（`content`）决定其基准尺寸。
-* 若显式设定了数值（如 `flex-basis: 300px`），则该值将覆盖 `width` 或 `height`。
+* 若显式设定了数值（如 `flex-basis: 300px`），则该值将覆盖 `width` 或 `height` 的基准参考值。
 
 ---
 
@@ -104,7 +107,45 @@ Flexbox 最核心的威力在于子项的“可伸缩性”。浏览器在解析
 
 当所有子项的 `flex-basis` 总和**小于**容器的主轴宽度时，会产生**正向剩余空间（Positive Free Space）**。`flex-grow` 定义了每个子项应分得多少比例的剩余空间。
 
-#### 数学推导公式
+#### 3.2.1 `flex-grow` 计算流程图
+
+```
++------------------------------------------+
+|  读取容器主轴宽度 W_container & 子项配置   |
++---------------------+--------------------+
+                      │
+                      ▼
++------------------------------------------+
+|     计算总基准尺寸 Σ B = B1 + B2 + ...     |
++---------------------+--------------------+
+                      │
+                      ▼
++------------------------------------------+
+| 计算正向剩余空间 S_rem = W_container - Σ B|
++---------------------+--------------------+
+                      │
+            [ S_rem 是否大于 0? ]
+            ├── 否 ──> 不进行放大计算，终止
+            └── 是
+                │
+                ▼
++------------------------------------------+
+|      计算总权重权重和 Σ G = G1 + G2 + ... |
++---------------------+--------------------+
+                      │
+                      ▼
++------------------------------------------+
+|     计算各项分得增长量 ΔWi = S_rem * Gi/ΣG |
++---------------------+--------------------+
+                      │
+                      ▼
++------------------------------------------+
+|    计算最终宽度 W_final,i = Bi + ΔWi     |
++------------------------------------------+
+```
+
+#### 3.2.2 数学推导公式
+
 设容器的主轴宽度为 $W_{container}$，子项 $i$ 的基准尺寸为 $B_i$，其 `flex-grow` 值为 $G_i$。
 
 1. **计算总基准尺寸**：
@@ -118,7 +159,8 @@ Flexbox 最核心的威力在于子项的“可伸缩性”。浏览器在解析
 5. **计算子项 $i$ 最终物理宽度**：
    $$W_{final, i} = B_i + \Delta W_i$$
 
-#### 实例演练
+#### 3.2.3 实例演练
+
 设容器主轴宽度为 **800px**，内含三个子项 A、B、C。
 * 子项 A：`flex-basis: 100px`, `flex-grow: 1`
 * 子项 B：`flex-basis: 150px`, `flex-grow: 2`
@@ -147,7 +189,46 @@ Flexbox 最核心的威力在于子项的“可伸缩性”。浏览器在解析
 
 为了防止小元素被过度压缩至消失，也为了防止大元素压缩不足，Flexbox 采用了**加权缩减机制**：**收缩量不仅取决于 `flex-shrink` 因子，还与子项自身的 `flex-basis` 尺寸大小成正比。**
 
-#### 数学推导公式
+#### 3.3.1 `flex-shrink` 计算流程图
+
+```
++------------------------------------------+
+|  读取容器主轴宽度 W_container & 子项配置   |
++---------------------+--------------------+
+                      │
+                      ▼
++------------------------------------------+
+|     计算总基准尺寸 Σ B = B1 + B2 + ...     |
++---------------------+--------------------+
+                      │
+                      ▼
++------------------------------------------+
+| 计算负向溢出空间 D_overflow = Σ B - W_cont|
++---------------------+--------------------+
+                      │
+            [ D_overflow 是否大于 0? ]
+            ├── 否 ──> 不进行收缩计算，终止
+            └── 是
+                │
+                ▼
++------------------------------------------+
+|   计算总加权收缩因子 Σ (Bj * Sj)          |
++---------------------+--------------------+
+                      │
+                      ▼
++------------------------------------------+
+| 计算各项分得压缩量                        |
+| ΔW_shrink,i = D_overflow * (Bi*Si) / 加权 |
++---------------------+--------------------+
+                      │
+                      ▼
++------------------------------------------+
+|  计算最终宽度 W_final,i = Bi - ΔW_shrink,i |
++------------------------------------------+
+```
+
+#### 3.3.2 数学推导公式
+
 设容器主轴宽度为 $W_{container}$，子项 $i$ 的基准尺寸为 $B_i$，其 `flex-shrink` 值为 $S_i$。
 
 1. **计算溢出空间（取绝对值）**：
@@ -159,7 +240,8 @@ Flexbox 最核心的威力在于子项的“可伸缩性”。浏览器在解析
 4. **计算子项 $i$ 最终物理宽度**：
    $$W_{final, i} = B_i - \Delta W_{shrink, i}$$
 
-#### 实例演练
+#### 3.3.3 实例演练
+
 设容器主轴宽度为 **500px**，内含三个子项 A、B、C。
 * 子项 A：`flex-basis: 200px`, `flex-shrink: 1`
 * 子项 B：`flex-basis: 300px`, `flex-shrink: 2`
@@ -198,25 +280,29 @@ Flexbox 最核心的威力在于子项的“可伸缩性”。浏览器在解析
 
 ## 4. 弹性子项对齐与布局奇招
 
-### 局部覆盖对齐：`align-self`
-子项可以通过显式设定 `align-self` 覆盖父容器设定的 `align-items` 对齐行为，从而在交叉轴上实现差异化排布。
+### 4.1 局部覆盖对齐：`align-self`
 
-### 改变视觉顺序：`order`
+子项可以通过显式设定 `align-self` 覆盖父容器设定的 `align-items` 对齐行为，从而在交叉轴上实现差异化排布（例如在普通垂直拉伸排列中，某个子项需要独立靠顶或居中）。
+
+### 4.2 改变视觉顺序：`order`
+
 * `order` 的数值越小越靠前，默认值为 `0`。
-* **无障碍警告（Accessibility Warning）**：`order` 仅改变视图层渲染的物理位置，**并不改变** DOM 结构和键盘 Tab 键的焦点聚焦顺序（Tab Order）。若过度利用此属性调整视觉顺序，会导致屏幕阅读器和视障用户在使用键盘导航时产生错乱。
+* **无障碍警告（Accessibility Warning）**：`order` 仅改变视图层渲染的物理位置，**并不改变** DOM 结构和键盘 Tab 键的焦点聚焦顺序（Tab Order）。若过度利用此属性调整视觉顺序，会导致屏幕阅读器和视障用户在使用键盘导航时产生体验割裂。
 
 ---
 
-### Margin-Auto 的妙用机制
+### 4.3 Margin-Auto 的妙用机制
+
 在常规块级布局中，`margin: auto` 只能在水平方向上平分空间实现居中。而在 Flexbox 中，**`margin: auto` 被赋予了强悍的占位吸收特性**：它会把所指方向上所有的主轴和交叉轴空闲空间全额吞噬。
 
-* **横向推移**：在导航栏中，如果我们给倒数第一个元素（如“个人中心”按钮）设置 `margin-left: auto;`，它将自动将所有剩余的主轴空闲空间塞到它的左侧，从而把自身及其右侧的元素推到最右边。这彻底摆脱了使用额外空 div 或繁琐对齐属性的依赖。
+* **横向推移**：在导航栏中，如果我们给最后一个元素（如“个人中心”按钮）设置 `margin-left: auto;`，它将自动将所有剩余的主轴空闲空间塞到它的左侧，从而把自身及其右侧的元素推到最右边。
 
 ```css
 /* 容器为横向 Flexbox，所有子项正常从左至右排列 */
 .nav-container {
   display: flex;
 }
+
 /* 通过 margin-left: auto 挤占左侧全部多余空间，实现局部向右靠拢 */
 .nav-profile {
   margin-left: auto;
@@ -229,10 +315,27 @@ Flexbox 最核心的威力在于子项的“可伸缩性”。浏览器在解析
 
 ### 5.1 响应式顶部导航条 (Header Navigation Bar)
 
+```html
+<!-- HTML 结构 -->
+<header class="flex-header">
+  <div class="header-brand">TechLogo</div>
+  <ul class="header-nav-list">
+    <li><a href="#" class="header-nav-link">首页</a></li>
+    <li><a href="#" class="header-nav-link">文档</a></li>
+    <li><a href="#" class="header-nav-link">社区</a></li>
+  </ul>
+  <div class="header-actions">
+    <button class="btn-login">登录</button>
+    <button class="btn-register">注册</button>
+  </div>
+</header>
+```
+
 ```css
+/* CSS 样式定义 */
 .flex-header {
   display: flex;
-  align-items: center;
+  align-items: center; /* 交叉轴方向完美垂直居中 */
   padding: 0 24px;
   height: 64px;
   background-color: #ffffff;
@@ -243,12 +346,12 @@ Flexbox 最核心的威力在于子项的“可伸缩性”。浏览器在解析
   font-size: 20px;
   font-weight: 700;
   color: #1e293b;
-  margin-right: 32px;
+  margin-right: 32px; /* 与右侧列表保持适当基础间隙 */
 }
 
 .header-nav-list {
   display: flex;
-  gap: 16px;
+  gap: 16px; /* 声明子导航之间的固定间隙 */
   list-style: none;
   margin: 0;
   padding: 0;
@@ -267,7 +370,7 @@ Flexbox 最核心的威力在于子项的“可伸缩性”。浏览器在解析
 
 /* 巧妙运用 margin-left: auto 彻底推开右侧的操作区 */
 .header-actions {
-  margin-left: auto;
+  margin-left: auto; /* 全量吸收左侧剩余空间，推至最右侧 */
   display: flex;
   align-items: center;
   gap: 12px;
@@ -276,10 +379,22 @@ Flexbox 最核心的威力在于子项的“可伸缩性”。浏览器在解析
 
 ### 5.2 完美对齐的媒体对象 (Media Object)
 
+```html
+<!-- HTML 结构 -->
+<div class="media-container">
+  <img src="avatar.jpg" alt="User Avatar" class="media-avatar" />
+  <div class="media-body">
+    <h4 class="media-title">开发者用户昵称</h4>
+    <p class="media-description">这段长文本可能会非常长以至于溢出容器边界，我们需要打点省略显示。</p>
+  </div>
+</div>
+```
+
 ```css
+/* CSS 样式定义 */
 .media-container {
   display: flex;
-  align-items: flex-start; /* 防止图片在内容拉长时被纵向拉伸 */
+  align-items: flex-start; /* 防止图片在内容拉长时被纵向拉伸变形 */
   padding: 16px;
   background-color: #f8fafc;
   border-radius: 8px;
@@ -291,12 +406,12 @@ Flexbox 最核心的威力在于子项的“可伸缩性”。浏览器在解析
   height: 48px;
   border-radius: 50%;
   object-fit: cover;
-  flex-shrink: 0; /* 强制头像绝不发生弹性收缩变形 */
+  flex-shrink: 0; /* 强制头像绝不发生弹性收缩变形，保持完美圆形 */
 }
 
 .media-body {
   flex-grow: 1; /* 占据剩余全部宽度 */
-  min-width: 0; /* 极其关键：防止子元素溢出容器宽度的经典 Hack */
+  min-width: 0; /* 极其关键：覆盖 flex 项默认的 min-content 溢出限制，允许打点省略 */
 }
 
 .media-title {
@@ -318,11 +433,27 @@ Flexbox 最核心的威力在于子项的“可伸缩性”。浏览器在解析
 
 ### 5.3 纵向高度自适应卡片 (Stretch Card Layout)
 
+```html
+<!-- HTML 结构 -->
+<div class="card-wrapper">
+  <img src="card-cover.jpg" alt="Cover" class="card-image" />
+  <div class="card-content">
+    <h3 class="card-title">弹性卡片标题</h3>
+    <p class="card-text">卡片内容可能很长，也可能很短。我们希望不管内容多少，底部页脚都能卡片下边界完美对齐。</p>
+    <div class="card-footer">
+      <span>发布于 2026 年</span>
+      <a href="#" class="card-link">阅读更多</a>
+    </div>
+  </div>
+</div>
+```
+
 ```css
+/* CSS 样式定义 */
 .card-wrapper {
   display: flex;
   flex-direction: column; /* 将主轴旋转为垂直方向 */
-  height: 100%; /* 使卡片撑满父网格或父容器 */
+  height: 100%; /* 使卡片撑满父网格或父容器的高 */
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
@@ -357,7 +488,7 @@ Flexbox 最核心的威力在于子项的“可伸缩性”。浏览器在解析
 
 /* 巧用 margin-top: auto，在没有明确计算内容高度时，将底部页脚绝对推至底部 */
 .card-footer {
-  margin-top: auto;
+  margin-top: auto; /* 全额吸收上方的剩余空间 */
   padding-top: 16px;
   border-top: 1px solid #f1f5f9;
   display: flex;

@@ -1,4 +1,4 @@
-# 静态生成器与 Headless CMS 的集成与解析原理
+# 第三章：无头 CMS 与静态网站生成器集成流程
 
 Frontmatter 并非独立存在，它的价值在于静态站点生成器（SSG）和无头内容管理系统（Headless CMS）对它的读取、解析、渲染以及写入。理解各大框架的解析机制并具备在 AST（抽象语法树）层面定制管道的能力，是开发大型企业文档系统的分水岭。
 
@@ -11,7 +11,7 @@ Frontmatter 并非独立存在，它的价值在于静态站点生成器（SSG�
 ### 1. Hugo (Go 语言生态)
 Hugo 是公认构建速度极快的静态生成器。它原生支持 YAML、TOML 和 JSON 格式，且在解析上采用了“双轨制”：
 *   **内置系统变量映射**：Hugo 会自动将标准字段（如 `title`, `date`, `description`, `draft`）映射到页面的根级属性。在 HTML 模板中，可以直接通过 `{{ .Title }}` 或 `{{ .Date }}` 访问。
-*   **自定义参数映射**：任何非内置的自定义字段，都会被放入 `.Params` 字典中。例如 `tags: ["Go"]` 需要通过 `{{ .Params.tags }}` 访问。特别需要注意的是，**Hugo 会将 `.Params` 下所有的自定义键名强制转化为小写**。
+*   **自定义参数映射**：任何非内置 of 自定义字段，都会被放入 `.Params` 字典中。例如 `tags: ["Go"]` 需要通过 `{{ .Params.tags }}` 访问。特别需要注意的是，**Hugo 会将 `.Params` 下所有的自定义键名强制转化为小写**。
 *   **级联机制（Cascade）**：Hugo 支持在 Frontmatter 中使用 `cascade` 关键字，将某些元数据递归传递给所有的子页面或子目录。
     ```yaml
     # content/sections/_index.md
@@ -72,7 +72,7 @@ const posts = await getCollection('blog', ({ data }) => !data.draft);
 
 ## Headless CMS 交互与读写逻辑
 
-Headless CMS（如 Decap CMS、Tina CMS）以及本地开发辅助工具（如 VS Code 的 **Front Matter** 扩展）并不维护数据库，而是直接读写 Git 仓库中的 Markdown 源文件。
+Headless CMS（如 Decap CMS、Tina CMS）以及本地开发辅助工具（如 VS Code 的 **Front Matter** 扩展）并不维度数据库，而是直接读写 Git 仓库中的 Markdown 源文件。
 
 ```mermaid
 graph LR
@@ -100,7 +100,7 @@ Tina CMS 允许在浏览器中直接预览修改。它要求开发者编写一�
 
 在实际工程中，我们常常需要对 Frontmatter 进行动态改造。例如：**自动计算文章的字符数，并估算出阅读时间，然后将 `readingTime` 动态注入到 Frontmatter 对象中，避免作者手动计算。**
 
-在 JavaScript 的 Markdown 编译链中，Unified / Remark 生态占据统治地位。Markdown 会首先被转化为 MDAST（Markdown 抽象语法树），随后我们可以编写 Remark 插件对树节点进行操作。
+In JavaScript 的 Markdown 编译链中，Unified / Remark 生态占据统治地位。Markdown 会首先被转化为 MDAST（Markdown 抽象语法树），随后我们可以编写 Remark 插件对树节点进行操作。
 
 下面是一个完整的、可直接运行的 ESM 规范 Remark 插件，演示了如何通过 AST 提取 Markdown 正文并向元数据中追加字段。
 
