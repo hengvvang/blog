@@ -196,6 +196,9 @@ function renderPartition() {
   const subcatArticles = currentSubcat === "all"
     ? allArticles
     : allArticles.filter(a => a.subcategory === currentSubcat);
+
+  // Sort subcategory articles by publishTime descending first
+  subcatArticles.sort((a, b) => new Date(b.publishTime).getTime() - new Date(a.publishTime).getTime());
   
   // Find unique subtopics for this subcategory
   const topicsSet = new Set<string>();
@@ -217,9 +220,8 @@ function renderPartition() {
     ? subcatArticles
     : subcatArticles.filter(a => a.subtopic === currentSubtopic);
   
-  filteredArticles.sort((a, b) => new Date(b.publishTime).getTime() - new Date(a.publishTime).getTime());
-  
-  const featured = filteredArticles.slice(0, 3);
+  // The featured cards are always the latest 4 articles under the selected subcategory
+  const featured = subcatArticles.slice(0, 4);
   const visibleList = filteredArticles.slice(0, pageSize);
   
   const featuredHTML = featured.length > 0 
