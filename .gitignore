@@ -15,3 +15,6 @@ Thumbs.db
 !.dev.vars.example
 .env*
 !.env.example
+
+# mdBook build output
+book/

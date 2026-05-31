@@ -1,6 +1,14 @@
 # Summary
 
-- [前言与课程大纲](README.md)
-- [01 ESP32 Wi-Fi 架构与 LwIP 协议栈](wifi-sta-architecture.md)
-- [02 Wi-Fi STA 模式初始化流程与底层机制](wifi-initialization.md)
-- [03 事件驱动连接管理与状态机实现](event-handler-connections.md)
+[引言](README.md)
+
+# 第一部分：Wi-Fi 物理架构与协议初始化
+
+- [Wi-Fi 架构与配置](wifi/README.md)
+    - [第一章：ESP32 Wi-Fi 物理层与 LwIP 协议栈架构](wifi/wifi-sta-architecture.md)
+    - [第二章：Wi-Fi 站模式（STA）初始化与配置流程](wifi/wifi-initialization.md)
+
+# 第二部分：连接管理与事件驱动机制
+
+- [连接与事件处理](sta/README.md)
+    - [第三章：事件循环机制与 Wi-Fi 连接状态机管理](sta/event-handler-connections.md)

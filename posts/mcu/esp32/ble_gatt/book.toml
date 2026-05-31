@@ -7,3 +7,5 @@ description = "Deep dive into BLE GATT server architecture, initialization datab
 [output.html]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
+smart-punctuation = true
+mathjax-support = true

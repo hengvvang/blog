@@ -1,6 +1,14 @@
 # Summary
 
-- [前言与课程大纲](README.md)
-- [01 BLE 核心物理与逻辑概念](ble-concepts.md)
-- [02 ESP32 GATT 服务器初始化与数据库建表](gatt-server-init.md)
-- [03 状态机、事件回调与双向数据流](callbacks-and-events.md)
+[引言](README.md)
+
+# 第一部分：BLE 协议栈与核心概念
+
+- [BLE 协议基础](ble/README.md)
+    - [第一章：BLE 层次架构与核心概念辨析](ble/ble-concepts.md)
+
+# 第二部分：GATT 服务器设计与事件处理
+
+- [GATT 服务器开发](gatt/README.md)
+    - [第二章：ESP32 蓝牙协议栈初始化与 GATT 服务构建](gatt/gatt-server-init.md)
+    - [第三章：GATT 读写回调事件处理与吞吐量优化](gatt/callbacks-and-events.md)
