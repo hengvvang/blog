@@ -107,17 +107,17 @@ export function renderFeaturedCardHTML(art: Article, categoryColor: string): str
 
   return `
     <div class="card toolchain-horizontal-card" data-action="view-article" data-id="${art.id}" ${scaleVar}>
-      <div class="card-cover-wrapper" style="height: auto; display: flex; flex-direction: column; gap: 8px; padding: 8px 16px 12px 16px;">
+      <div class="card-cover-wrapper" style="height: auto; display: flex; flex-direction: column; gap: 6px; padding: 8px 12px 10px 12px;">
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 2px; line-height: 1.2;">
           ${renderBadgeHTML(art)}
-          <span class="featured-date" style="font-size: 12px; color: var(--text-light, #888);">${art.publishTime}</span>
+          <span class="featured-date" style="font-size: 11px; color: var(--text-light, #888);">${art.publishTime}</span>
         </div>
-        <div class="featured-cover" style="position: relative; overflow: hidden; height: 160px; border-radius: 4px;">
-          ${renderCoverHTML(art.cover, categoryColor, '18px')}
+        <div class="featured-cover" style="position: relative; overflow: hidden; height: 110px; border-radius: 4px;">
+          ${renderCoverHTML(art.cover, categoryColor, '14px')}
         </div>
         <div class="featured-info" style="padding: 0;">
-          <h4 class="featured-title" style="margin: 4px 0; font-size: 16px;">${art.title}</h4>
-          <p class="featured-snippet" style="font-size: 12px; margin: 0; -webkit-line-clamp: 1;">${art.contentSnippet}</p>
+          <h4 class="featured-title" style="margin: 2px 0; font-size: 14px;">${art.title}</h4>
+          <p class="featured-snippet" style="font-size: 11px; margin: 0; -webkit-line-clamp: 1;">${art.contentSnippet}</p>
         </div>
       </div>
       <div class="card-content">
