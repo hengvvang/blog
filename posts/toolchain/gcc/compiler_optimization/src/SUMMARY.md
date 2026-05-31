@@ -1,7 +1,14 @@
 # Summary
 
-[Introduction](README.md)
+[引言](README.md)
 
-- [GCC 优化等级与循环变换](optimization-levels.md)
-- [GCC 内联汇编与约束规则](inline-assembly.md)
-- [函数内联屏障与链接时优化 (LTO)](inline-and-link-optimization.md)
+# 第一部分：编译器优化级别与链接期优化
+
+- [优化级别与 LTO](optimization/README.md)
+    - [第一章：GCC 优化级别深度剖析与性能评测](optimization/optimization-levels.md)
+    - [第二章：内联函数与链接期优化 (LTO) 原理](optimization/inline-and-link-optimization.md)
+
+# 第二部分：内联汇编
+
+- [GNU 内联汇编](assembly/README.md)
+    - [第三章：GNU 内联汇编语法与嵌入式开发实战](assembly/inline-assembly.md)

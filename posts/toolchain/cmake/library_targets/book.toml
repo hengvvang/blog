@@ -6,6 +6,6 @@ language = "zh-CN"
 src = "src"
 
 [output.html]
-additional-css = ["../../../__shared_theme/custom-mdbook.css"]
-additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 git-repository-icon = "fa-github"
+smart-punctuation = true
+mathjax-support = true
