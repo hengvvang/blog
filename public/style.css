@@ -1513,11 +1513,8 @@ body {
     flex: 0 0 auto !important;
     width: 25% !important;
   }
-  .toolchain-featured-section:hover .toolchain-horizontal-card:not(:hover) {
-    width: calc(25% - 15px) !important;
-  }
   .toolchain-horizontal-card:hover {
-    width: calc(25% + 45px) !important;
+    width: calc(25% + 44px) !important;
   }
   .toolchain-horizontal-card .card-cover-wrapper {
     flex: 1 !important;
