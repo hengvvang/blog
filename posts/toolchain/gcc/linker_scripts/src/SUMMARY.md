@@ -1,6 +1,14 @@
 # Summary
 
-- [前言](README.md)
-- [第一章：链接原理与语法基础](linker-phases-syntax.md)
-- [第二章：物理存储映射与自定义 Section 分配](sections-allocation.md)
-- [第三章：链接器变量、符号与 C 运行时交互](linker-variables-embedded.md)
+[引言](README.md)
+
+# 第一部分：编译链接流程与段分配
+
+- [编译链接原理](anatomy/README.md)
+    - [第一章：编译链接阶段与链接脚本基本语法](anatomy/linker-phases-syntax.md)
+    - [第二章：物理/虚拟内存分区与程序段映射机制](anatomy/sections-allocation.md)
+
+# 第二部分：链接器符号与嵌入式交互
+
+- [链接器符号](variables/README.md)
+    - [第三章：C 语言访问链接器符号与栈/堆边界管理](variables/linker-variables-embedded.md)

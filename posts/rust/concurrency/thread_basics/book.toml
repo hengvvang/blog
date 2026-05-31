@@ -5,7 +5,6 @@ description = "Exploration of OS thread creation, scoped tasks, Send/Sync proper
 language = "zh-CN"
 src = "src"
 
-
 [output.html]
-additional-css = ["../../../__shared_theme/custom-mdbook.css"]
-additional-js = ["../../../__shared_theme/custom-mdbook.js"]
+smart-punctuation = true
+mathjax-support = true
