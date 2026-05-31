@@ -1,6 +1,6 @@
-# asyncio 核心 API 详解与任务调度
+# 第二章：任务调度 API 与异常处理机制
 
-在第一章中，我们了解了协程如何利用 `selectors` 与底层多路复用实现非阻塞控制。在实际开发中，我们不需要手动编写事件循环和任务驱动器，Python 的 `asyncio` 标准库为我们提供了完善的实现。
+在第一章中，我们了解了协程如何利用 `selectors` 与底层多路复用实现非阻塞控制。在实际开发中，我们并不需要手动编写事件循环和任务驱动器，Python 的 `asyncio` 标准库为我们提供了功能完备的高层 API。
 
 本章将从概念底层出发，解构 `asyncio` 中的三大核心组件，并逐一分析高频核心 API 的运行生命周期与最佳实践。
 
@@ -15,14 +15,14 @@
 |                            Task                             |
 |  (继承自 Future，负责在 Event Loop 中真正驱动协程，管理状态)     |
 +-------------------------------------------------------------+
-                              | 包装 (Wrap)
-                              v
+                               | 包装 (Wrap)
+                               v
 +-------------------------------------------------------------+
 |                          Coroutine                          |
 |  (async def 定义的原生协程，仅是执行逻辑的惰性包装，不具备自驱动能力) |
 +-------------------------------------------------------------+
-                              | 依赖 (Await)
-                              v
+                               | 依赖 (Await)
+                               v
 +-------------------------------------------------------------+
 |                           Future                            |
 |  (底层异步状态容器：PENDING -> CANCELLED / FINISHED)         |
@@ -39,9 +39,9 @@
 
 `Future` 是一个更偏向底层设计模式的对象。它代表一个**尚未完成但预计会在未来产生结果的异步操作**。
 *   **状态机**：`Future` 内部维护了一个状态变量，其生命周期跃迁如下：
-    *   `PENDING`（等待中）
-    *   `CANCELLED`（已取消）
-    *   `FINISHED`（已完成）
+    *   `PENDING`（等待中）：初始状态，表示操作正在进行。
+    *   `CANCELLED`（已取消）：被显式取消。
+    *   `FINISHED`（已完成）：操作已成功或抛出异常。
 *   **回调机制**：你可以通过 `fut.add_done_callback(callback)` 向其注册回调函数。一旦外部某些底层事件（如网卡接收完数据）触发 `fut.set_result(value)`，该 `Future` 变为 `FINISHED` 状态，并立即触发所有注册的回调。
 *   **地位**：它是连接“低级异步回调事件”与“高级协程”的桥梁。
 
@@ -49,26 +49,70 @@
 
 `Task` 继承自 `Future`，是 `Future` 的子类。
 *   **核心功能**：它用来**在事件循环中并发运行协程**。
-*   **机制**：当用 `asyncio.create_task(coro)` 将一个协程包装为 Task 时，该 Task 会被立即注册到当前事件循环的就绪队列中。事件循环在下一轮迭代中会自动调用 Task 的 `step()` 方法（类似于我们在第一章手写的内容），通过发送 `None` 启动协程。
+*   **机制**：当用 `asyncio.create_task(coro)` 将一个协程包装为 Task 时，该 Task 会被立即注册到当前事件循环的就绪队列中。事件循环在下一轮迭代中会自动调用 Task 的 `step()` 方法，通过发送 `None` 启动协程。
 *   **生命周期**：Task 不仅继承了 Future 的状态控制，还负责监控协程的执行。当协程运行完毕抛出 `StopIteration(value)` 时，Task 会捕获该异常并执行 `self.set_result(value)`，将 Task 标记为 `FINISHED`。
 
 ---
 
-## 2. 核心 API 生命周期与最佳实践
+## 2. 任务依赖有向无环图 (Task Dependency DAG)
 
-### 2.1 异步程序入口：`asyncio.run()`
+在多任务并发的异步编程中，各个异步 Task 之间通常会形成依赖关系。这种依赖关系本质上是一个**有向无环图（DAG, Directed Acyclic Graph）**。事件循环通过驱动根节点 Task，当根节点挂起并等待子节点时，子节点又继续向下驱动，直到最底层的叶子节点（通常是真实的 I/O 操作 Future 或 `asyncio.sleep` 定时器）。
+
+下图展示了一个复杂的多任务依赖 DAG 结构：
+
+```
+                    +------------------------------------+
+                    |             Task Main              | (主任务入口)
+                    +------------------------------------+
+                                      |
+                           await asyncio.gather(...)
+                                      |
+                     +----------------+----------------+
+                     |                                 |
+                     v                                 v
+        +-------------------------+       +-------------------------+
+        |         Task A          |       |         Task B          | (并发分支)
+        +-------------------------+       +-------------------------+
+                     |                                 |
+              await Task C                      await Task D
+                     |                                 |
+                     v                                 v
+        +-------------------------+       +-------------------------+
+        |         Task C          |       |         Task D          | (子任务依赖)
+        +-------------------------+       +-------------------------+
+                     |                                 |
+                     +----------------+----------------+
+                                      |
+                                      v
+                        +---------------------------+
+                        |   I/O Future / Timer      | (底层叶子节点)
+                        | (e.g. Socket Read/Sleep)  |
+                        +---------------------------+
+```
+
+在这个依赖 DAG 中：
+1.  `Task Main` 是根节点，它并发地启动了 `Task A` 和 `Task B`。
+2.  `Task A` 和 `Task B` 又分别依赖 `Task C` 和 `Task D` 的计算结果。
+3.  `Task C` 和 `Task D` 挂起于最底层的 I/O 事件。
+4.  当最底层的 I/O 准备就绪时，回调依次向上传递，状态从叶子节点层层反馈至根节点，最终完成整个图的调度。
+
+---
+
+## 3. 核心 API 生命周期与最佳实践
+
+### 3.1 异步程序入口：`asyncio.run()`
 
 在 Python 3.7+ 中，`asyncio.run(coro)` 是启动异步应用程序的标准入口。它在底层执行了以下复杂的生命周期管理：
-1.  检测当前线程中是否已经有正在运行的事件循环。如果有，抛出 `RuntimeError`。
-2.  创建一个新的事件循环实例（默认为 `SelectorEventLoop` 或 `ProactorEventLoop`）。
-3.  将传入的协程包装为 Task 并运行，直到该 Task 完成。
+1.  **环境检测**：检测当前线程中是否已经有正在运行的事件循环。如果有，抛出 `RuntimeError`。
+2.  **创建循环**：创建一个新的事件循环实例（默认为 `SelectorEventLoop` 或 `ProactorEventLoop`）。
+3.  **驱动执行**：将传入的协程包装为 Task 并运行，直到该 Task 完成并返回。
 4.  **优雅收尾（Cleanup）**：当主协程运行完毕，`asyncio.run` 会自动获取事件循环中所有尚未完成的 Tasks（通过 `asyncio.all_tasks()`），向它们发送取消请求（`task.cancel()`），并通过 `loop.run_until_complete()` 等待它们响应取消。
-5.  关闭线程池执行器（Executor），最后关闭并销毁事件循环。
+5.  **销毁循环**：关闭线程池执行器（Executor），最后关闭并销毁事件循环。
 
 > [!IMPORTANT]
 > **最佳实践**：不要在同一个线程中多次频繁调用 `asyncio.run()`，也不要在已经运行的协程中调用它。它应当只作为整个进程（或主线程）的**唯一控制起点**。
 
-### 2.2 任务创建：`create_task` vs `ensure_future`
+### 3.2 任务创建：`create_task` vs `ensure_future`
 
 在代码中，如果我们希望并发启动一个协程，我们需要将其转化为 Task。常见的做法有三种：
 
@@ -76,18 +120,19 @@
 import asyncio
 
 async def sample_coro():
+    """一个简单的协程示例"""
     await asyncio.sleep(1)
     return "Done"
 
 async def main():
-    # 方式一：推荐，最符合现代化标准
+    # 方式一：推荐，最符合现代化标准，直接在当前运行的循环中创建并提交任务
     task1 = asyncio.create_task(sample_coro())
 
-    # 方式二：低级 API，当需要对特定事件循环实例进行操作时使用
+    # 方式二：低级 API，针对特定事件循环实例创建任务，一般在底层框架开发中常用
     loop = asyncio.get_running_loop()
     task2 = loop.create_task(sample_coro())
 
-    # 方式三：兼容性封装
+    # 方式三：兼容性封装，能自动识别 Future 和 Coroutine 并妥善处理
     task3 = asyncio.ensure_future(sample_coro())
 ```
 
@@ -98,11 +143,11 @@ async def main():
 
 ---
 
-## 3. 并发组合器深度对比：gather vs wait vs as_completed
+## 4. 并发组合器深度对比：gather vs wait vs as_completed
 
 当有多个 Task 需要并发运行时，`asyncio` 提供了三种主流的组合控制手段。它们的行为模式、异常处理和返回值结构大相径庭。
 
-### 3.1 `asyncio.gather(*aws, return_exceptions=False)`
+### 4.1 `asyncio.gather(*aws, return_exceptions=False)`
 
 *   **特点**：以**位置参数**形式接收多个可等待对象。并发驱动它们，并返回一个包含所有结果的**列表**，结果顺序与传入参数的顺序完全一致（与实际完成的先后顺序无关）。
 *   **`return_exceptions` 行为**：
@@ -113,6 +158,7 @@ async def main():
 import asyncio
 
 async def worker(db_id, delay, fail=False):
+    """模拟异步工作协程"""
     await asyncio.sleep(delay)
     if fail:
         raise ValueError(f"Worker {db_id} failed!")
@@ -127,7 +173,8 @@ async def main():
             worker(3, 3)
         )
     except ValueError as e:
-        print(f"捕获到异常: {e}")  # 2秒时捕获异常，但 worker 3 依然在后台继续运行
+        # 在第 2 秒时捕获异常，但是 worker 3 依然在后台继续运行，不会被强行取消
+        print(f"捕获到异常: {e}")
         
     # 场景二：设置 return_exceptions=True
     results_safe = await asyncio.gather(
@@ -142,7 +189,7 @@ async def main():
 asyncio.run(main())
 ```
 
-### 3.2 `asyncio.wait(aws, timeout=None, return_when=ALL_COMPLETED)`
+### 4.2 `asyncio.wait(aws, timeout=None, return_when=ALL_COMPLETED)`
 
 *   **特点**：接收一个 Task 集合（注意：必须是 `Task`/`Future` 集合，如果是裸协程会自动报 Deprecation 警告，建议手动 `create_task`）。
 *   **返回值**：返回一个二元元组 `(done_set, pending_set)`，其中包含了已完成的 Tasks 和仍在运行的 Tasks。
@@ -152,6 +199,8 @@ asyncio.run(main())
     *   `FIRST_EXCEPTION`：任意一个任务抛出异常时立即返回；如果无异常，则等同于 `ALL_COMPLETED`。
 
 ```python
+import asyncio
+
 async def main():
     t1 = asyncio.create_task(worker(1, 1))
     t2 = asyncio.create_task(worker(2, 3))
@@ -173,14 +222,18 @@ async def main():
     # 如果不想让 pending 任务继续跑，必须手动取消它们
     for task in pending:
         task.cancel()
+
+asyncio.run(main())
 ```
 
-### 3.3 `asyncio.as_completed(aws, timeout=None)`
+### 4.3 `asyncio.as_completed(aws, timeout=None)`
 
 *   **特点**：接收一个可等待对象列表，返回一个**迭代器**。每次对该迭代器进行迭代或 `await`，都会返回**最先完成**的那个任务的结果。
-*   **适用场景**：希望在任务流执行过程中“即时处理结果”，例如并发爬取 100 个网页，哪个网页先返回，就先解析哪个网页，避免因等待慢速网页而造成管道空闲。
+*   **适用场景**：希望在任务流执行过程中“即时处理结果”，例如并发爬取 100 个网页，哪个网页先返回，就先解析哪个网页，避免因等待慢速网页而造成整个流水线阻塞。
 
 ```python
+import asyncio
+
 async def main():
     tasks = [worker(i, 4 - i) for i in range(1, 4)]
     # worker(1, 3秒), worker(2, 2秒), worker(3, 1秒)
@@ -189,22 +242,26 @@ async def main():
         result = await future
         print(f"获取到先完成的结果: {result}")
         # 依次输出: Result 3 (1秒时), Result 2 (2秒时), Result 1 (3秒时)
+
+asyncio.run(main())
 ```
 
 ---
 
-## 4. 任务取消机制与异常屏障
+## 5. 任务取消机制与异常屏障
 
 异步系统的生命周期管理往往比同步系统更复杂，核心在于**优雅取消**和**全局异常捕获**。
 
-### 4.1 任务取消机制与 `CancelledError`
+### 5.1 任务取消机制与 `CancelledError`
 
 当对一个正在运行的 `Task` 调用 `task.cancel()` 时，事件循环会在下一轮迭代中向该协程内部抛出一个 `asyncio.CancelledError` 异常。
 
-*   协程可以选择在内部通过 `try...except asyncio.CancelledError` 捕获该异常，执行清理逻辑（如关闭连接、回滚事务）。
+*   协程可以选择在内部通过 `try...except asyncio.CancelledError` 捕获该异常，执行清理逻辑（如关闭数据库连接、回滚事务、清理临时文件）。
 *   在捕获 `CancelledError` 后，如果你执行了清理工作，**必须重新抛出该异常**，或者直接让协程自然退出，否则会导致 Task 无法正常终止。
 
 ```python
+import asyncio
+
 async def cancel_demo():
     try:
         print("工作启动，准备进入循环等待...")
@@ -230,11 +287,13 @@ async def main():
 asyncio.run(main())
 ```
 
-### 4.2 使用 `asyncio.shield()` 保护关键任务
+### 5.2 使用 `asyncio.shield()` 保护关键任务
 
-在一些业务场景下，某个异步操作极其关键（例如写数据库），不能因为客户端连接断开或外部取消信号而中断。此时可以使用 `asyncio.shield()` 包装该可等待对象：
+在一些业务场景下，某个异步操作极其关键（例如写入核心账单数据库），不能因为客户端连接突然断开或外部取消信号而中途夭折。此时可以使用 `asyncio.shield()` 包装该可等待对象。被 `shield` 保护的任务即使在外层被调用了 `.cancel()`，其内部逻辑依然会完整执行：
 
 ```python
+import asyncio
+
 async def critical_write():
     print("开始写入核心数据库，不可中断...")
     await asyncio.sleep(3)
@@ -242,7 +301,7 @@ async def critical_write():
     return True
 
 async def main():
-    # 使用 shield 保护
+    # 使用 shield 保护关键写入操作
     shielded_task = asyncio.shield(critical_write())
     
     # 假设外层因为超时或取消信号，取消了 shielded_task
@@ -259,19 +318,22 @@ async def main():
     await asyncio.sleep(3)
     # 虽然 shielded_task.cancel() 被调用，且外层抛出了 CancelledError，
     # 但底层的 critical_write() 依然会完整运行完毕，不受影响。
+
+asyncio.run(main())
 ```
 
-### 4.3 全局未捕获异常的防线：Exception Handler
+### 5.3 全局未捕获异常的防线：Exception Handler
 
-如果一个 Task 抛出了异常，而我们既没有 `await` 它，也没有对其调用 `.result()`，那么这个异常就会变成“未捕获的后台垃圾”，通常会在 Task 被垃圾回收时输出一条类似 `Task exception was never retrieved` 的警告。
+如果一个 Task 抛出了异常，而我们既没有 `await` 它，也没有对其调用 `.result()`，那么这个异常就会变成“未捕获的后台垃圾”，通常会在 Task 被垃圾回收时由解释器输出一条类似 `Task exception was never retrieved` 的警告。
 
 为了全局捕获这种后台遗漏异常，我们可以为事件循环设置一个全局异常处理器：
 
 ```python
+import asyncio
 import sys
 
 def global_exception_handler(loop, context):
-    # context 包含异常信息、发生异常的 Task/Future 实例以及错误消息
+    # context 包含异常信息、发生异常的 Task/Future 实例以及错误消息描述
     exception = context.get("exception")
     message = context.get("message")
     task = context.get("future") # Task 继承自 Future
@@ -282,7 +344,7 @@ def global_exception_handler(loop, context):
         print(f"异常类型: {type(exception).__name__}, 内容: {exception}")
     if task:
         print(f"关联任务: {task}")
-    # 在生产环境下，通常在此处接入 Sentry 或输出日志
+    # 在生产环境下，通常在此处接入 Sentry 或输出告警日志
 
 async def buggy_task():
     await asyncio.sleep(1)
@@ -299,4 +361,4 @@ async def main():
 asyncio.run(main())
 ```
 
-通过这一层全局防线，可以有效避免生产环境下由于后台协程崩溃无声无息而导致的内存泄漏或数据不一致问题。
+通过这一层全局防线，可以有效避免生产环境下由于后台协程崩溃无声无息而导致的内存泄漏、数据状态不一致或静默失效问题。

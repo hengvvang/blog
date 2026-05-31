@@ -1,6 +1,6 @@
-# 高并发模式与线程/进程执行器集成
+# 第三章：异步并发队列与多线程/进程线程池协作
 
-单线程事件循环（Event Loop）之所以高效，是因为它假设所有运行的代码都是“协作式非阻塞”的。如果我们在协程中编写了同步阻塞代码，整个系统就会瞬间退化，失去并发优势。
+单线程事件循环（Event Loop）之所以高效，是因为它基于一个强假设：所有运行的代码都是“协作式非阻塞”的。如果我们在协程中编写了同步阻塞代码，整个系统就会瞬间退化，失去并发优势。
 
 本章将详细剖析如何规避事件循环阻塞、如何使用异步同步原语进行高并发流控，最后通过一个工业级的异步 TCP 服务端实战打通全部链路。
 
@@ -11,25 +11,50 @@
 ### 1.1 为什么同步阻塞是“致命毒药”？
 
 在前面的章节中，我们明确了事件循环是一个单线程上的无限循环。如果在某个协程中调用了：
-*   同步网络请求（如 `requests.get()`）
-*   同步等待（如 `time.sleep()`）
-*   同步磁盘文件 I/O（如 `open().read()`）
-*   CPU 密集型计算（如大图像处理、海量数据哈希计算）
+*   **同步网络请求**（如使用 `requests.get()`、`urllib` 库）
+*   **同步等待**（如调用 `time.sleep()`）
+*   **同步磁盘文件 I/O**（如传统的 `open().read()` 操作）
+*   **CPU 密集型计算**（如大图像处理、海量数据哈希碰撞、大矩阵运算）
 
-那么，事件循环将停留在当前任务的回调执行阶段，无法进行下一次 `select()` 调用来获取就绪的网络套接字，也无法调度其他就绪的任务。这会导致整个服务处于“假死”状态。
+那么，事件循环将停留在当前任务的回调执行阶段，无法进行下一次 `select()` 调用来获取就绪的网络套接字，也无法调度其他就绪的任务。这会导致整个服务处于“假死”状态，所有的并发请求都被挂起延迟。
 
-### 1.2 解决方案：`loop.run_in_executor`
+### 1.2 解决方案：ThreadPoolExecutor 与 ProcessPoolExecutor 桥梁
 
 当无法避免使用同步库或执行 CPU 密集型任务时，必须将这些操作投递到**线程池**或**进程池**中异步运行，并在主协程中通过 `await` 等待其返回。
 
 `asyncio` 提供了 `loop.run_in_executor(executor, func, *args)` 方法：
 *   **`executor`**：执行器对象。传入 `None` 时，会使用事件循环默认的线程池执行器。
-*   **`func`**：要执行的同步阻塞函数（注意：传函数名，不需要带括号）。
+*   **`func`**：要执行的同步阻塞函数（注意：传函数引用本身，不需要带括号）。
 *   **`*args`**：传给函数的参数。
 
+下图展示了事件循环与 `ThreadPoolExecutor` 之间的桥梁机制，即如何以非阻塞方式在后台线程运行同步代码，并最终将控制权与结果传回主线程事件循环：
+
+```
++-----------------------------------------------------------------------------------+
+|                              Main Thread (主线程事件循环)                           |
+|                                                                                   |
+|  +--------------------+                    +-----------------------------------+  |
+|  |   asyncio Task     | --(1. 提交)-------> | asyncio.get_running_loop()        |  |
+|  |   (awaitable fut)  | <---(4. 唤醒 Future) | .run_in_executor(pool, func, args)|  |
+|  +--------------------+                    +-----------------------------------+  |
+|           ^                                                   |                   |
++-----------|---------------------------------------------------|-------------------+
+            |                                                   |
+            | (3. 触发 loop.call_soon_threadsafe)               | (2. 投递任务到队列)
+            |                                                   v
++-----------|-----------------------------------------------------------------------+
+|           |                 ThreadPoolExecutor (工作线程池)                        |
+|           |                                                                       |
+|   +---------------+         +------------------+         +------------------+     |
+|   | Loop Thread-  | <------ |  Worker Thread 1 |         |  Worker Thread 2 |     |
+|   | safe Callback |         |  (执行同步阻塞)   |         |                  |     |
+|   +---------------+         +------------------+         +------------------+     |
++-----------------------------------------------------------------------------------+
+```
+
 #### 线程池（ThreadPoolExecutor）vs 进程池（ProcessPoolExecutor）
-*   **ThreadPoolExecutor（线程池）**：适用于 **I/O 密集型阻塞操作**（如同步爬虫 `requests`、旧版数据库驱动）。虽然有 GIL 锁，但当线程进入 I/O 阻塞时，会主动释放 GIL，从而允许其他线程（包括事件循环主线程）运行。
-*   **ProcessPoolExecutor（进程池）**：适用于 **CPU 密集型操作**（如哈希计算、科学计算、图像编解码）。它通过开启独立的操作系统进程，彻底绕过 GIL 限制，实现真正的多核并行计算。
+*   **ThreadPoolExecutor（线程池）**：适用于 **I/O 密集型阻塞操作**（如同步爬虫 `requests`、旧版数据库驱动、本地同步文件读写）。虽然 Python 存在全局解释器锁（GIL），但当线程进入底层 C 语言级的 I/O 阻塞系统调用时，会主动释放 GIL，从而允许其他线程（包括事件循环主线程）并发运行。
+*   **ProcessPoolExecutor（进程池）**：适用于 **CPU 密集型操作**（如哈希计算、图像编解码、机器学习推理）。它通过开启独立的操作系统子进程，彻底绕过 GIL 限制，实现真正的多核 CPU 并行计算。
 
 ### 1.3 实例演示：混合编程实战
 
@@ -44,14 +69,16 @@ import requests  # 经典的同步 HTTP 库
 
 # --- 1. 同步 I/O 阻塞任务 (模拟爬网) ---
 def sync_fetch_url(url):
+    """同步阻塞的 URL 下载任务"""
     print(f"[Thread-Worker] 开始下载: {url}")
-    # requests.get 是完全同步阻塞的
+    # requests.get 是完全同步阻塞的，会在网络 I/O 处卡住当前线程
     response = requests.get(url, timeout=5)
     print(f"[Thread-Worker] 下载完成: {url}，状态码: {response.status_code}")
     return len(response.content)
 
 # --- 2. CPU 密集型计算任务 (哈希计算) ---
 def sync_cpu_intensive_hash(number):
+    """高耗 CPU 的哈希碰撞计算任务"""
     print(f"[Process-Worker] 开始计算数值 {number} 的哈希...")
     # 模拟高耗 CPU 循环
     result = 0
@@ -76,7 +103,7 @@ async def main():
         "http://httpbin.org/delay/1",
         "https://www.python.org"
     ]
-    # 使用 loop.run_in_executor 将同步函数包装为 awaitable
+    # 使用 loop.run_in_executor 将同步函数包装为 awaitable 对象
     fetch_tasks = [
         loop.run_in_executor(thread_pool, sync_fetch_url, url)
         for url in urls
@@ -95,12 +122,12 @@ async def main():
     print(f"[Main] 所有任务执行完毕，结果集: {all_results}")
     print(f"[Main] 总耗时: {time.time() - start_time:.4f} 秒")
     
-    # 关闭池资源
+    # 优雅关闭池资源
     thread_pool.shutdown()
     process_pool.shutdown()
 
 if __name__ == "__main__":
-    # 注意：在 Windows 下运行多进程，需要将启动逻辑放入 __main__ 保护中
+    # 注意：在 Windows 环境下运行多进程，必须将启动逻辑放入 __main__ 保护中，防止无限循环创建进程
     asyncio.run(main())
 ```
 
@@ -108,21 +135,22 @@ if __name__ == "__main__":
 
 ## 2. 高并发控制与异步数据结构
 
-在单线程异步模型中，虽然同一时刻只有一段代码在执行，但是在 `await` 挂起点，控制权可能发生转移。这依然会引入逻辑上的**竞态条件（Race Condition）**。为此，`asyncio` 提供了与多线程标准库极其类似的同步与控制原语。
+在单线程异步模型中，虽然同一时刻只有一段代码在执行，但是在 `await` 挂起点，控制权会发生转移。这意味着，如果多个协程在不加锁的情况下共享并修改同一个易变资源，依然会引入逻辑上的**竞态条件（Race Condition）**。为此，`asyncio` 提供了与多线程标准库功能对称的同步与控制原语。
 
 ### 2.1 异步信号量：`asyncio.Semaphore`
 
-*   **痛点**：如果你并发发起 10000 个 HTTP 请求，即使系统能支撑，远端服务器也可能因为触发频率控制（Rate Limit）而直接封禁你的 IP。
-*   **方案**：使用信号量限制同时处于活跃状态的 Task 数量。
+*   **痛点**：如果你并发发起 10000 个 HTTP 请求，即使本地系统能够支撑，远端目标服务器也可能会因为触发频率控制（Rate Limit）而直接封禁你的 IP，或者导致本地句柄耗尽。
+*   **方案**：使用信号量限制同时处于活跃执行状态的 Task 数量。
 
 ```python
 import asyncio
 
 async def fetch_item(sem, item_id):
+    """使用信号量进行并发限流的任务"""
     # 尝试获取信号量，若已达到上限，则在此处挂起等待
     async with sem:
         print(f"正在处理任务 {item_id}...")
-        await asyncio.sleep(1) # 模拟网络消耗
+        await asyncio.sleep(1) # 模拟网络或磁盘消耗
         print(f"任务 {item_id} 处理完毕。")
 
 async def main():
@@ -138,14 +166,17 @@ asyncio.run(main())
 
 ### 2.2 异步队列：`asyncio.Queue`
 
-在典型的架构设计中，我们常用**生产者-消费者模式**来解耦复杂系统的流量压力。`asyncio.Queue` 是专门为异步协程定制的 FIFO 队列。
+在典型的分布式或微服务架构设计中，我们常用**生产者-消费者模式**来解耦复杂系统的流量压力。`asyncio.Queue` 是专门为异步协程定制的 FIFO（先进先出）队列，实现了非阻塞的条件同步。
 
-*   `await queue.put(item)`：向队列放入数据。如果队列已满（达到了设置的 `maxsize`），则挂起等待空位。
-*   `await queue.get()`：从队列取出数据。如果队列为空，则挂起等待数据被放入。
-*   `queue.task_done()` 与 `await queue.join()`：用于追踪队列中的生命周期。
+*   `await queue.put(item)`：向队列放入数据。如果队列已满（达到了设置的 `maxsize`），则协程挂起等待空位。
+*   `await queue.get()`：从队列取出数据。如果队列为空，则协程挂起等待新数据被放入。
+*   `queue.task_done()` 与 `await queue.join()`：用于追踪队列中元素的处理状态。每次 `get` 后处理完数据需调用 `task_done`，而 `join` 会阻塞直到所有被放入的元素都被处理完毕。
 
 ```python
+import asyncio
+
 async def producer(queue, name):
+    """生产者协程"""
     for i in range(5):
         await asyncio.sleep(0.5)
         item = f"Msg-{name}-{i}"
@@ -153,14 +184,16 @@ async def producer(queue, name):
         print(f"[Producer {name}] 生产了: {item}")
 
 async def consumer(queue, name):
+    """消费者协程"""
     while True:
-        # 挂起等待新数据
+        # 挂起等待新数据到达
         item = await queue.get()
         print(f"[Consumer {name}] 消费了: {item}")
         await asyncio.sleep(1) # 模拟消费耗时
-        queue.task_done() # 告知队列该任务已完成
+        queue.task_done() # 告知队列该元素已完成处理
 
 async def main():
+    # 创建一个最大容量为 10 的异步队列
     queue = asyncio.Queue(maxsize=10)
     
     # 启动 2 个生产者，1 个消费者
@@ -182,22 +215,26 @@ asyncio.run(main())
 
 ### 2.3 异步锁：`asyncio.Lock`
 
-尽管 `asyncio` 运行在单线程内，但如果两个协程共享了同一个资源，并在 `await` 时发生了切换，可能会导致数据读写错乱。
+尽管 `asyncio` 运行在单线程内，但如果两个协程共享了同一个资源，并在 `await` 时发生了调度切换，可能会导致数据读写错乱。
 
 ```python
+import asyncio
+
 shared_counter = 0
 lock = asyncio.Lock()
 
 async def worker_with_lock():
+    """使用异步锁保护临界资源"""
     global shared_counter
     async with lock:
         # 进入临界区
         val = shared_counter
-        await asyncio.sleep(0.01) # 此处会挂起并切换协程
+        # 此处存在挂起，会切换协程
+        await asyncio.sleep(0.01) 
         shared_counter = val + 1
 ```
 
-如果不加 `async with lock`，当两个协程同时读取到相同的旧 `val`，并在 `await asyncio.sleep(0.01)` 挂起时，最终写入的值就会发生丢失。
+如果不加 `async with lock`，当两个协程同时读取到相同的旧值 `val`，并在 `await asyncio.sleep(0.01)` 挂起时，它们恢复后写入的值就会相互覆盖，导致计数器丢失累加结果。
 
 ---
 
@@ -207,11 +244,11 @@ async def worker_with_lock():
 
 ### 3.1 解决 TCP 粘包与半包：长度前缀协议
 
-在 TCP 这种面向字节流的协议中，发送端连续发送的多个数据包可能会被接收端一次性读取（粘包），或者一个数据包被拆成多次读取（半包）。
+在 TCP 这种面向字节流的传输层协议中，发送端连续发送的多个数据包可能会被接收端一次性读取（粘包），或者一个数据包被拆成多次读取（半包）。
 
 为了保证消息边界的正确解析，我们在此实现一个通用的**长度前缀（Length-Prefixed）网络包协议**：
 *   **报文结构**：`[4 字节的大端整数表示的有效载荷长度] + [实际有效载荷数据]`。
-*   **读取策略**：每次先通过 `readexactly(4)` 读取长度头，然后解析出具体长度，再通过 `readexactly(length)` 精确读取对应大小的 payload。
+*   **读取策略**：每次先通过 `readexactly(4)` 读取长度头，然后解析出具体长度，再通过 `readexactly(length)` 精确读取对应大小的 payload，从而彻底规避粘包。
 
 ### 3.2 生产级异步 TCP 示例
 
@@ -239,9 +276,10 @@ async def read_msg(reader: asyncio.StreamReader) -> bytes:
 
 async def write_msg(writer: asyncio.StreamWriter, payload: bytes):
     """向网络流中写入一个带有长度前缀的报文"""
+    # 封装 4 字节大端整数头并拼接实际载荷
     header = struct.pack("!I", len(payload))
     writer.write(header + payload)
-    # 强制将缓冲区数据发送至物理链路
+    # 强制将缓冲区数据发送至物理链路，释放内存缓冲区
     await writer.drain()
 
 async def handle_client(reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
@@ -266,7 +304,7 @@ async def handle_client(reader: asyncio.StreamReader, writer: asyncio.StreamWrit
             else:
                 response = f"Echo: {msg_str}"
 
-            # 回写响应
+            # 回写响应数据
             await write_msg(writer, response.encode('utf-8'))
             print(f"[Server] 已回应 {addr}: '{response}'")
 
@@ -304,6 +342,7 @@ import asyncio
 import struct
 
 async def read_msg(reader: asyncio.StreamReader) -> bytes:
+    """从网络流中精确读取一个长度前缀的报文"""
     try:
         header = await reader.readexactly(4)
         length = struct.unpack("!I", header)[0]
@@ -313,6 +352,7 @@ async def read_msg(reader: asyncio.StreamReader) -> bytes:
         return b""
 
 async def write_msg(writer: asyncio.StreamWriter, payload: bytes):
+    """发送带长度前缀的报文"""
     header = struct.pack("!I", len(payload))
     writer.write(header + payload)
     await writer.drain()
@@ -323,7 +363,7 @@ async def main():
     print("[Client] 成功连接至服务端...")
 
     try:
-        # 1. 发送常规消息
+        # 1. 发送常规业务消息
         msg1 = "Hello, high-concurrency asyncio TCP server!"
         print(f"[Client] 发送消息: '{msg1}'")
         await write_msg(writer, msg1.encode('utf-8'))

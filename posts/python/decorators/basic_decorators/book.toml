@@ -1,11 +1,10 @@
+[book]
 title = "Python Basic Decorators"
 authors = ["hengvvang"]
 description = "Fundamentals of closures, lexical scopes, standard @ syntax wrapping, and generic parameter passing."
-
-[book]
 src = "src"
 language = "zh-CN"
 
 [output.html]
-additional-css = ["../../../__shared_theme/custom-mdbook.css"]
-additional-js = ["../../../__shared_theme/custom-mdbook.js"]
+smart-punctuation = true
+mathjax-support = true
