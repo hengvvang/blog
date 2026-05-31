@@ -1,7 +1,14 @@
 # Summary
 
-[Introduction](README.md)
+[引言](README.md)
 
-- [第一章：引用的生命周期与借用检查器](scope-analysis.md)
-- [第二章：生命周期标注与编译器借用分析](lifetime-annotations.md)
-- [第三章：生命周期安全设计模式与疑难排查](lifetime-safety-patterns.md)
+# 第一部分：作用域分析与栈内存生命周期
+
+- [作用域与栈内存](scopes/README.md)
+    - [第一章：变量作用域与栈帧生命周期深度分析](scopes/scope-analysis.md)
+
+# 第二部分：生命周期标注与安全模式
+
+- [生命周期标注](annotations/README.md)
+    - [第二章：生命周期标注语法与编译期隐式省略规则](annotations/lifetime-annotations.md)
+    - [第三章：共享/可变引用安全模式与借用冲突防范](annotations/lifetime-safety-patterns.md)
