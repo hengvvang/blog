@@ -1,21 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap');
 
 :root {
-  --bg-color: #f3efe9; /* 接近原神样式图表的淡米黄色背景 */
+  --bg-color: #f8fafc; /* 极轻冷灰/蓝色调背景，更具现代简约与冷静感 */
   --nav-bg: #ffffff;
-  --text-dark: #40485a; /* 卡片标题使用的较深蓝灰 */
-  --text-light: #7b7b7b;
-  --btn-bg: #b79773; /* 截图使用的土豪金 */
-  --btn-hover: #664d33;
+  --text-dark: #0f172a; /* 深炭灰/板岩色，极具克制力且易于阅读 */
+  --text-light: #64748b; /* 哑光钢灰，冷静且低调 */
+  --btn-bg: #1e293b; /* 冷灰色调按钮，替换原本土豪金 */
+  --btn-hover: #0f172a; /* 深色板岩灰悬浮状态 */
   
   /* Refactored Design Tokens */
-  --border-color: #d3ccbe;
-  --border-light: #e2ded5;
-  --card-bg: rgb(245, 243, 238);
-  --card-bg-hover: rgb(228, 223, 217);
+  --border-color: #e2e8f0; /* 轻薄明朗的冷灰色边框线，克制且干净 */
+  --border-light: #f1f5f9;
+  --card-bg: #ffffff; /* 简约白色卡片底色 */
+  --card-bg-hover: #e2e8f0; /* 简约冷灰悬浮底色，透明度稍高 */
+  --home-hover-bg: #f1f5f9; /* 首页悬浮样式，透明度更高 */
   --white: #ffffff;
-  --card-btn-hover-bg: rgb(102, 77, 51);
-  --sidebar-hover-bg: rgb(227, 227, 229);
+  --card-btn-hover-bg: #0f172a;
+  --sidebar-hover-bg: #f1f5f9;
   
   --card-width: 464px;
   --card-inner-width: 438px;
@@ -389,7 +390,7 @@ body {
   width: 100%;
   background: #ffffff;
   border-radius: 0; /* rectangular */
-  border: 1px solid #d3ccbe; /* rectangular border */
+  border: 1px solid var(--border-color); /* rectangular border */
   border-top: 4px solid var(--btn-bg);
   box-shadow: 0 3px 7px rgba(0,0,0,0.02);
   padding: 79px 90px 115px; /* Spacing as specified */
@@ -454,7 +455,7 @@ body {
   font-size: 18px;
   color: #3b4252;
   font-weight: 500;
-  background-color: #fcfbfa;
+  background-color: var(--bg-color);
   border-left: 4px solid var(--btn-bg);
   padding: 18px 24px;
   margin-bottom: 28px;
@@ -655,7 +656,7 @@ body {
   background: rgba(0,0,0,0.02);
 }
 .outline-list::-webkit-scrollbar-thumb {
-  background: rgba(183,151,115,0.3);
+  background: rgba(30, 41, 59, 0.3);
   border-radius: 2px;
 }
 
@@ -689,7 +690,7 @@ body {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background-color: #d3ccbe;
+  background-color: var(--border-color);
   flex-shrink: 0;
   margin-top: 6px;
   transition: background-color 0.2s ease;
@@ -759,14 +760,15 @@ body {
 
 .sidebar-meta-card .tag-badge {
   display: inline-block;
-  padding: 1px 6px;
-  background-color: rgba(183, 151, 115, 0.08);
-  color: rgb(141, 110, 75);
-  border: 1px solid rgba(183, 151, 115, 0.18);
-  border-radius: 2px;
+  padding: 2px 8px;
+  background-color: rgba(30, 41, 59, 0.05);
+  color: #475569;
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
   font-size: 11px;
   font-weight: 500;
   text-transform: uppercase;
+  transition: all var(--transition-duration-fast) ease;
 }
 
 /* Row 2: Metrics */
@@ -841,7 +843,7 @@ body {
 }
 
 .sidebar-item:hover {
-  background-color: rgb(227, 227, 229); /* E3E3E5 */
+  background-color: var(--sidebar-hover-bg);
 }
 
 .sidebar-thumb {
@@ -878,7 +880,7 @@ body {
   font-size: 16px;
   line-height: 20px;
   min-height: 40px;
-  color: rgb(57, 59, 64);
+  color: var(--text-dark);
   margin: 0;
   text-align: start;
   overflow: hidden;
@@ -912,7 +914,7 @@ body {
   height: 60px;
   border-radius: 4px;
   background-color: #ffffff;
-  border: 1px solid #d3ccbe; /* Theme border color */
+  border: 1px solid var(--border-color); /* Theme border color */
   box-shadow: 0 4px 16px rgba(0,0,0,0.05);
   display: flex;
   align-items: center;
@@ -953,18 +955,18 @@ body {
 /* 按钮样式完全吻合官方 */
 .card-btn {
   height: 36px;
-  background: rgb(183, 151, 115);
+  background: var(--btn-bg);
   padding: 0px 18px;
   border-radius: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: background 0.3s;
-  cursor: pointer;
+  box-sizing: border-box;
+  transition: background var(--transition-duration-fast) ease;
 }
 
 .card-btn:hover {
-  background: rgb(102, 77, 51);
+  background: var(--btn-hover);
 }
 
 .card-btn img {
@@ -1010,7 +1012,7 @@ body {
 }
 
 .home-collection:hover {
-  background: rgba(228, 223, 217, 0.4);
+  background: var(--home-hover-bg); /* 使用和先前卡片相同的悬浮样式 */
 }
 
 .collection-inner {
@@ -1284,32 +1286,34 @@ body {
 .toolchain-tabs {
   display: flex;
   gap: 14px;
-  border-bottom: 2px solid rgba(57, 59, 64, 0.1);
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: 12px;
   margin-top: 10px;
   flex-wrap: wrap;
 }
 
 .toolchain-tab {
-  background: rgba(57, 59, 64, 0.08);
-  border: none;
-  border-radius: 4px;
-  padding: 8px 24px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 6px 20px;
   font-family: 'Outfit', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: rgb(57, 59, 64);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-light);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-duration-fast) ease;
 }
 
 .toolchain-tab:hover {
-  background: rgba(57, 59, 64, 0.18);
+  background: var(--border-light);
+  color: var(--text-dark);
 }
 
 .toolchain-tab.active {
-  background: rgb(57, 59, 64);
-  color: rgb(244, 216, 168);
+  background: var(--btn-bg);
+  border-color: var(--btn-bg);
+  color: var(--white);
 }
 
 /* 3. News List cards */
@@ -1323,7 +1327,7 @@ body {
 .toolchain-list-column {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 0;
 }
 
 @media (max-width: 768px) {
@@ -1332,7 +1336,7 @@ body {
     gap: 12px;
   }
   .toolchain-list-column {
-    gap: 12px;
+    gap: 0;
   }
 }
 
@@ -1428,7 +1432,7 @@ body {
 }
 
 .toolchain-loadmore-btn {
-  background-color: rgb(57, 59, 64);
+  background-color: var(--btn-bg);
   color: #ffffff;
   border: none;
   padding: 8px 162px;
@@ -1441,7 +1445,7 @@ body {
 }
 
 .toolchain-loadmore-btn:hover {
-  background-color: rgb(86, 89, 97);
+  background-color: var(--btn-hover);
 }
 
 .toolchain-empty {
@@ -1637,9 +1641,9 @@ body {
 .markdown-body blockquote {
   margin: 1.5em 0;
   padding: 12px 24px;
-  border-left: 4px solid var(--btn-bg, #b79773);
-  background-color: rgba(183, 151, 115, 0.08);
-  color: #5e6573;
+  border-left: 4px solid var(--btn-bg);
+  background-color: rgba(30, 41, 59, 0.05);
+  color: var(--text-light);
   font-style: italic;
   border-radius: 0 4px 4px 0;
 }
@@ -1715,30 +1719,30 @@ body {
 
 .markdown-body table th {
   font-weight: 600;
-  background-color: #f5f3ee;
+  background-color: var(--border-light);
 }
 
 .markdown-body table th,
 .markdown-body table td {
   padding: 8px 13px;
-  border: 1px solid #d3ccbe;
+  border: 1px solid var(--border-color);
 }
 
 .markdown-body table tr {
   background-color: #ffffff;
-  border-top: 1px solid #d3ccbe;
+  border-top: 1px solid var(--border-color);
 }
 
 .markdown-body table tr:nth-child(2n) {
-  background-color: #faf9f6;
+  background-color: var(--bg-color);
 }
 
 /* Divider */
 .markdown-body hr {
-  height: 2px;
+  height: 1px;
   padding: 0;
   margin: 24px 0;
-  background-color: #e2ded5;
+  background-color: var(--border-color);
   border: 0;
 }
 
@@ -1853,7 +1857,7 @@ body {
 
 /* Active Highlight (Genshin mondstadt select rect layout) */
 .genshin-sidebar-item.active {
-  background-color: rgba(183, 151, 115, 0.08); /* warm gold tint */
+  background-color: rgba(30, 41, 59, 0.05); /* subtle dark slate/gray background */
   border-radius: 4px;
 }
 
@@ -1864,20 +1868,20 @@ body {
   top: 0;
   bottom: 0;
   width: 3px;
-  background-color: var(--btn-bg, #b79773);
+  background-color: var(--btn-bg);
   border-radius: 2px 0 0 2px;
 }
 
 .genshin-sidebar-item.active .genshin-sidebar-text {
-  color: var(--btn-bg, #b79773);
+  color: var(--btn-bg);
   font-weight: 600;
 }
 
 .genshin-sidebar-item.active .genshin-sidebar-diamond {
-  border-color: var(--btn-bg, #b79773);
-  background-color: var(--white, #ffffff);
+  border-color: var(--btn-bg);
+  background-color: var(--white);
   transform: rotate(45deg) scale(1.25);
-  box-shadow: 0 0 6px rgba(183, 151, 115, 0.5);
+  box-shadow: 0 0 6px rgba(30, 41, 59, 0.25);
 }
 
 /* Responsive Media Queries */
