@@ -274,11 +274,30 @@ function renderPartition() {
       `</div>`
     : '';
     
-  const listHTML = visibleList.length > 0
-    ? `<div class="toolchain-list-section">` +
-        visibleList.map(art => renderListCardHTML(art, getCategoryColor(art.subcategory || currentCategory))).join('') +
-      `</div>`
-    : (featured.length === 0 ? '<div class="toolchain-empty">没有找到相关文章。</div>' : '');
+  let listHTML = '';
+  if (visibleList.length > 0) {
+    const leftCards: Article[] = [];
+    const rightCards: Article[] = [];
+    visibleList.forEach((art, idx) => {
+      if (idx % 2 === 0) {
+        leftCards.push(art);
+      } else {
+        rightCards.push(art);
+      }
+    });
+    
+    const leftHTML = leftCards.map(art => renderListCardHTML(art, getCategoryColor(art.subcategory || currentCategory))).join('');
+    const rightHTML = rightCards.map(art => renderListCardHTML(art, getCategoryColor(art.subcategory || currentCategory))).join('');
+    
+    listHTML = `
+      <div class="toolchain-list-section">
+        <div class="toolchain-list-column">${leftHTML}</div>
+        <div class="toolchain-list-column">${rightHTML}</div>
+      </div>
+    `;
+  } else {
+    listHTML = featured.length === 0 ? '<div class="toolchain-empty">没有找到相关文章。</div>' : '';
+  }
     
   const hasMore = filteredArticles.length > pageSize;
   const loadMoreHTML = hasMore

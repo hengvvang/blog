@@ -172,7 +172,7 @@ export function renderListCardHTML(art: Article, categoryColor: string): string 
   const scaleStyle = art.cover?.image?.scale !== undefined ? `--cover-scale: ${art.cover.image.scale};` : '';
 
   return `
-    <div class="card" style="width: 100%; ${scaleStyle}" data-action="view-article" data-id="${art.id}">
+    <div class="card toolchain-list-card" style="width: 100%; align-self: start; ${scaleStyle}" data-action="view-article" data-id="${art.id}">
       <div class="card-cover-wrapper" style="width: 100%; height: auto; display: flex; gap: 24px;">
         <div class="list-card-cover" style="position: relative; overflow: hidden; width: 180px; height: 110px; border-radius: 4px; flex-shrink: 0;">
           ${renderCoverHTML(art.cover, categoryColor, '14px')}

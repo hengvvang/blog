@@ -1317,11 +1317,21 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
+  align-items: start;
 }
 
-@media (max-width: 900px) {
+.toolchain-list-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
   .toolchain-list-section {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .toolchain-list-column {
     gap: 12px;
   }
 }
