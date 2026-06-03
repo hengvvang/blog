@@ -5,17 +5,25 @@ category: markup
 subcategory: css
 subtopic: others
 timeline:
-  publishTime: "2026-05-30 20:00"
-time:
-  lastUpdatedTime: "2026-05-31 12:30"
+  publishTime: 2026-05-30 20:00
+  lastUpdatedTime: 2026-05-31 12:30
 cover:
-  title: "CSS 动画设计与微动画实现"
-  summary: "利用 CSS transition 与 keyframes 进行动效建模，优化三维变形（transform）与透明度通道以激活 GPU 硬件加速。"
-  tags: ["MARKUP", "CSS", "Animations", "UI"]
+  title: CSS 动画设计与微动画实现
+  summary: 利用 CSS transition 与 keyframes 进行动效建模，优化三维变形（transform）与透明度通道以激活 GPU 硬件加速。
+  tags:
+    - MARKUP
+    - CSS
+    - Animations
+    - UI
   image:
-    src: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop"
-    text:
-      content: "CSS | ANIMATIONS"
-      position: "topRight"
+    src: https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&auto=format&fit=crop
     brightness: 0.75
     scale: 1.08
+    badge:
+      text: CSS | ANIMATIONS
+      position: top-right
+    hover:
+      scale: 1.14
+      brightness: 0.9
+      rotate: 0
+      blur: 0px

@@ -55,13 +55,41 @@ export const ICONS: Record<string, string> = {
 
 export const DEFAULT_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
 
-export const KEYWORDS: Record<string, string[]> = {
-  lang: ['Rust', 'C', 'Python'],
-  rtos: ['FreeRTOS', 'RT-Thread', 'Zephyr', 'uCOS', 'ThreadX'],
-  mcu: ['STM32', 'ESP32', 'GD32', 'MSP430', 'AVR'],
-  markup: ['Markdown', 'HTML', 'CSS', 'LaTeX', 'XML'],
-  toolchain: ['CMake', 'GCC', 'GDB', 'Git', 'Clang', 'LLVM']
+export const SUBCAT_DISPLAY_NAMES: Record<string, string> = {
+  c: 'C',
+  rust: 'Rust',
+  python: 'Python',
+  freertos: 'FreeRTOS',
+  'rt-thread': 'RT-Thread',
+  zephyr: 'Zephyr',
+  ucos: 'uCOS',
+  threadx: 'ThreadX',
+  stm32: 'STM32',
+  esp32: 'ESP32',
+  gd32: 'GD32',
+  msp430: 'MSP430',
+  avr: 'AVR',
+  markdown: 'Markdown',
+  html: 'HTML',
+  css: 'CSS',
+  latex: 'LaTeX',
+  xml: 'XML',
+  cmake: 'CMake',
+  gcc: 'GCC',
+  gdb: 'GDB',
+  git: 'Git',
+  clang: 'Clang',
+  llvm: 'LLVM'
 };
+
+export function formatSubcategory(sub: string): string {
+  const key = sub.trim().toLowerCase();
+  if (SUBCAT_DISPLAY_NAMES[key]) {
+    return SUBCAT_DISPLAY_NAMES[key];
+  }
+  if (key.length === 0) return '';
+  return key.charAt(0).toUpperCase() + key.slice(1);
+}
 
 export function getKeywordIcon(keyword: string): string {
   const key = keyword.toLowerCase();
@@ -91,18 +119,18 @@ export function getOppositeDirection(dir: typeof slideDirs[0]): typeof slideDirs
   return slideDirs[idx]; // same for left/right
 }
 
-export function getCategoryHomeElementsHTML(cat: string): { keywordsHTML: string; iconsHTML: string } {
-  const list = KEYWORDS[cat] || ['Code', 'Tech', 'Doc', 'Dev', 'System'];
-  const initialIndex = Math.floor(Math.random() * list.length);
+export function getCategoryHomeElementsHTML(cat: string, list: string[]): { keywordsHTML: string; iconsHTML: string } {
+  const displayList = list.length > 0 ? list : ['Code', 'Tech', 'Doc', 'Dev', 'System'];
+  const initialIndex = Math.floor(Math.random() * displayList.length);
   
-  const keywordsHTML = list.map((word, i) => `<span class="media-text ${i === initialIndex ? 'js-active' : ''}">${word}</span>`).join('');
+  const keywordsHTML = displayList.map((word, i) => `<span class="media-text ${i === initialIndex ? 'js-active' : ''}">${word}</span>`).join('');
   
   let iconsHTML = '';
   if (SINGLE_ICON_CATEGORIES.includes(cat)) {
     const singleIcon = ICONS[cat] || DEFAULT_ICON;
     iconsHTML = `<span class="icon-item js-active">${singleIcon}</span>`;
   } else {
-    iconsHTML = list.map((word, i) => {
+    iconsHTML = displayList.map((word, i) => {
       const iconSVG = getKeywordIcon(word);
       return `<span class="icon-item ${i === initialIndex ? 'js-active' : ''}">${iconSVG}</span>`;
     }).join('');

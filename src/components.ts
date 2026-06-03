@@ -50,7 +50,13 @@ const POSITION_MAP: Record<string, string> = {
   bottomLeft: "bottom: 12px; left: 16px; transform: none; text-align: left;",
   center: "top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;",
   bottomRight: "bottom: 12px; right: 16px; transform: none; text-align: right;",
-  topRight: "top: 12px; right: 16px; transform: none; text-align: right;"
+  topRight: "top: 12px; right: 16px; transform: none; text-align: right;",
+  
+  // kebab-case mappings for YAML config consistency
+  "top-left": "top: 12px; left: 16px; transform: none; text-align: left;",
+  "bottom-left": "bottom: 12px; left: 16px; transform: none; text-align: left;",
+  "bottom-right": "bottom: 12px; right: 16px; transform: none; text-align: right;",
+  "top-right": "top: 12px; right: 16px; transform: none; text-align: right;"
 };
 
 // Unified Cover Renderer helper for filter isolation and custom styling
@@ -59,24 +65,47 @@ function renderCoverHTML(cover: Article['cover'], categoryColor: string, default
   
   let bgImageHTML = '';
   if (cover?.image?.src) {
-    const filters: string[] = [];
+    const styleVariables: string[] = [];
+    if (cover.image.scale !== undefined) {
+      styleVariables.push(`--cover-scale: ${cover.image.scale}`);
+    }
     if (cover.image.brightness !== undefined) {
-      filters.push(`brightness(${cover.image.brightness})`);
+      styleVariables.push(`--cover-brightness: ${cover.image.brightness}`);
     }
     if (cover.image.blur !== undefined) {
-      filters.push(`blur(${cover.image.blur})`);
+      styleVariables.push(`--cover-blur: ${cover.image.blur}px`);
     }
-    const filterStyle = filters.length > 0 ? `filter: ${filters.join(' ')};` : '';
-    bgImageHTML = `<div class="cover-bg-image" style="background-image: url('${cover.image.src}'); ${filterStyle}"></div>`;
+    
+    // Hover animation configs
+    const hover = cover.image.hover || {};
+    if (hover.scale !== undefined) {
+      styleVariables.push(`--cover-hover-scale: ${hover.scale}`);
+    }
+    if (hover.brightness !== undefined) {
+      styleVariables.push(`--cover-hover-brightness: ${hover.brightness}`);
+    }
+    if (hover.rotate !== undefined) {
+      styleVariables.push(`--cover-hover-rotate: ${hover.rotate}deg`);
+    }
+    if (hover.blur !== undefined) {
+      const blurVal = String(hover.blur).endsWith("px") ? hover.blur : `${hover.blur}px`;
+      styleVariables.push(`--cover-hover-blur: ${blurVal}`);
+    }
+
+    const varStyle = styleVariables.length > 0 ? `${styleVariables.join('; ')};` : '';
+    bgImageHTML = `<div class="cover-bg-image" style="background-image: url('${cover.image.src}'); ${varStyle}"></div>`;
   }
   
   let coverContentHTML = '';
-  const coverText = cover?.image?.text;
-  if (coverText?.content && coverText?.position) {
-    const posStyle = POSITION_MAP[coverText.position] || POSITION_MAP.center;
-    const txtColor = coverText.color || '#ffffff';
-    const txtSize = coverText.size || defaultTextSize;
-    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: ${txtSize}; font-weight: 600; color: ${txtColor}; text-shadow: 0 2px 4px rgba(0,0,0,0.4); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${coverText.content}</span>`;
+  // Support both badge (new) and text (legacy)
+  const coverBadge = cover?.image?.badge || cover?.image?.text;
+  const badgeText = coverBadge?.text || coverBadge?.content;
+  const badgePos = coverBadge?.position;
+  if (badgeText && badgePos) {
+    const posStyle = POSITION_MAP[badgePos] || POSITION_MAP.center;
+    const txtColor = coverBadge.color || '#ffffff';
+    const txtSize = coverBadge.size || defaultTextSize;
+    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: ${txtSize}; font-weight: 600; color: ${txtColor}; text-shadow: 0 2px 4px rgba(0,0,0,0.4); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${badgeText}</span>`;
   }
   
   return `

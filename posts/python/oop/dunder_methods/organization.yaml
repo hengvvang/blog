@@ -5,17 +5,25 @@ category: lang
 subcategory: python
 subtopic: oop
 timeline:
-  publishTime: "2026-05-30 23:45"
-time:
-  lastUpdatedTime: "2026-05-31 19:00"
+  publishTime: 2026-05-30 23:45
+  lastUpdatedTime: 2026-05-31 19:00
 cover:
-  title: "Python 魔术方法与自定义对象行为"
-  summary: "系统整理双下划线方法的调用契机，通过重载算术与比较运算符、构建自定义迭代容器与上下文管理器接管系统级操作。"
-  tags: ["PYTHON", "OOP", "Magic Methods", "Dunder"]
+  title: Python 魔术方法与自定义对象行为
+  summary: 系统整理双下划线方法的调用契机，通过重载算术与比较运算符、构建自定义迭代容器与上下文管理器接管系统级操作。
+  tags:
+    - PYTHON
+    - OOP
+    - Magic Methods
+    - Dunder
   image:
-    src: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop"
-    text:
-      content: "PYTHON | OOP"
-      position: "bottomRight"
+    src: https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&auto=format&fit=crop
     brightness: 0.75
     scale: 1.08
+    badge:
+      text: PYTHON | OOP
+      position: bottom-right
+    hover:
+      scale: 1.14
+      brightness: 0.9
+      rotate: 0
+      blur: 0px

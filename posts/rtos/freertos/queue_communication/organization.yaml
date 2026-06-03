@@ -5,17 +5,26 @@ category: rtos
 subcategory: freertos
 subtopic: others
 timeline:
-  publishTime: "2026-05-30 16:00"
-time:
-  lastUpdatedTime: "2026-05-31 20:30"
+  publishTime: 2026-05-30 16:00
+  lastUpdatedTime: 2026-05-31 20:30
 cover:
-  title: "FreeRTOS 队列通信机制与数据拷贝深度剖析"
-  summary: "讲解如何在不同优先级的 FreeRTOS 任务之间或者中断服务程序中，通过线程安全队列安全传递结构体数据。"
-  tags: ["RTOS", "FreeRTOS", "Queue", "Copy by Value", "Kernel"]
+  title: FreeRTOS 队列通信机制与数据拷贝深度剖析
+  summary: 讲解如何在不同优先级的 FreeRTOS 任务之间或者中断服务程序中，通过线程安全队列安全传递结构体数据。
+  tags:
+    - RTOS
+    - FreeRTOS
+    - Queue
+    - Copy by Value
+    - Kernel
   image:
-    src: "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=800&auto=format&fit=crop"
-    text:
-      content: "RTOS | FREERTOS"
-      position: "bottomLeft"
+    src: https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=800&auto=format&fit=crop
     brightness: 0.75
     scale: 1.08
+    badge:
+      text: RTOS | FREERTOS
+      position: bottom-left
+    hover:
+      scale: 1.14
+      brightness: 0.9
+      rotate: 0
+      blur: 0px

@@ -106,8 +106,8 @@ async function buildStatic() {
   const articles = await loadArticles();
   const taxonomy = buildTaxonomy(articles);
   
-  // Clean up legacy theme folder
-  await rm("./public/books/theme", { recursive: true, force: true });
+  // Clean up legacy books folder to prevent stale files/folders from blocking build
+  await rm("./public/books", { recursive: true, force: true });
   
   // Create output API directories inside public/
   await mkdir("./public/api", { recursive: true });
@@ -432,9 +432,16 @@ async function buildStatic() {
   console.log("Generated central custom-mdbook.js");
 
   // Compile each book automatically
-  for (const bookSrc of uniqueBookSrcs) {
-    const bookFolder = relative("posts", bookSrc).replace(/\\/g, "/");
-    const destDir = join(process.cwd(), "public/books", bookFolder);
+  for (const art of articles) {
+    const bookSrc = art.bookSrc;
+    if (!bookSrc) continue;
+
+    let relDest = art.path;
+    if (relDest.startsWith("/")) relDest = relDest.substring(1);
+    if (relDest.endsWith("/index.html")) {
+      relDest = relDest.substring(0, relDest.length - 11);
+    }
+    const destDir = join(process.cwd(), "public", relDest);
     
     // Ensure book.toml contains theme path pointing to central posts/theme relatively
     const bookTomlPath = join(bookSrc, "book.toml");
@@ -512,6 +519,7 @@ async function buildStatic() {
 
     console.log(`Compiling mdbook: "${bookSrc}" -> "${destDir}"`);
     try {
+      await rm(destDir, { recursive: true, force: true });
       execSync(`mdbook build "${bookSrc}" --dest-dir "${destDir}"`, { stdio: "inherit" });
     } catch (err) {
       console.error(`Error compiling mdbook at ${bookSrc}:`, err);

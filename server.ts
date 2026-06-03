@@ -76,7 +76,18 @@ const server = serve({
       });
     }
 
-    const publicFilePath = `./public${path}`;
+    let publicFilePath = `./public${path}`;
+    if (await Bun.file(publicFilePath + "/index.html").exists()) {
+      if (!path.endsWith("/")) {
+        return new Response(null, {
+          status: 302,
+          headers: {
+            "Location": path + "/"
+          }
+        });
+      }
+      publicFilePath = publicFilePath + "/index.html";
+    }
     const publicFile = Bun.file(publicFilePath);
     if (await publicFile.exists()) {
       return new Response(publicFile, {

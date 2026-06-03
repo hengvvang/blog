@@ -5,17 +5,25 @@ category: toolchain
 subcategory: git
 subtopic: internals
 timeline:
-  publishTime: "2026-05-30 21:15"
-time:
-  lastUpdatedTime: "2026-06-01 03:30"
+  publishTime: 2026-05-30 21:15
+  lastUpdatedTime: 2026-06-01 03:30
 cover:
-  title: "Git 内部原理与对象模型剖析"
-  summary: "剥离 Git 的神秘外衣，详细解构 .git 目录、四类基本对象（Blob、Tree、Commit、Tag）的底层二进制表示与 SHA-1 哈希寻址机制。"
-  tags: ["GIT", "INTERNALS", "Objects", "Low-Level"]
+  title: Git 内部原理与对象模型剖析
+  summary: 剥离 Git 的神秘外衣，详细解构 .git 目录、四类基本对象（Blob、Tree、Commit、Tag）的底层二进制表示与 SHA-1 哈希寻址机制。
+  tags:
+    - GIT
+    - INTERNALS
+    - Objects
+    - Low-Level
   image:
-    src: "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=800&auto=format&fit=crop"
-    text:
-      content: "GIT | INTERNALS"
-      position: "bottomLeft"
+    src: https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=800&auto=format&fit=crop
     brightness: 0.75
     scale: 1.08
+    badge:
+      text: GIT | INTERNALS
+      position: bottom-left
+    hover:
+      scale: 1.14
+      brightness: 0.9
+      rotate: 0
+      blur: 0px

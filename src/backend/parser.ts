@@ -119,7 +119,16 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
       throw new Error(`Missing category or subcategory in ${yamlFile}`);
     }
     
-    const path = `/books/${bookFolder}/index.html`;
+    // Respect book.src and book.path to decouple URL/logical path from physical disk path
+    let path = "";
+    if (meta.book && meta.book.src && meta.book.path) {
+      const prefix = relative(postsDir, meta.book.src).replace(/\\/g, "/");
+      const cleanPrefix = prefix ? prefix + "/" : "";
+      path = `/books/${cleanPrefix}${meta.book.path}`;
+    } else {
+      path = `/books/${bookFolder}/index.html`;
+    }
+    
     let file = join(bookSrc, "src", "README.md").replace(/\\/g, "/");
     if (!existsSync(file)) {
       file = join(bookSrc, "README.md").replace(/\\/g, "/");
@@ -130,8 +139,11 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
     if (!publishTime) {
       throw new Error(`Missing timeline.publishTime in ${yamlFile}`);
     }
-    const timeMeta = meta.time || {};
-    const lastUpdatedTime = timeMeta.lastUpdatedTime ? String(timeMeta.lastUpdatedTime).trim() : "";
+    
+    // Support lastUpdatedTime in timeline (new) or time (legacy)
+    const lastUpdatedTime = timeline.lastUpdatedTime 
+      ? String(timeline.lastUpdatedTime).trim() 
+      : (meta.time?.lastUpdatedTime ? String(meta.time.lastUpdatedTime).trim() : "");
     const sortTime = lastUpdatedTime || publishTime;
     
     const coverMeta = meta.cover || {};
@@ -140,8 +152,12 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
     
     let cover: any = undefined;
     if (coverMeta.image) {
+      const imgConfig = coverMeta.image;
       cover = {
-        image: coverMeta.image
+        image: {
+          ...imgConfig,
+          src: imgConfig.src || imgConfig.image
+        }
       };
     }
 

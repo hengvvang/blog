@@ -8,7 +8,8 @@ import {
   getCategoryHomeElementsHTML,
   onRowEnter,
   onRowLeave,
-  stopAllSlideshows
+  stopAllSlideshows,
+  formatSubcategory
 } from "./utils";
 import {
   renderNavHTML,
@@ -173,7 +174,11 @@ function renderArticles() {
     articleGrid.className = 'home-collections-wrapper';
     articleGrid.innerHTML = CATEGORIES.map(cat => {
       const count = ARTICLES.filter(a => a.category === cat).length;
-      const { keywordsHTML, iconsHTML } = getCategoryHomeElementsHTML(cat);
+      const categoryEntry = TAXONOMY?.categories.find(c => c.key === cat);
+      const rawSubcats = (categoryEntry?.subcategories || []).map(sub => sub.key);
+      const formattedSubcats = rawSubcats.map(sub => formatSubcategory(sub));
+      
+      const { keywordsHTML, iconsHTML } = getCategoryHomeElementsHTML(cat, formattedSubcats);
       const order = categoryOrders[cat] || [0, 1, 3, 2];
       return renderHomeCollectionHTML(cat, count, keywordsHTML, order, iconsHTML);
     }).join('');

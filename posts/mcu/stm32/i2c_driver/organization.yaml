@@ -5,17 +5,27 @@ category: mcu
 subcategory: stm32
 subtopic: others
 timeline:
-  publishTime: "2026-05-30 12:00"
-time:
-  lastUpdatedTime: "2026-05-31 16:30"
+  publishTime: 2026-05-30 12:00
+  lastUpdatedTime: 2026-05-31 16:30
 cover:
-  title: "STM32 软件模拟 I2C 驱动与总线时序实现"
-  summary: "系统讲解 I2C 物理层电平与 GPIO 开漏输出模拟时序，剖析 STM32 硬件 I2C 的经典锁死与从机拉低 SDA 死锁成因，并提供总线恢复逻辑与防死锁的健壮驱动层设计。"
-  tags: ["MCU", "STM32", "I2C", "GPIO", "Hardware Bug"]
+  title: STM32 软件模拟 I2C 驱动与总线时序实现
+  summary: 系统讲解 I2C 物理层电平与 GPIO 开漏输出模拟时序，剖析 STM32 硬件 I2C 的经典锁死与从机拉低 SDA
+    死锁成因，并提供总线恢复逻辑与防死锁的健壮驱动层设计。
+  tags:
+    - MCU
+    - STM32
+    - I2C
+    - GPIO
+    - Hardware Bug
   image:
-    src: "https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&auto=format&fit=crop"
-    text:
-      content: "MCU | STM32"
-      position: "bottomRight"
+    src: https://images.unsplash.com/photo-1639322537228-f710d846310a?w=800&auto=format&fit=crop
     brightness: 0.75
     scale: 1.08
+    badge:
+      text: MCU | STM32
+      position: bottom-right
+    hover:
+      scale: 1.14
+      brightness: 0.9
+      rotate: 0
+      blur: 0px

@@ -5,21 +5,25 @@ category: markup
 subcategory: markdown
 subtopic: others
 timeline:
-  publishTime: "2026-05-30 20:45"
-time:
-  lastUpdatedTime: "2026-05-31 14:00"
+  publishTime: 2026-05-30 20:45
+  lastUpdatedTime: 2026-05-31 14:00
 cover:
-  title: "Markdown Mermaid 图表建模与工作流绘制"
-  summary: "说明如何通过 Mermaid 在 Markdown 内部使用纯文本代码渲染出流程图、时序图、甘特图等技术文档架构图表。"
+  title: Markdown Mermaid 图表建模与工作流绘制
+  summary: 说明如何通过 Mermaid 在 Markdown 内部使用纯文本代码渲染出流程图、时序图、甘特图等技术文档架构图表。
   tags:
     - MARKUP
     - MARKDOWN
     - Mermaid
     - Modeling
   image:
-    src: "https://images.unsplash.com/photo-1618401471353-b98aedd07871?w=800&auto=format&fit=crop"
-    text:
-      content: "MARKDOWN | MERMAID"
-      position: "bottomRight"
+    src: https://images.unsplash.com/photo-1618401471353-b98aedd07871?w=800&auto=format&fit=crop
     brightness: 0.75
     scale: 1.08
+    badge:
+      text: MARKDOWN | MERMAID
+      position: bottom-right
+    hover:
+      scale: 1.14
+      brightness: 0.9
+      rotate: 0
+      blur: 0px

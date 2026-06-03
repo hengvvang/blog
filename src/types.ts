@@ -1,17 +1,28 @@
 export interface CoverTextConfig {
   content?: string;
-  position?: 'topLeft' | 'bottomLeft' | 'center' | 'bottomRight' | 'topRight';
+  text?: string;
+  position?: 'topLeft' | 'bottomLeft' | 'center' | 'bottomRight' | 'topRight' | 'top-left' | 'bottom-left' | 'bottom-right' | 'top-right';
   color?: string;
   size?: string;
 }
 
+export interface CoverImageHoverConfig {
+  scale?: number;
+  brightness?: number;
+  rotate?: number;
+  blur?: string | number;
+}
+
 export interface CoverImageConfig {
   src?: string;
+  image?: string; // legacy support
   color?: string;
   brightness?: number;
   blur?: number;
   scale?: number;
   text?: CoverTextConfig;
+  badge?: CoverTextConfig;
+  hover?: CoverImageHoverConfig;
 }
 
 export interface CoverConfig {

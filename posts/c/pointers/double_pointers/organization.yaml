@@ -5,17 +5,26 @@ category: lang
 subcategory: c
 subtopic: pointers
 timeline:
-  publishTime: "2026-05-30 11:00"
-time:
-  lastUpdatedTime: "2026-05-31 11:00"
+  publishTime: 2026-05-30 11:00
+  lastUpdatedTime: 2026-05-31 11:00
 cover:
-  title: "C语言双指针高级操作与内存管理"
-  summary: "分析二级指针的多重间接寻址原理，探讨其在动态分配多维数组、修改传入指针参数、链表操作，以及跨层数据共享时的作用与底层机制。"
-  tags: ["C", "Pointers", "Double Pointers", "Memory", "Low-Level"]
+  title: C语言双指针高级操作与内存管理
+  summary: 分析二级指针的多重间接寻址原理，探讨其在动态分配多维数组、修改传入指针参数、链表操作，以及跨层数据共享时的作用与底层机制。
+  tags:
+    - C
+    - Pointers
+    - Double Pointers
+    - Memory
+    - Low-Level
   image:
-    src: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop"
-    text:
-      content: "C | POINTERS"
-      position: "bottomRight"
+    src: https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop
     brightness: 0.75
     scale: 1.08
+    badge:
+      text: C | POINTERS
+      position: bottom-right
+    hover:
+      scale: 1.14
+      brightness: 0.9
+      rotate: 0
+      blur: 0px
