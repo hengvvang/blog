@@ -78,7 +78,7 @@ export function renderCoverHTML(cover: Article['cover'], categoryColor: string, 
     const posStyle = POSITION_MAP[badgePos] || POSITION_MAP.center;
     const txtColor = coverBadge.color || '#ffffff';
     const txtSize = coverBadge.size || defaultTextSize;
-    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: ${txtSize}; font-weight: 600; color: ${txtColor}; text-shadow: 0 2px 4px rgba(0,0,0,0.4); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${badgeText}</span>`;
+    coverContentHTML = `<span style="position: absolute; ${posStyle} font-size: ${txtSize}; font-weight: 700; letter-spacing: 0.05em; color: ${txtColor}; text-shadow: 0 2px 4px rgba(0,0,0,0.4); z-index: 2; width: 85%; box-sizing: border-box; pointer-events: none;">${badgeText}</span>`;
   }
   
   return `
@@ -119,7 +119,7 @@ export function renderFeaturedCardHTML(art: Article, categoryColor: string): str
           <span class="featured-date" style="font-size: 12px; color: var(--text-light);">${getDisplayTime(art)}</span>
         </div>
         <div class="featured-cover" style="position: relative; overflow: hidden; height: 160px; border-radius: 4px;">
-          ${renderCoverHTML(art.cover, categoryColor, '14px')}
+          ${renderCoverHTML(art.cover, categoryColor, '11px')}
         </div>
         <div class="featured-info" style="padding: 0; display: flex; flex-direction: column; gap: 6px;">
           <h4 class="featured-title" style="margin: 0; font-size: 17px; font-weight: 600; line-height: 1.4; color: var(--text-dark);">${art.title}</h4>
@@ -148,7 +148,7 @@ export function renderListCardHTML(art: Article, categoryColor: string): string 
     <div class="card toolchain-list-card" style="width: 100%; align-self: start; ${scaleStyle}" data-action="view-article" data-id="${art.id}">
       <div class="card-cover-wrapper" style="width: 100%; height: auto; display: flex; gap: 24px;">
         <div class="list-card-cover" style="position: relative; overflow: hidden; width: 210px; height: 135px; border-radius: 4px; flex-shrink: 0;">
-          ${renderCoverHTML(art.cover, categoryColor, '14px')}
+          ${renderCoverHTML(art.cover, categoryColor, '11px')}
         </div>
         <div class="list-card-info" style="padding: 0; flex-grow: 1;">
           <div class="list-card-header">
@@ -182,7 +182,7 @@ export function renderRelatedCardHTML(rel: Article): string {
       <div class="card-cover-wrapper" style="border: none;">
         <div class="sidebar-item-inner">
           <div class="sidebar-thumb" style="position: relative; overflow: hidden; width: 140px; height: 70px; border-radius: 4px;">
-            ${renderCoverHTML(rel.cover, getCategoryColor(rel.category), '10px')}
+            ${renderCoverHTML(rel.cover, getCategoryColor(rel.category), '8px')}
           </div>
           <div class="sidebar-item-info">
             <p class="sidebar-item-title">${rel.title}</p>
