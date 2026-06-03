@@ -1525,7 +1525,7 @@ body {
   justify-content: flex-end;
 }
 .toolchain-horizontal-card:hover .card-content {
-  width: 44px;
+  width: 36px;
   height: auto;
 }
 
@@ -1535,7 +1535,7 @@ body {
     width: 25% !important;
   }
   .toolchain-horizontal-card:hover {
-    width: calc(25% + 44px) !important;
+    width: calc(25% + 36px) !important;
   }
   .toolchain-horizontal-card .card-cover-wrapper {
     flex: 1 !important;
@@ -1552,23 +1552,36 @@ body {
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: flex-end;
+  align-items: flex-end; /* 恢复为底对齐，位置保持相对不变 */
   justify-content: flex-end;
 }
 .toolchain-horizontal-card .card-btn {
-  height: 65%;
-  width: 36px;
+  height: 70%;
+  width: 26px; /* 统一再粗一点 */
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+.toolchain-horizontal-card .card-btn img {
+  left: 0 !important; /* 居中对齐 */
+}
 
 .toolchain-horizontal-card { padding: 12px 12px 12px 24px; }
 
-/* 扩大下方列表卡片的右下角按钮为原来的3倍宽 */
+.toolchain-list-card:hover .card-content {
+  height: 42px; /* 调大一点高度，使上下间距稍微大一点点 */
+}
+
+.toolchain-list-section .card-btn-container {
+  display: flex;
+  align-items: center; /* 垂直居中，确保指示块上下间距保持一致 */
+  padding-top: 0;
+  height: 100%;
+}
 .toolchain-list-section .card-btn {
-  padding: 0 54px; 
+  height: 28px; /* 统一再粗一点 */
+  padding: 0 76px; /* 长一点 */
 }
 
 /* 扩大文章详情页右侧悬浮卡的进入按钮为原来的2倍宽 */
