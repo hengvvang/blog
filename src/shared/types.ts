@@ -1,7 +1,6 @@
 export interface CoverTextConfig {
-  content?: string;
   text?: string;
-  position?: 'topLeft' | 'bottomLeft' | 'center' | 'bottomRight' | 'topRight' | 'top-left' | 'bottom-left' | 'bottom-right' | 'top-right';
+  position?: 'top-left' | 'bottom-left' | 'center' | 'bottom-right' | 'top-right';
   color?: string;
   size?: string;
 }
@@ -15,12 +14,10 @@ export interface CoverImageHoverConfig {
 
 export interface CoverImageConfig {
   src?: string;
-  image?: string; // legacy support
   color?: string;
   brightness?: number;
   blur?: number;
   scale?: number;
-  text?: CoverTextConfig;
   badge?: CoverTextConfig;
   hover?: CoverImageHoverConfig;
 }
@@ -57,4 +54,15 @@ export interface ArticleContent {
   tags: string[];
   lastUpdated: string;
   cover?: CoverConfig;
+}
+
+export interface TaxonomyNode {
+  key: string;
+  latestTime: string;
+  subcategories?: TaxonomyNode[];
+  subtopics?: TaxonomyNode[];
+}
+
+export interface Taxonomy {
+  categories: TaxonomyNode[];
 }

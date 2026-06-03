@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "A simple blog using bun, ts, html and css",
   "scripts": {
-    "dev": "bun run server.ts",
-    "build": "bun build ./src/main.ts --outdir ./public && bun run ./build-static.ts",
+    "dev": "bun run src/backend/server.ts",
+    "build": "bun build ./src/frontend/main.ts --outdir ./public && bun run ./src/cli/build.ts",
     "deploy": "wrangler deploy",
     "preview": "wrangler dev"
   },

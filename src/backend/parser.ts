@@ -2,21 +2,10 @@ import { readdir, stat } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join, relative, dirname } from "node:path";
 import { parse as parseYaml } from "yaml";
-import { CoverConfig } from "../types";
+import { CoverConfig, Article } from "../shared/types";
 
-export interface ArticleMetadata {
-  id: number;
-  title: string;
-  category: string;
-  subcategory?: string;
-  subtopic?: string;
-  contentSnippet: string;
-  publishTime: string;
-  lastUpdatedTime?: string;
-  sortTime: string;
+export interface ArticleMetadata extends Article {
   filePath: string;
-  cover?: CoverConfig;
-  path: string;
   bookSrc?: string;
 }
 
@@ -140,23 +129,26 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
       throw new Error(`Missing timeline.publishTime in ${yamlFile}`);
     }
     
-    // Support lastUpdatedTime in timeline (new) or time (legacy)
-    const lastUpdatedTime = timeline.lastUpdatedTime 
-      ? String(timeline.lastUpdatedTime).trim() 
-      : (meta.time?.lastUpdatedTime ? String(meta.time.lastUpdatedTime).trim() : "");
+    // Support lastUpdatedTime strictly under timeline
+    const lastUpdatedTime = timeline.lastUpdatedTime ? String(timeline.lastUpdatedTime).trim() : "";
     const sortTime = lastUpdatedTime || publishTime;
     
     const coverMeta = meta.cover || {};
     const title = coverMeta.title || "";
     const snippet = coverMeta.summary || "";
     
-    let cover: any = undefined;
+    let cover: CoverConfig | undefined = undefined;
     if (coverMeta.image) {
       const imgConfig = coverMeta.image;
       cover = {
         image: {
-          ...imgConfig,
-          src: imgConfig.src || imgConfig.image
+          src: imgConfig.src,
+          color: imgConfig.color,
+          brightness: imgConfig.brightness,
+          blur: imgConfig.blur,
+          scale: imgConfig.scale,
+          badge: imgConfig.badge,
+          hover: imgConfig.hover
         }
       };
     }

@@ -1,105 +1,6 @@
-import { SIMPLE_ICONS } from "./icons-data";
+import { getCategoryColor, getKeywordIcon, ICONS, SINGLE_ICON_CATEGORIES } from "./theme";
+import { DEFAULT_ICON } from "../../shared/constants";
 
-// Date helpers
-export function formatDate(dateStr: string): string {
-  const parts = dateStr.split(' ')[0].split('-');
-  if (parts.length === 3) {
-    return `${parts[0]}年${parts[1]}月${parts[2]}日`;
-  }
-  return dateStr;
-}
-
-export function formatEnglishDate(dateStr: string): string {
-  const parts = dateStr.split(' ');
-  const [year, monthStr, dayStr] = parts[0].split('-');
-  if (!year || !monthStr || !dayStr) return `<span style="font-weight: 600; color: var(--text-dark, #333);">${dateStr}</span>`;
-  
-  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  const month = monthNames[parseInt(monthStr, 10) - 1];
-  const day = parseInt(dayStr, 10);
-  
-  const dateFormatted = `<span style="font-weight: 600; color: var(--text-dark, #333);">${month} ${day}, ${year}</span>`;
-  
-  if (parts[1]) {
-    const [hrStr, minStr] = parts[1].split(':');
-    let hour = parseInt(hrStr, 10);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    hour = hour % 12 || 12;
-    return `${dateFormatted} at <span style="font-weight: 600; color: var(--text-dark, #333);">${hour}:${minStr} ${ampm}</span>`;
-  }
-  
-  return dateFormatted;
-}
-
-// Color and Theme helpers
-const categoryColors: Record<string, string> = {};
-
-export function getCategoryColor(cat: string): string {
-  if (!categoryColors[cat]) {
-    const h = Math.floor(Math.random() * 360);
-    const s = Math.floor(Math.random() * 20) + 40; // 40% - 60% saturation
-    const l = Math.floor(Math.random() * 15) + 35; // 35% - 50% lightness
-    categoryColors[cat] = `hsl(${h}, ${s}%, ${l}%)`;
-  }
-  return categoryColors[cat];
-}
-
-export const SINGLE_ICON_CATEGORIES: string[] = [];
-
-export const ICONS: Record<string, string> = {
-  rtos: SIMPLE_ICONS["cat:rtos"] || "",
-  mcu: SIMPLE_ICONS["cat:mcu"] || "",
-  markup: SIMPLE_ICONS["cat:markup"] || "",
-  toolchain: SIMPLE_ICONS["cat:toolchain"] || ""
-};
-
-export const DEFAULT_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
-
-export const SUBCAT_DISPLAY_NAMES: Record<string, string> = {
-  c: 'C',
-  rust: 'Rust',
-  python: 'Python',
-  freertos: 'FreeRTOS',
-  'rt-thread': 'RT-Thread',
-  zephyr: 'Zephyr',
-  ucos: 'uCOS',
-  threadx: 'ThreadX',
-  stm32: 'STM32',
-  esp32: 'ESP32',
-  gd32: 'GD32',
-  msp430: 'MSP430',
-  avr: 'AVR',
-  markdown: 'Markdown',
-  html: 'HTML',
-  css: 'CSS',
-  latex: 'LaTeX',
-  xml: 'XML',
-  cmake: 'CMake',
-  gcc: 'GCC',
-  gdb: 'GDB',
-  git: 'Git',
-  clang: 'Clang',
-  llvm: 'LLVM'
-};
-
-export function formatSubcategory(sub: string): string {
-  const key = sub.trim().toLowerCase();
-  if (SUBCAT_DISPLAY_NAMES[key]) {
-    return SUBCAT_DISPLAY_NAMES[key];
-  }
-  if (key.length === 0) return '';
-  return key.charAt(0).toUpperCase() + key.slice(1);
-}
-
-export function getKeywordIcon(keyword: string): string {
-  const key = keyword.toLowerCase();
-  if (key === 'c' || key === 'rust' || key === 'python') {
-    return SIMPLE_ICONS[`cat:${key}`] || DEFAULT_ICON;
-  }
-  return SIMPLE_ICONS[key] || DEFAULT_ICON;
-}
-
-// Slideshow state
 export const slideshowTimers: Record<string, any> = {};
 export const slideDirs = [
   { in: 'translate(-50%, 150%)', out: 'translate(-50%, -150%)' },
@@ -107,6 +8,7 @@ export const slideDirs = [
   { in: 'translate(150%, -50%)', out: 'translate(-150%, -50%)' },
   { in: 'translate(-150%, -50%)', out: 'translate(150%, -50%)' }
 ];
+
 export const categoryDirections: Record<string, typeof slideDirs[0]> = {};
 export const categoryOrders: Record<string, number[]> = {};
 
@@ -240,8 +142,4 @@ export function stopAllSlideshows(): void {
     clearInterval(slideshowTimers[cat]);
     delete slideshowTimers[cat];
   });
-}
-
-export function getCategoryIcon(cat: string): string {
-  return ICONS[cat] || DEFAULT_ICON;
 }

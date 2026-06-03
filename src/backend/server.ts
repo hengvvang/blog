@@ -1,6 +1,6 @@
 import { serve } from "bun";
-import { loadArticles } from "./src/backend/parser";
-import { compileArticleToContent } from "./src/backend/compiler";
+import { loadArticles } from "./parser";
+import { compileArticleToContent } from "./compiler";
 
 const server = serve({
   port: 9191,
@@ -20,7 +20,7 @@ const server = serve({
     // On-the-fly bundle main.ts for the browser
     if (path === "/main.js") {
       const build = await Bun.build({
-        entrypoints: ["./src/main.ts"],
+        entrypoints: ["./src/frontend/main.ts"],
         minify: true,
       });
       

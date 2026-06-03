@@ -1,6 +1,6 @@
 import { marked } from "marked";
 import { parseFrontMatter, calculateWordCount, parseTags, ArticleMetadata } from "./parser";
-import { ArticleContent } from "../types";
+import { ArticleContent } from "../shared/types";
 
 export async function compileArticleToContent(article: ArticleMetadata): Promise<ArticleContent> {
   const content = await Bun.file(article.filePath).text();

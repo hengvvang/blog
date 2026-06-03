@@ -22,9 +22,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     const taxonomy = await taxonomyRes.json();
     
     // Find matching article based on pathname (normalize both to support Cloudflare Pretty URLs)
-    const pathname = window.location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '');
+    const pathname = window.location.pathname.replace(/\\index\\.html$/, '').replace(/\\$/, '');
     const article = articles.find(a => {
-      const cleanPath = a.path.replace(/\/index\.html$/, '').replace(/\/$/, '');
+      const cleanPath = a.path.replace(/\\index\\.html$/, '').replace(/\\$/, '');
       return pathname === cleanPath || pathname.endsWith(cleanPath) || pathname.includes(cleanPath);
     });
     if (!article) return; // Not a registered article book page
@@ -50,15 +50,15 @@ window.addEventListener('DOMContentLoaded', async () => {
     const categories = (taxonomy.categories || []).map(cat => cat.key);
     const categoryDropdownHTML = categories.map(cat => {
       const activeClass = cat === category ? 'active-link' : '';
-      return `<a href="/#/category/${cat}?subcat=all&subtopic=all" target="_parent" class="${activeClass}">${cat.toUpperCase()}</a>`;
+      return `<a href="/#/category/\${cat}?subcat=all&subtopic=all" target="_parent" class="\${activeClass}">\${cat.toUpperCase()}</a>`;
     }).join('');
     
     html += `
-      ${separatorSVG}
+      \${separatorSVG}
       <div class="breadcrumb-item dropdown-trigger">
-        <span class="segment-label">${category.toUpperCase()}</span>
-        ${arrowSVG}
-        <div class="breadcrumb-dropdown">${categoryDropdownHTML}</div>
+        <span class="segment-label">\${category.toUpperCase()}</span>
+        \${arrowSVG}
+        <div class="breadcrumb-dropdown">\${categoryDropdownHTML}</div>
       </div>
     `;
     
@@ -68,15 +68,15 @@ window.addEventListener('DOMContentLoaded', async () => {
       const subcategories = (categoryEntry?.subcategories || []).map(sub => sub.key);
       const subcatDropdownHTML = subcategories.map(sub => {
         const activeClass = sub === subcat ? 'active-link' : '';
-        return `<a href="/#/category/${category}?subcat=${sub}&subtopic=all" target="_parent" class="${activeClass}">${sub.toUpperCase()}</a>`;
+        return `<a href="/#/category/\${category}?subcat=\${sub}&subtopic=all" target="_parent" class="\${activeClass}">\${sub.toUpperCase()}</a>`;
       }).join('');
       
       html += `
-        ${separatorSVG}
+        \${separatorSVG}
         <div class="breadcrumb-item dropdown-trigger">
-          <span class="segment-label">${subcat.toUpperCase()}</span>
-          ${arrowSVG}
-          <div class="breadcrumb-dropdown">${subcatDropdownHTML}</div>
+          <span class="segment-label">\${subcat.toUpperCase()}</span>
+          \${arrowSVG}
+          <div class="breadcrumb-dropdown">\${subcatDropdownHTML}</div>
         </div>
       `;
     }
@@ -88,16 +88,16 @@ window.addEventListener('DOMContentLoaded', async () => {
       const subtopics = (subcatEntry?.subtopics || []).map(topic => topic.key);
       const subtopicDropdownHTML = subtopics.map(topic => {
         const activeClass = topic === subtopic ? 'active-link' : '';
-        return `<a href="/#/category/${category}?subcat=${subcat}&subtopic=${topic}" target="_parent" class="${activeClass}">${topic.toUpperCase()}</a>`;
+        return `<a href="/#/category/\${category}?subcat=\${subcat}&subtopic=\${topic}" target="_parent" class="\${activeClass}">\${topic.toUpperCase()}</a>`;
       }).join('');
       
       if (subtopics.length > 0) {
         html += `
-          ${separatorSVG}
+          \${separatorSVG}
           <div class="breadcrumb-item dropdown-trigger">
-            <span class="segment-label">${subtopic.toUpperCase()}</span>
-            ${arrowSVG}
-            <div class="breadcrumb-dropdown">${subtopicDropdownHTML}</div>
+            <span class="segment-label">\${subtopic.toUpperCase()}</span>
+            \${arrowSVG}
+            <div class="breadcrumb-dropdown">\${subtopicDropdownHTML}</div>
           </div>
         `;
       }
