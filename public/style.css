@@ -1314,9 +1314,16 @@ body {
 
 /* 3. News List cards */
 .toolchain-list-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .toolchain-list-section {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
 }
 
 
