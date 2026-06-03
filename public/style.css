@@ -9,8 +9,8 @@
   --btn-hover: #0f172a; /* 深色板岩灰悬浮状态 */
   
   /* Refactored Design Tokens */
-  --border-color: #e2e8f0; /* 轻薄明朗的冷灰色边框线，克制且干净 */
-  --border-light: #f1f5f9;
+  --border-color: #cbd5e1; /* 稍微加深，让边框与底色更具质感与清晰度 */
+  --border-light: #e2e8f0;
   --card-bg: #ffffff; /* 简约白色卡片底色 */
   --card-bg-hover: #e2e8f0; /* 简约冷灰悬浮底色，透明度稍高 */
   --home-hover-bg: #f1f5f9; /* 首页悬浮样式，透明度更高 */
@@ -21,7 +21,7 @@
   --card-width: 464px;
   --card-inner-width: 438px;
   --card-padding-x: 13px;
-  --card-padding-y: 7px;
+  --card-padding-y: 12px; /* 增加上下衬距，优化卡片之间的相对布局 */
   --sidebar-width: 355px;
   --main-layout-gap: 25px;
   
@@ -141,9 +141,9 @@ body {
   z-index: 2; /* 确保上方不会被掩盖 */
   overflow: hidden;
   background-color: var(--white); /* 更适合大段文字阅读的底色 */
-  padding: 16px 20px;
+  padding: 20px 24px; /* 增加内衬间距，使布局更大气 */
   box-sizing: border-box;
-  border: 1px solid var(--border-light);
+  border: 1.5px solid rgba(15, 23, 42, 0.04); /* 边框使用超透明 Slate-900，提供极其轻盈的视觉感 */
 }
 
 .card-cover-text {
@@ -390,7 +390,7 @@ body {
   width: 100%;
   background: #ffffff;
   border-radius: 0; /* rectangular */
-  border: 1px solid var(--border-color); /* rectangular border */
+  border: 1.5px solid rgba(15, 23, 42, 0.04); /* rectangular border */
   border-top: 4px solid var(--btn-bg);
   box-shadow: 0 3px 7px rgba(0,0,0,0.02);
   padding: 79px 90px 115px; /* Spacing as specified */
@@ -1294,7 +1294,7 @@ body {
 
 .toolchain-tab {
   background: transparent;
-  border: 1px solid var(--border-color);
+  border: 1.5px solid var(--border-color); /* 边框加粗至 1.5px */
   border-radius: 20px;
   padding: 6px 20px;
   font-family: 'Outfit', sans-serif;
@@ -1383,13 +1383,15 @@ body {
 }
 
 .list-card-badge {
-  background-color: var(--btn-bg);
-  color: #ffffff;
-  padding: 3px 10px;
-  border-radius: 4px;
-  font-size: 11px;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  letter-spacing: 0.03em;
 }
 
 .list-card-date {
@@ -1401,7 +1403,7 @@ body {
   font-size: 17px;
   font-weight: 600;
   color: var(--text-dark);
-  margin: 6px 0;
+  margin: 8px 0 6px 0; /* 优化间距，使上下排版更具呼吸感 */
   transition: color 0.2s ease;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1414,7 +1416,7 @@ body {
 
 .list-card-snippet {
   font-size: 13px;
-  color: #666;
+  color: var(--text-light);
   line-height: 1.6;
   margin: 0;
   display: -webkit-box;
@@ -1528,7 +1530,6 @@ body {
   width: 36px;
   height: auto;
 }
-
 @media (min-width: 769px) {
   .toolchain-horizontal-card {
     flex: 0 0 auto !important;
@@ -1536,6 +1537,24 @@ body {
   }
   .toolchain-horizontal-card:hover {
     width: calc(25% + 36px) !important;
+  }
+  .toolchain-featured-section[data-count="1"] .toolchain-horizontal-card {
+    width: 100% !important;
+  }
+  .toolchain-featured-section[data-count="1"] .toolchain-horizontal-card:hover {
+    width: 100% !important;
+  }
+  .toolchain-featured-section[data-count="2"] .toolchain-horizontal-card {
+    width: 50% !important;
+  }
+  .toolchain-featured-section[data-count="2"] .toolchain-horizontal-card:hover {
+    width: calc(50% + 36px) !important;
+  }
+  .toolchain-featured-section[data-count="3"] .toolchain-horizontal-card {
+    width: 33.33% !important;
+  }
+  .toolchain-featured-section[data-count="3"] .toolchain-horizontal-card:hover {
+    width: calc(33.33% + 36px) !important;
   }
   .toolchain-horizontal-card .card-cover-wrapper {
     flex: 1 !important;

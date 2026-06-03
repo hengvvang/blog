@@ -97,14 +97,14 @@ export function renderBadgeHTML(art: Article): string {
   const subcatStr = (art.subcategory || art.category).toUpperCase();
   if (art.subtopic) {
     return `
-      <span class="list-card-badge" style="display: inline-flex; align-items: center;">
-        <span style="color: #000000; font-weight: 700;">${subcatStr}</span>
-        <span style="color: #ffffff; margin: 0 6px; font-weight: 500; opacity: 0.85;">|</span>
-        <span style="color: #ffffff; font-weight: 700;">${art.subtopic.toUpperCase()}</span>
+      <span class="list-card-badge" style="display: inline-flex; align-items: center; background: transparent; padding: 0;">
+        <span style="color: var(--text-dark); font-weight: 700;">${subcatStr}</span>
+        <span style="color: var(--border-color); margin: 0 6px; font-weight: 500;">|</span>
+        <span style="color: var(--text-light); font-weight: 700;">${art.subtopic.toUpperCase()}</span>
       </span>
     `;
   }
-  return `<span class="list-card-badge">${subcatStr}</span>`;
+  return `<span class="list-card-badge" style="background: transparent; padding: 0; color: var(--text-dark); font-weight: 700;">${subcatStr}</span>`;
 }
 
 // Featured article card (horizontal slide-out)
@@ -113,17 +113,17 @@ export function renderFeaturedCardHTML(art: Article, categoryColor: string): str
 
   return `
     <div class="card toolchain-horizontal-card" data-action="view-article" data-id="${art.id}" ${scaleVar}>
-      <div class="card-cover-wrapper" style="height: auto; display: flex; flex-direction: column; gap: 6px; padding: 8px 12px 10px 12px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 2px; line-height: 1.2;">
+      <div class="card-cover-wrapper" style="height: auto; display: flex; flex-direction: column; gap: 14px; padding: 22px 24px 24px 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; line-height: 1.2;">
           ${renderBadgeHTML(art)}
-          <span class="featured-date" style="font-size: 11px; color: var(--text-light, #888);">${getDisplayTime(art)}</span>
+          <span class="featured-date" style="font-size: 12px; color: var(--text-light);">${getDisplayTime(art)}</span>
         </div>
-        <div class="featured-cover" style="position: relative; overflow: hidden; height: 110px; border-radius: 4px;">
+        <div class="featured-cover" style="position: relative; overflow: hidden; height: 160px; border-radius: 4px;">
           ${renderCoverHTML(art.cover, categoryColor, '14px')}
         </div>
-        <div class="featured-info" style="padding: 0;">
-          <h4 class="featured-title" style="margin: 2px 0; font-size: 14px;">${art.title}</h4>
-          <p class="featured-snippet" style="font-size: 11px; margin: 0; -webkit-line-clamp: 1;">${art.contentSnippet}</p>
+        <div class="featured-info" style="padding: 0; display: flex; flex-direction: column; gap: 6px;">
+          <h4 class="featured-title" style="margin: 0; font-size: 17px; font-weight: 600; line-height: 1.4; color: var(--text-dark);">${art.title}</h4>
+          <p class="featured-snippet" style="font-size: 13px; color: var(--text-light); margin: 0; -webkit-line-clamp: 1; line-height: 1.5;">${art.contentSnippet}</p>
         </div>
       </div>
       <div class="card-content">
@@ -147,7 +147,7 @@ export function renderListCardHTML(art: Article, categoryColor: string): string 
   return `
     <div class="card toolchain-list-card" style="width: 100%; align-self: start; ${scaleStyle}" data-action="view-article" data-id="${art.id}">
       <div class="card-cover-wrapper" style="width: 100%; height: auto; display: flex; gap: 24px;">
-        <div class="list-card-cover" style="position: relative; overflow: hidden; width: 180px; height: 110px; border-radius: 4px; flex-shrink: 0;">
+        <div class="list-card-cover" style="position: relative; overflow: hidden; width: 210px; height: 135px; border-radius: 4px; flex-shrink: 0;">
           ${renderCoverHTML(art.cover, categoryColor, '14px')}
         </div>
         <div class="list-card-info" style="padding: 0; flex-grow: 1;">

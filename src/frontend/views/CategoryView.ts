@@ -76,7 +76,7 @@ export const CategoryView = {
     const visibleList = filteredArticles.slice(0, state.pageSize);
     
     const featuredHTML = featured.length > 0 
-      ? `<div class="toolchain-featured-section">` +
+      ? `<div class="toolchain-featured-section" data-count="${featured.length}">` +
           featured.map(art => renderFeaturedCardHTML(art, getCategoryColor(art.subcategory || state.currentCategory))).join('') +
         `</div>`
       : '';
