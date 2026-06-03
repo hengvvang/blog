@@ -4,6 +4,9 @@ description = "In-depth guide to Python event loops, native coroutines, asyncio 
 src = "src"
 title = "Python asyncio"
 
+[build]
+build-dir = "../../../../public/books/python/concurrency/asyncio_basics.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

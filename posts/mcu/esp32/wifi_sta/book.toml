@@ -4,6 +4,9 @@ title = "ESP32 Wi-Fi STA Connection & State Machine"
 authors = ["hengvvang"]
 description = "Deep dive into Wi-Fi stack configurations, station mode, and event loop state machine handlers under ESP-IDF."
 
+[build]
+build-dir = "../../../../public/books/mcu/esp32/wifi_sta.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

@@ -5,6 +5,9 @@ description = "Low-level exploration of ARM Cortex-M thread architecture, PendSV
 language = "zh-CN"
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/rtos/freertos/context_switch.html"
+
 [output.html]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

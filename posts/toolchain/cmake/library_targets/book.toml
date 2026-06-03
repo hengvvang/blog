@@ -5,6 +5,9 @@ description = "Deep dive into target linking, visibility rules, static vs dynami
 language = "zh-CN"
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/toolchain/cmake/library_targets.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

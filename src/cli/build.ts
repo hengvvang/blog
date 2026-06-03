@@ -447,6 +447,30 @@ async function buildStatic() {
       let bookToml = await safeReadFile(bookTomlPath);
       let updated = false;
       
+      // Calculate relative destination path and configure build-dir dynamically
+      const relBuildDir = relative(bookSrc, destDir).replace(/\\/g, "/");
+      
+      // Ensure [output.html] section exists first so we have a reliable insertion point
+      if (!bookToml.includes("[output.html]")) {
+        bookToml += "\n\n[output.html]\n";
+        updated = true;
+      }
+
+      if (!bookToml.includes("[build]")) {
+        bookToml = bookToml.replace("[output.html]", `[build]\nbuild-dir = "${relBuildDir}"\n\n[output.html]`);
+        updated = true;
+      } else {
+        const buildDirPattern = /build-dir\s*=\s*"[^"]+"\r?\n?/g;
+        if (!bookToml.includes(`build-dir = "${relBuildDir}"`)) {
+          if (buildDirPattern.test(bookToml)) {
+            bookToml = bookToml.replace(buildDirPattern, `build-dir = "${relBuildDir}"\n`);
+          } else {
+            bookToml = bookToml.replace("[build]", `[build]\nbuild-dir = "${relBuildDir}"`);
+          }
+          updated = true;
+        }
+      }
+
       // Dynamically set src directory config based on physical folder structure
       const hasSrcFolder = existsSync(join(bookSrc, "src"));
       if (hasSrcFolder) {
@@ -464,12 +488,6 @@ async function buildStatic() {
           }
           updated = true;
         }
-      }
-      
-      // Ensure [output.html] section exists
-      if (!bookToml.includes("[output.html]")) {
-        bookToml += "\n\n[output.html]\n";
-        updated = true;
       }
       
       // Remove theme configuration if it exists
@@ -514,6 +532,7 @@ async function buildStatic() {
     await rm(join(bookSrc, "custom-mdbook.js"), { force: true });
     await rm(join(bookSrc, "theme"), { recursive: true, force: true });
     await rm(join(bookSrc, "__shared_theme"), { recursive: true, force: true });
+    await rm(join(bookSrc, "book"), { recursive: true, force: true });
 
     console.log(`Compiling mdbook: "${bookSrc}" -> "${destDir}"`);
     try {

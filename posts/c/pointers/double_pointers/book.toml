@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Deep dive into pointer-to-pointer mechanisms, parameter modification, and dynamic 2D array management."
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/c/pointers/double_pointers.html"
+
 [output.html]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

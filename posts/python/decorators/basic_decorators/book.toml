@@ -5,6 +5,9 @@ description = "Fundamentals of closures, lexical scopes, standard @ syntax wrapp
 src = "src"
 language = "zh-CN"
 
+[build]
+build-dir = "../../../../public/books/python/decorators/basic_decorators.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

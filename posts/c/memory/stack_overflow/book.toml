@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Deep dive into calling conventions, function frames, stack overflow vulnerabilities, and defense measures."
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/c/memory/stack_overflow.html"
+
 [output.html]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

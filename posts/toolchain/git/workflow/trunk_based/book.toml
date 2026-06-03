@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Exploration of Trunk-Based continuous integration, Feature Flags decoupling, branch-by-abstraction, and deployment pipelines."
 language = "zh-CN"
 
+[build]
+build-dir = "../../../../../public/books/toolchain/git/workflow/trunk_based.html"
+
 [output.html]
 additional-js = ["../../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../../__shared_theme/custom-mdbook.css"]

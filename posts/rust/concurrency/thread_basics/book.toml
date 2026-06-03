@@ -5,6 +5,9 @@ description = "Exploration of OS thread creation, scoped tasks, Send/Sync proper
 language = "zh-CN"
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/rust/concurrency/thread_basics.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

@@ -4,6 +4,9 @@ title = "Rust Tokio Async Runtime & Scheduling"
 authors = ["hengvvang"]
 description = "Deep dive into Tokio runtime thread scheduling, work-stealing queues, cooperative tasks, futures execution, and synchronization."
 
+[build]
+build-dir = "../../../../public/books/rust/concurrency/async_tokio.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Complete manual on monitoring thread stack watermarks, arming stack protectors (MPU/Canary), and debugging dynamic heap leaks."
 language = "zh-CN"
 
+[build]
+build-dir = "../../../../public/books/rtos/zephyr/thread_analyzer.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

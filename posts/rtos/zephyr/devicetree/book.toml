@@ -4,6 +4,9 @@ title = "Zephyr RTOS Devicetree Configuration Decoupling"
 authors = ["hengvvang"]
 description = "Exploration of Zephyr's Devicetree syntax, bindings matching, compile-time header macro generation, and C API access layers."
 
+[build]
+build-dir = "../../../../public/books/rtos/zephyr/devicetree.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

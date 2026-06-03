@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Analysis of GCC compilation optimization options, loop transformations, inlining barriers, and inline assembly constraints."
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/toolchain/gcc/compiler_optimization.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

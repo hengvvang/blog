@@ -4,6 +4,9 @@ title = "Markdown Mermaid Diagrams"
 authors = ["hengvvang"]
 description = "Complete manual on Mermaid diagram parsing, flowcharting, sequence flow modeling, state diagrams, and layout rendering."
 
+[build]
+build-dir = "../../../../public/books/markup/markdown/mermaid_diagrams.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

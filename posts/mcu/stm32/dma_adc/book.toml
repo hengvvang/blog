@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Deep dive into ADC sampling mechanisms, DMA peripheral integration, and multi-channel high-speed circular buffers."
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/mcu/stm32/dma_adc.html"
+
 [output.html]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

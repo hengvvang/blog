@@ -3,6 +3,9 @@ title = "Embedded C Memory Layout & Alignment"
 authors = ["hengvvang"]
 description = "Production-grade guide on memory layout and alignment in embedded systems."
 
+[build]
+build-dir = "../../../../public/books/c/memory/memory_layout.html"
+
 [output.html]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

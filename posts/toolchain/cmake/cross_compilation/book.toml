@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Deep dive into cross compilation toolchain files, MCU targets, and bare-metal compilation with CMake."
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/toolchain/cmake/cross_compilation.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

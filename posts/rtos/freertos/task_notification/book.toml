@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Analysis of TCB-embedded direct task notifications, API operations, and performance comparison to semaphores."
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/rtos/freertos/task_notification.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

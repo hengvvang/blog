@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Detailed guide to long-lived branch topologies, feature/release/hotfix branching policies, and pull request loops."
 src = "src"
 
+[build]
+build-dir = "../../../../../public/books/toolchain/git/workflow/git_flow.html"
+
 [output.html]
 additional-js = ["../../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../../__shared_theme/custom-mdbook.css"]

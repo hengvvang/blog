@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Introduction to Rust lifetimes, reference scopes, borrow checker rules, struct lifetime annotation, and lifetime elision rules."
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/rust/lifetime/lifetime_basics.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

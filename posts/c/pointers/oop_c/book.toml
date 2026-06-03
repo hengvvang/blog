@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Deep dive into function pointers, callback architectures, and OOP design patterns in C."
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/c/pointers/oop_c.html"
+
 [output.html]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

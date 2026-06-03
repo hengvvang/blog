@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Manual on merging history, cherry-picking replays, squash/fixup workflows, splitting commits, and conflict resolution."
 src = "src"
 
+[build]
+build-dir = "../../../../../public/books/toolchain/git/rebase/interactive.html"
+
 [output.html]
 additional-js = ["../../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../../__shared_theme/custom-mdbook.css"]

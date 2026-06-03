@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Deep dive into dynamic memory allocation, heap leaks, and runtime analysis with Valgrind."
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/c/memory/memory_leaks.html"
+
 [output.html]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

@@ -5,6 +5,9 @@ description = "Exploration of FreeRTOS Queue_t buffer control structures, by-val
 src = "src"
 language = "zh-CN"
 
+[build]
+build-dir = "../../../../public/books/rtos/freertos/queue_communication.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

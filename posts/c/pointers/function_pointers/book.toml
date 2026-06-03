@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Deep dive into function pointer syntax, indirect branch assembly translation, branch prediction, and state machines."
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/c/pointers/function_pointers.html"
+
 [output.html]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Comprehensive guide to I2C physical timing, GPIO simulation, hardware deadlock bugs, and robust driver design."
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/mcu/stm32/i2c_driver.html"
+
 [output.html]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

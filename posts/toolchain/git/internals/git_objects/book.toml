@@ -3,6 +3,9 @@ title = "Git Object Model"
 authors = ["hengvvang"]
 description = "Deep dive into Git repository directory architecture, plumbing vs porcelain, content addressable files, and SHA-1 serialization."
 
+[build]
+build-dir = "../../../../../public/books/toolchain/git/internals/git_objects.html"
+
 [output.html]
 additional-js = ["../../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../../__shared_theme/custom-mdbook.css"]

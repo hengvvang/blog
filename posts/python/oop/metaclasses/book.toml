@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Exploration of dynamic type construction, custom metaclass compilation, namespace configurations, and real-world validation frameworks."
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/python/oop/metaclasses.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

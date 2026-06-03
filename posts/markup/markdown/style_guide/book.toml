@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Manual on typography structures, lists formatting, table alignment, mdBook CSS style overrides, and accessibility."
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/markup/markdown/style_guide.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

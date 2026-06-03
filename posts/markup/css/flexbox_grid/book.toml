@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Comprehensive guide to Flexbox axes, alignment, Grid tracks, template areas, and responsive layouts without media queries."
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/markup/css/flexbox_grid.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

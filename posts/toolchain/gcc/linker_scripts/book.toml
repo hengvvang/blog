@@ -4,6 +4,9 @@ title = "Embedded Linker Scripts & Section Allocation"
 authors = ["hengvvang"]
 description = "Comprehensive guide to GNU ld linking scripts, MEMORY allocation blocks, sections layout, and loading symbols in C."
 
+[build]
+build-dir = "../../../../public/books/toolchain/gcc/linker_scripts.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

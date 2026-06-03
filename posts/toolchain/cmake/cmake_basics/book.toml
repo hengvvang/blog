@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Deep dive into CMake syntax, variables, directory layout management, and CI/CD integration."
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/toolchain/cmake/cmake_basics.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

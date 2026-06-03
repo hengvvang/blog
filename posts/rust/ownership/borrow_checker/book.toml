@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Exploration of Rust memory management, RAII, ownership moves, borrow checker rules, and the Polonius borrow checker engine."
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/rust/ownership/borrow_checker.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

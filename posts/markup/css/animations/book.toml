@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "In-depth guide to CSS transitions, keyframes, compositor execution, hardware acceleration, and micro-animations."
 language = "zh-CN"
 
+[build]
+build-dir = "../../../../public/books/markup/css/animations.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

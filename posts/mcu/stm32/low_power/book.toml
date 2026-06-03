@@ -4,6 +4,9 @@ authors = ["hengvvang"]
 description = "Systematic analysis of low power domains, GPIO leakage minimization, and sleep/stop modes configuration."
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/mcu/stm32/low_power.html"
+
 [output.html]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

@@ -5,6 +5,9 @@ description = "Exploration of closures, parameterized class-based decorators, me
 language = "zh-CN"
 src = "src"
 
+[build]
+build-dir = "../../../../public/books/python/decorators/advanced_decorators.html"
+
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]
