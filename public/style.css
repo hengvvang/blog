@@ -1572,11 +1572,11 @@ body {
   height: 100%;
   display: flex;
   align-items: flex-end; /* 恢复为底对齐，位置保持相对不变 */
-  justify-content: flex-end;
+  justify-content: center;
 }
 .toolchain-horizontal-card .card-btn {
   height: 60%;
-  width: 26px; /* 统一再粗一点 */
+  width: 22px; /* 统一再粗一点 */
   padding: 0;
   display: flex;
   align-items: center;
