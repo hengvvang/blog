@@ -1538,24 +1538,6 @@ body {
   .toolchain-horizontal-card:hover {
     width: calc(25% + 42px) !important;
   }
-  .toolchain-featured-section[data-count="1"] .toolchain-horizontal-card {
-    width: 100% !important;
-  }
-  .toolchain-featured-section[data-count="1"] .toolchain-horizontal-card:hover {
-    width: 100% !important;
-  }
-  .toolchain-featured-section[data-count="2"] .toolchain-horizontal-card {
-    width: 50% !important;
-  }
-  .toolchain-featured-section[data-count="2"] .toolchain-horizontal-card:hover {
-    width: calc(50% + 42px) !important;
-  }
-  .toolchain-featured-section[data-count="3"] .toolchain-horizontal-card {
-    width: 33.33% !important;
-  }
-  .toolchain-featured-section[data-count="3"] .toolchain-horizontal-card:hover {
-    width: calc(33.33% + 42px) !important;
-  }
   .toolchain-horizontal-card .card-cover-wrapper {
     flex: 1 !important;
     width: auto !important;
