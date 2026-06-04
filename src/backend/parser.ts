@@ -108,12 +108,13 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
       throw new Error(`Missing category or subcategory in ${yamlFile}`);
     }
     
-    // Respect book.src and book.path to decouple URL/logical path from physical disk path
+    // Respect book.src and book.target (formerly book.path) to decouple URL/logical path from physical disk path
     let path = "";
-    if (meta.book && meta.book.src && meta.book.path) {
+    const bookTarget = meta.book && (meta.book.target || meta.book.path);
+    if (meta.book && meta.book.src && bookTarget) {
       const prefix = relative(postsDir, meta.book.src).replace(/\\/g, "/");
       const cleanPrefix = prefix ? prefix + "/" : "";
-      path = `/books/${cleanPrefix}${meta.book.path}`;
+      path = `/books/${cleanPrefix}${bookTarget}`;
     } else {
       path = `/books/${bookFolder}/index.html`;
     }
