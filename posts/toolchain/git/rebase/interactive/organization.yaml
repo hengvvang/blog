@@ -1,6 +1,6 @@
 book:
   src: posts/toolchain
-  path: git/rebase/interactive.html
+  target: git/rebase/interactive.html
 category: toolchain
 subcategory: git
 subtopic: rebase

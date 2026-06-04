@@ -1,6 +1,6 @@
 book:
   src: posts/markup
-  path: markdown/frontmatter_guide.html
+  target: markdown/frontmatter_guide.html
 category: markup
 subcategory: markdown
 subtopic: others

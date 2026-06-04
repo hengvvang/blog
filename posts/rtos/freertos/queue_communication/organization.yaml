@@ -1,6 +1,6 @@
 book:
   src: posts/rtos
-  path: freertos/queue_communication.html
+  target: freertos/queue_communication.html
 category: rtos
 subcategory: freertos
 subtopic: others

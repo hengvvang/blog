@@ -1,6 +1,6 @@
 book:
   src: posts/python
-  path: oop/metaclasses.html
+  target: oop/metaclasses.html
 category: lang
 subcategory: python
 subtopic: oop

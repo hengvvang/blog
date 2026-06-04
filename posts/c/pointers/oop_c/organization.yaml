@@ -1,6 +1,6 @@
 book:
   src: posts/c
-  path: pointers/oop_c.html
+  target: pointers/oop_c.html
 category: lang
 subcategory: c
 subtopic: pointers

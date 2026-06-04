@@ -1,6 +1,6 @@
 book:
   src: posts/rust
-  path: lifetime/lifetime_basics.html
+  target: lifetime/lifetime_basics.html
 category: lang
 subcategory: rust
 subtopic: lifetime

@@ -1,6 +1,6 @@
 book:
   src: posts/toolchain
-  path: git/internals/git_objects.html
+  target: git/internals/git_objects.html
 category: toolchain
 subcategory: git
 subtopic: internals

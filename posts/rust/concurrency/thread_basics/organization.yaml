@@ -1,6 +1,6 @@
 book:
   src: posts/rust
-  path: concurrency/thread_basics.html
+  target: concurrency/thread_basics.html
 category: lang
 subcategory: rust
 subtopic: concurrency

@@ -1,6 +1,6 @@
 book:
   src: posts/markup
-  path: css/flexbox_grid.html
+  target: css/flexbox_grid.html
 category: markup
 subcategory: css
 subtopic: others

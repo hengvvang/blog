@@ -1,6 +1,6 @@
 book:
   src: posts/mcu
-  path: stm32/i2c_driver.html
+  target: stm32/i2c_driver.html
 category: mcu
 subcategory: stm32
 subtopic: others

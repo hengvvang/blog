@@ -1,6 +1,6 @@
 book:
   src: posts/toolchain
-  path: cmake/cross_compilation.html
+  target: cmake/cross_compilation.html
 category: toolchain
 subcategory: cmake
 subtopic: others

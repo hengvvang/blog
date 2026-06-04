@@ -1,6 +1,6 @@
 book:
   src: posts/rtos
-  path: zephyr/devicetree.html
+  target: zephyr/devicetree.html
 category: rtos
 subcategory: zephyr
 subtopic: others

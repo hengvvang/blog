@@ -1,6 +1,6 @@
 book:
   src: posts/c
-  path: pointers/array_pointers.html
+  target: pointers/array_pointers.html
 category: lang
 subcategory: c
 subtopic: pointers

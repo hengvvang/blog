@@ -1,6 +1,6 @@
 book:
   src: posts/toolchain
-  path: gcc/linker_scripts.html
+  target: gcc/linker_scripts.html
 category: toolchain
 subcategory: gcc
 subtopic: others

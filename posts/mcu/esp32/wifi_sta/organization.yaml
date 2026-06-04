@@ -1,6 +1,6 @@
 book:
   src: posts/mcu
-  path: esp32/wifi_sta.html
+  target: esp32/wifi_sta.html
 category: mcu
 subcategory: esp32
 subtopic: others

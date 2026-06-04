@@ -1,6 +1,6 @@
 book:
   src: posts/c
-  path: memory/stack_overflow.html
+  target: memory/stack_overflow.html
 category: lang
 subcategory: c
 subtopic: memory

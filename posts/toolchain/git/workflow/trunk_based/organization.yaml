@@ -1,6 +1,6 @@
 book:
   src: posts/toolchain
-  path: git/workflow/trunk_based.html
+  target: git/workflow/trunk_based.html
 category: toolchain
 subcategory: git
 subtopic: workflow

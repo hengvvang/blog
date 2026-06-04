@@ -1,6 +1,6 @@
 book:
   src: posts/toolchain
-  path: git/workflow/git_flow.html
+  target: git/workflow/git_flow.html
 category: toolchain
 subcategory: git
 subtopic: workflow

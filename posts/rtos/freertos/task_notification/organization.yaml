@@ -1,6 +1,6 @@
 book:
   src: posts/rtos
-  path: freertos/task_notification.html
+  target: freertos/task_notification.html
 category: rtos
 subcategory: freertos
 subtopic: others

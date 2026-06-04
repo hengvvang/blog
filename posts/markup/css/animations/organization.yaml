@@ -1,6 +1,6 @@
 book:
   src: posts/markup
-  path: css/animations.html
+  target: css/animations.html
 category: markup
 subcategory: css
 subtopic: others

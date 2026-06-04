@@ -1,6 +1,6 @@
 book:
   src: posts/rust
-  path: lifetime/advanced_lifetimes.html
+  target: lifetime/advanced_lifetimes.html
 category: lang
 subcategory: rust
 subtopic: lifetime

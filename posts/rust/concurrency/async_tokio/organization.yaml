@@ -1,6 +1,6 @@
 book:
   src: posts/rust
-  path: concurrency/async_tokio.html
+  target: concurrency/async_tokio.html
 category: lang
 subcategory: rust
 subtopic: concurrency

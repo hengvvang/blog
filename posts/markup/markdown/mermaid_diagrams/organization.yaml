@@ -1,6 +1,6 @@
 book:
   src: posts/markup
-  path: markdown/mermaid_diagrams.html
+  target: markdown/mermaid_diagrams.html
 category: markup
 subcategory: markdown
 subtopic: others

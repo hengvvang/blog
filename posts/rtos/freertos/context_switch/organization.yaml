@@ -1,6 +1,6 @@
 book:
   src: posts/rtos
-  path: freertos/context_switch.html
+  target: freertos/context_switch.html
 category: rtos
 subcategory: freertos
 subtopic: others

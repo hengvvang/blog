@@ -1,6 +1,6 @@
 book:
   src: posts/c
-  path: pointers/double_pointers.html
+  target: pointers/double_pointers.html
 category: lang
 subcategory: c
 subtopic: pointers

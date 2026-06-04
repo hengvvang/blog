@@ -1,6 +1,6 @@
 book:
   src: posts/rtos
-  path: zephyr/thread_analyzer.html
+  target: zephyr/thread_analyzer.html
 category: rtos
 subcategory: zephyr
 subtopic: others

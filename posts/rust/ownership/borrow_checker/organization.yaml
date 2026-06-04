@@ -1,6 +1,6 @@
 book:
   src: posts/rust
-  path: ownership/borrow_checker.html
+  target: ownership/borrow_checker.html
 category: lang
 subcategory: rust
 subtopic: ownership

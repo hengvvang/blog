@@ -1,6 +1,6 @@
 book:
   src: posts/toolchain
-  path: cmake/cmake_basics.html
+  target: cmake/cmake_basics.html
 category: toolchain
 subcategory: cmake
 subtopic: others

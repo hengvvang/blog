@@ -1,6 +1,6 @@
 book:
   src: posts/toolchain
-  path: gcc/compiler_optimization.html
+  target: gcc/compiler_optimization.html
 category: toolchain
 subcategory: gcc
 subtopic: others

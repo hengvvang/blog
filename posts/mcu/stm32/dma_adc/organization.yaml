@@ -1,6 +1,6 @@
 book:
   src: posts/mcu
-  path: stm32/dma_adc.html
+  target: stm32/dma_adc.html
 category: mcu
 subcategory: stm32
 subtopic: others

@@ -1,6 +1,6 @@
 book:
   src: posts/mcu
-  path: esp32/ble_gatt.html
+  target: esp32/ble_gatt.html
 category: mcu
 subcategory: esp32
 subtopic: others

@@ -1,6 +1,6 @@
 book:
   src: posts/python
-  path: oop/dunder_methods.html
+  target: oop/dunder_methods.html
 category: lang
 subcategory: python
 subtopic: oop

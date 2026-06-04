@@ -1,6 +1,6 @@
 book:
   src: posts/c
-  path: memory/memory_leaks.html
+  target: memory/memory_leaks.html
 category: lang
 subcategory: c
 subtopic: memory

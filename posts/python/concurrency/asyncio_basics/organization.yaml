@@ -1,6 +1,6 @@
 book:
   src: posts/python
-  path: concurrency/asyncio_basics.html
+  target: concurrency/asyncio_basics.html
 category: lang
 subcategory: python
 subtopic: concurrency

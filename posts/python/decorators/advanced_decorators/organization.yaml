@@ -1,6 +1,6 @@
 book:
   src: posts/python
-  path: decorators/advanced_decorators.html
+  target: decorators/advanced_decorators.html
 category: lang
 subcategory: python
 subtopic: decorators
