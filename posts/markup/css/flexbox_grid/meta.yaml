@@ -1,0 +1,33 @@
+book:
+  src: .
+
+category: markup
+
+subcategory: css
+
+subtopic: others
+
+timeline:
+  publishTime: 2026-05-30 20:15
+  lastUpdatedTime: 2026-05-31 13:00
+
+cover:
+  title: CSS Flexbox 与 Grid 响应式布局
+  summary: 全面梳理弹性盒与网格布局的属性，通过 auto-fit 和 minmax() 编写出无需媒体查询的自适应多终端网格。
+  tags:
+    - MARKUP
+    - CSS
+    - Flexbox
+    - Grid
+  image:
+    src: https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+    badge:
+      text: CSS | LAYOUT
+      position: bottom-right
+    hover:
+      scale: 1.14
+      brightness: 0.9
+      rotate: 0
+      blur: 0px

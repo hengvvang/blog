@@ -1,0 +1,34 @@
+book:
+  src: .
+
+category: rtos
+
+subcategory: freertos
+
+subtopic: others
+
+timeline:
+  publishTime: 2026-05-30 14:00
+  lastUpdatedTime: 2026-05-31 20:00
+
+cover:
+  title: 实时操作系统 RTOS 任务调度与优先级翻转
+  summary: 从 PendSV 中断与堆栈恢复的角度，层层剥离汇编代码，还原 FreeRTOS 任务调度器在 CPU 寄存器上的保存流程。
+  tags:
+    - RTOS
+    - FreeRTOS
+    - Context Switch
+    - PendSV
+    - Low-Level
+  image:
+    src: https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+    badge:
+      text: RTOS | FREERTOS
+      position: top-left
+    hover:
+      scale: 1.14
+      brightness: 0.9
+      rotate: 0
+      blur: 0px

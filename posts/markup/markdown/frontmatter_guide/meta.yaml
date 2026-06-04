@@ -1,0 +1,33 @@
+book:
+  src: .
+
+category: markup
+
+subcategory: markdown
+
+subtopic: others
+
+timeline:
+  publishTime: 2026-05-30 20:30
+  lastUpdatedTime: 2026-05-31 13:30
+
+cover:
+  title: Markdown Frontmatter 元数据属性指南
+  summary: 阐述 YAML / TOML 头信息块的格式规范，讲解 Jekyll、Hugo、Astro 等静态生成器的解析提取和 SEO 数据注入。
+  tags:
+    - MARKUP
+    - MARKDOWN
+    - Frontmatter
+    - SEO
+  image:
+    src: https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+    badge:
+      text: MARKDOWN | METADATA
+      position: top-left
+    hover:
+      scale: 1.14
+      brightness: 0.9
+      rotate: 0
+      blur: 0px

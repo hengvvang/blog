@@ -1,0 +1,31 @@
+book:
+  src: .
+
+category: lang
+
+subcategory: c
+
+subtopic: pointers
+
+timeline:
+  publishTime: 2026-05-30 09:00
+  lastUpdatedTime: 2026-05-31 12:00
+
+cover:
+  title: 深入理解 C 语言函数指针、回调机制与面向对象设计模式
+  summary: 系统讲解 C
+    语言中的函数指针底层实现、回调函数与闭包模拟、如何利用结构体与函数指针实现面向对象（封装、继承、多态），以及在嵌入式驱动开发与系统级接口设计中的经典
+    OOP-C 应用实践。
+  tags:
+    - C
+    - Pointers
+    - Callback
+    - OOP-C
+    - Embedded
+  image:
+    src: /images/c_pointer_oop_cover.png
+    hover:
+      scale: 1.1
+      brightness: 0.95
+      rotate: 0
+      blur: 0px

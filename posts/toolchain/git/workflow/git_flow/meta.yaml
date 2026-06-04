@@ -1,0 +1,33 @@
+book:
+  src: .
+
+category: toolchain
+
+subcategory: git
+
+subtopic: workflow
+
+timeline:
+  publishTime: 2026-05-30 22:00
+  lastUpdatedTime: 2026-06-01 05:00
+
+cover:
+  title: Git Flow 分支管理模型实践
+  summary: 系统化解析 Git Flow 的主干/开发/辅助分支拓扑、预发布冷冻与双向合并，并探讨团队 PR 网关与自动化 CI/CD 流水线工程实践。
+  tags:
+    - GIT
+    - WORKFLOW
+    - Git Flow
+    - Topologies
+  image:
+    src: https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+    badge:
+      text: GIT | WORKFLOW
+      position: top-left
+    hover:
+      scale: 1.14
+      brightness: 0.9
+      rotate: 0
+      blur: 0px

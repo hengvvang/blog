@@ -62,7 +62,7 @@ export function parseTags(tagsValue?: any): string[] {
   }
 }
 
-// Recursively scan directories for organization.yaml configuration files
+// Recursively scan directories for meta.yaml configuration files
 export async function scanForYamlConfigs(dir: string, fileList: string[] = []): Promise<string[]> {
   try {
     const files = await readdir(dir);
@@ -71,7 +71,7 @@ export async function scanForYamlConfigs(dir: string, fileList: string[] = []): 
       const fileStat = await stat(filePath);
       if (fileStat.isDirectory()) {
         await scanForYamlConfigs(filePath, fileList);
-      } else if (file === "organization.yaml") {
+      } else if (file === "meta.yaml") {
         fileList.push(filePath);
       }
     }
@@ -97,7 +97,13 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
       continue;
     }
     
-    const bookSrc = dirname(yamlFile).replace(/\\/g, "/");
+    let bookSrc = dirname(yamlFile).replace(/\\/g, "/");
+    if (meta.book) {
+      if (!meta.book.src) {
+        throw new Error(`Missing book.src in ${yamlFile}`);
+      }
+      bookSrc = join(dirname(yamlFile), meta.book.src).replace(/\\/g, "/");
+    }
     const bookFolder = relative(postsDir, bookSrc).replace(/\\/g, "/");
     
     const category = meta.category ? String(meta.category).trim().toLowerCase() : "";
@@ -108,15 +114,23 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
       throw new Error(`Missing category or subcategory in ${yamlFile}`);
     }
     
-    // Respect book.src and book.target to decouple URL/logical path from physical disk path
+    // Determine path from book.toml build-dir dynamically if book is specified
     let path = "";
     if (meta.book) {
-      if (!meta.book.src || !meta.book.target) {
-        throw new Error(`Missing book.src or book.target in ${yamlFile}`);
+      const bookTomlPath = join(bookSrc, "book.toml");
+      if (!existsSync(bookTomlPath)) {
+        throw new Error(`Missing book.toml at ${bookSrc} for article ${yamlFile}`);
       }
-      const prefix = relative(postsDir, meta.book.src).replace(/\\/g, "/");
-      const cleanPrefix = prefix ? prefix + "/" : "";
-      path = `/books/${cleanPrefix}${meta.book.target}`;
+      const bookTomlContent = await Bun.file(bookTomlPath).text();
+      const match = bookTomlContent.match(/build-dir\s*=\s*"([^"]+)"/);
+      if (!match) {
+        throw new Error(`Missing build-dir configuration in ${bookTomlPath}`);
+      }
+      const buildDir = match[1];
+      const destDir = join(bookSrc, buildDir).replace(/\\/g, "/");
+      const publicRoot = join(process.cwd(), "public").replace(/\\/g, "/");
+      const relativePath = relative(publicRoot, destDir).replace(/\\/g, "/");
+      path = "/" + relativePath;
     } else {
       path = `/books/${bookFolder}/index.html`;
     }

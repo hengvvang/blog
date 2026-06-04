@@ -1,0 +1,33 @@
+book:
+  src: .
+
+category: lang
+
+subcategory: python
+
+subtopic: concurrency
+
+timeline:
+  publishTime: 2026-05-30 23:00
+  lastUpdatedTime: 2026-05-31 17:30
+
+cover:
+  title: Python 异步编程协程基础与 asyncio
+  summary: 利用系统的线程监控组件，实时输出每个任务栈的最高水位线，防范栈溢出引起的内核崩溃。
+  tags:
+    - PYTHON
+    - CONCURRENCY
+    - Asyncio
+    - Event Loop
+  image:
+    src: https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+    badge:
+      text: PYTHON | CONCURRENCY
+      position: top-left
+    hover:
+      scale: 1.14
+      brightness: 0.9
+      rotate: 0
+      blur: 0px

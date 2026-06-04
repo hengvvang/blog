@@ -1,0 +1,30 @@
+book:
+  src: .
+
+category: lang
+
+subcategory: c
+
+subtopic: memory
+
+timeline:
+  publishTime: 2026-05-30 08:00
+  lastUpdatedTime: 2026-05-31 09:00
+
+cover:
+  title: 深入理解嵌入式 C 语言内存布局与对齐限制
+  summary: 系统讲解 MCU 内存布局（Flash 与 SRAM 划分）、Text/Data/BSS/Stack/Heap
+    分区、结构体字节对齐/填充原理，以及 Cortex-M 处理器下的总线非对齐访问陷阱与调试诊断方法。
+  tags:
+    - C
+    - Memory
+    - Alignment
+    - Cortex-M
+    - Embedded
+  image:
+    src: /images/c_memory_cover.png
+    hover:
+      scale: 1.1
+      brightness: 0.95
+      rotate: 0
+      blur: 0px

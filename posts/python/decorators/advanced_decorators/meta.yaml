@@ -1,0 +1,33 @@
+book:
+  src: .
+
+category: lang
+
+subcategory: python
+
+subtopic: decorators
+
+timeline:
+  publishTime: 2026-05-30 23:15
+  lastUpdatedTime: 2026-05-31 18:00
+
+cover:
+  title: Python 装饰器高级设计与原理
+  summary: 深入讲解闭包机制、带参数的类装饰器设计、装饰器嵌套执行顺序，以及元数据丢失的底层成因与防范方案。
+  tags:
+    - PYTHON
+    - DECORATORS
+    - Meta
+    - Advanced
+  image:
+    src: https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+    badge:
+      text: PYTHON | DECORATORS
+      position: bottom-left
+    hover:
+      scale: 1.14
+      brightness: 0.9
+      rotate: 0
+      blur: 0px

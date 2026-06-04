@@ -135,15 +135,7 @@ async function buildStatic() {
   }
   console.log(`Pre-rendered content for ${articles.length} articles inside public/api/article-content/`);
   
-  // Aggregate unique books to compile
-  const uniqueBookSrcs = new Set<string>();
-  
-  for (const art of articles) {
-    if (art.bookSrc) {
-      uniqueBookSrcs.add(art.bookSrc);
-    }
-  }
-  
+
   const customCss = `/* Custom floating breadcrumb panel styling */
 .mdbook-custom-breadcrumbs {
   position: fixed;
@@ -430,101 +422,92 @@ async function buildStatic() {
   console.log("Generated central custom-mdbook.js");
 
   // Compile each book automatically
+  // Collect unique books based on bookSrc to prevent redundant compilations
+  const uniqueBookSrcs = new Set<string>();
   for (const art of articles) {
-    const bookSrc = art.bookSrc;
-    if (!bookSrc) continue;
-
-    let relDest = art.path;
-    if (relDest.startsWith("/")) relDest = relDest.substring(1);
-    if (relDest.endsWith("/index.html")) {
-      relDest = relDest.substring(0, relDest.length - 11);
+    if (art.bookSrc) {
+      uniqueBookSrcs.add(art.bookSrc);
     }
-    const destDir = join(process.cwd(), "public", relDest);
+  }
+
+  for (const bookSrc of uniqueBookSrcs) {
+    // Locate and read book.toml to find its build-dir output directory
+    const bookTomlPath = join(bookSrc, "book.toml");
+    if (!existsSync(bookTomlPath)) {
+      console.warn(`[Build] book.toml not found at ${bookSrc}, skipping compile`);
+      continue;
+    }
+    
+    let bookToml = await safeReadFile(bookTomlPath);
+    const match = bookToml.match(/build-dir\s*=\s*"([^"]+)"/);
+    if (!match) {
+      console.error(`[Build] Missing build-dir in ${bookTomlPath}, skipping compile`);
+      continue;
+    }
+    
+    const buildDir = match[1];
+    const destDir = join(bookSrc, buildDir).replace(/\\/g, "/");
+    let updated = false;
     
     // Ensure book.toml contains theme path pointing to central posts/theme relatively
-    const bookTomlPath = join(bookSrc, "book.toml");
-    if (existsSync(bookTomlPath)) {
-      let bookToml = await safeReadFile(bookTomlPath);
-      let updated = false;
-      
-      // Calculate relative destination path and configure build-dir dynamically
-      const relBuildDir = relative(bookSrc, destDir).replace(/\\/g, "/");
-      
-      // Ensure [output.html] section exists first so we have a reliable insertion point
-      if (!bookToml.includes("[output.html]")) {
-        bookToml += "\n\n[output.html]\n";
+    const hasSrcFolder = existsSync(join(bookSrc, "src"));
+    if (hasSrcFolder) {
+      if (bookToml.includes('src = "."')) {
+        bookToml = bookToml.replace(/src\s*=\s*"\."\r?\n?/g, "");
         updated = true;
       }
-
-      if (!bookToml.includes("[build]")) {
-        bookToml = bookToml.replace("[output.html]", `[build]\nbuild-dir = "${relBuildDir}"\n\n[output.html]`);
-        updated = true;
-      } else {
-        const buildDirPattern = /build-dir\s*=\s*"[^"]+"\r?\n?/g;
-        if (!bookToml.includes(`build-dir = "${relBuildDir}"`)) {
-          if (buildDirPattern.test(bookToml)) {
-            bookToml = bookToml.replace(buildDirPattern, `build-dir = "${relBuildDir}"\n`);
-          } else {
-            bookToml = bookToml.replace("[build]", `[build]\nbuild-dir = "${relBuildDir}"`);
-          }
-          updated = true;
-        }
-      }
-
-      // Dynamically set src directory config based on physical folder structure
-      const hasSrcFolder = existsSync(join(bookSrc, "src"));
-      if (hasSrcFolder) {
-        if (bookToml.includes('src = "."')) {
-          bookToml = bookToml.replace(/src\s*=\s*"\."\r?\n?/g, "");
-          updated = true;
-        }
-      } else {
-        if (!bookToml.includes('src = "."')) {
-          const srcLinePattern = /src\s*=\s*"[^"]+"\r?\n?/g;
-          if (srcLinePattern.test(bookToml)) {
-            bookToml = bookToml.replace(srcLinePattern, 'src = "."\n');
-          } else {
-            bookToml = bookToml.replace("[book]", '[book]\nsrc = "."');
-          }
-          updated = true;
-        }
-      }
-      
-      // Remove theme configuration if it exists
-      if (bookToml.includes("theme = ")) {
-        bookToml = bookToml.replace(/theme\s*=\s*"[^"]+"\r?\n?/g, "");
-        updated = true;
-      }
-      
-      // Dynamically calculate theme paths relative to the book's root
-      const relCss = relative(bookSrc, "posts/__shared_theme/custom-mdbook.css").replace(/\\/g, "/");
-      const relJs = relative(bookSrc, "posts/__shared_theme/custom-mdbook.js").replace(/\\/g, "/");
-
-      // Ensure additional-css = ["${relCss}"]
-      if (!bookToml.includes(`additional-css = ["${relCss}"]`)) {
-        const cssLinePattern = /additional-css\s*=\s*\[[^\]]+\]\r?\n?/g;
-        if (cssLinePattern.test(bookToml)) {
-          bookToml = bookToml.replace(cssLinePattern, `additional-css = ["${relCss}"]\n`);
+    } else {
+      if (!bookToml.includes('src = "."')) {
+        const srcLinePattern = /src\s*=\s*"[^"]+"\r?\n?/g;
+        if (srcLinePattern.test(bookToml)) {
+          bookToml = bookToml.replace(srcLinePattern, 'src = "."\n');
         } else {
-          bookToml = bookToml.replace("[output.html]", `[output.html]\nadditional-css = ["${relCss}"]`);
+          bookToml = bookToml.replace("[book]", '[book]\nsrc = "."');
         }
         updated = true;
       }
-      
-      // Ensure additional-js = ["${relJs}"]
-      if (!bookToml.includes(`additional-js = ["${relJs}"]`)) {
-        const jsLinePattern = /additional-js\s*=\s*\[[^\]]+\]\r?\n?/g;
-        if (jsLinePattern.test(bookToml)) {
-          bookToml = bookToml.replace(jsLinePattern, `additional-js = ["${relJs}"]\n`);
-        } else {
-          bookToml = bookToml.replace("[output.html]", `[output.html]\nadditional-js = ["${relJs}"]`);
-        }
-        updated = true;
+    }
+    
+    // Ensure [output.html] section exists
+    if (!bookToml.includes("[output.html]")) {
+      bookToml += "\n\n[output.html]\n";
+      updated = true;
+    }
+    
+    // Remove theme configuration if it exists
+    if (bookToml.includes("theme = ")) {
+      bookToml = bookToml.replace(/theme\s*=\s*"[^"]+"\r?\n?/g, "");
+      updated = true;
+    }
+    
+    // Dynamically calculate theme paths relative to the book's root
+    const relCss = relative(bookSrc, "posts/__shared_theme/custom-mdbook.css").replace(/\\/g, "/");
+    const relJs = relative(bookSrc, "posts/__shared_theme/custom-mdbook.js").replace(/\\/g, "/");
+
+    // Ensure additional-css = ["${relCss}"]
+    if (!bookToml.includes(`additional-css = ["${relCss}"]`)) {
+      const cssLinePattern = /additional-css\s*=\s*\[[^\]]+\]\r?\n?/g;
+      if (cssLinePattern.test(bookToml)) {
+        bookToml = bookToml.replace(cssLinePattern, `additional-css = ["${relCss}"]\n`);
+      } else {
+        bookToml = bookToml.replace("[output.html]", `[output.html]\nadditional-css = ["${relCss}"]`);
       }
-      
-      if (updated) {
-        await safeWriteFile(bookTomlPath, bookToml);
+      updated = true;
+    }
+    
+    // Ensure additional-js = ["${relJs}"]
+    if (!bookToml.includes(`additional-js = ["${relJs}"]`)) {
+      const jsLinePattern = /additional-js\s*=\s*\[[^\]]+\]\r?\n?/g;
+      if (jsLinePattern.test(bookToml)) {
+        bookToml = bookToml.replace(jsLinePattern, `additional-js = ["${relJs}"]\n`);
+      } else {
+        bookToml = bookToml.replace("[output.html]", `[output.html]\nadditional-js = ["${relJs}"]`);
       }
+      updated = true;
+    }
+    
+    if (updated) {
+      await safeWriteFile(bookTomlPath, bookToml);
     }
 
     // Cleanup duplicated files at book root and remove local theme folder

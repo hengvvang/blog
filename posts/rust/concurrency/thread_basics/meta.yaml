@@ -1,0 +1,33 @@
+book:
+  src: .
+
+category: lang
+
+subcategory: rust
+
+subtopic: concurrency
+
+timeline:
+  publishTime: 2026-05-30 21:00
+  lastUpdatedTime: 2026-05-31 23:00
+
+cover:
+  title: Rust 多线程并发编程与通道机制
+  summary: 从 OS 线程创建说起，精讲 Rust 的 Send/Sync 特质，以及如何通过 mpsc 通道在线程间安全传输消息。
+  tags:
+    - RUST
+    - CONCURRENCY
+    - System
+    - Safety
+  image:
+    src: https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+    badge:
+      text: RUST | CONCURRENCY
+      position: bottom-left
+    hover:
+      scale: 1.14
+      brightness: 0.9
+      rotate: 0
+      blur: 0px

@@ -1,0 +1,33 @@
+book:
+  src: .
+
+category: lang
+
+subcategory: python
+
+subtopic: decorators
+
+timeline:
+  publishTime: 2026-05-30 23:30
+  lastUpdatedTime: 2026-05-31 18:30
+
+cover:
+  title: Python 基础装饰器与闭包
+  summary: 从变量作用域和第一类对象起步，说明闭包在内存中的表现，并实现记录日志和计算函数运行时间的入门装饰器。
+  tags:
+    - PYTHON
+    - DECORATORS
+    - Closures
+    - Syntax
+  image:
+    src: https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+    badge:
+      text: PYTHON | DECORATORS
+      position: center
+    hover:
+      scale: 1.14
+      brightness: 0.9
+      rotate: 0
+      blur: 0px

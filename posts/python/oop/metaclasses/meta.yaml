@@ -1,0 +1,33 @@
+book:
+  src: .
+
+category: lang
+
+subcategory: python
+
+subtopic: oop
+
+timeline:
+  publishTime: 2026-05-30 23:55
+  lastUpdatedTime: 2026-05-31 19:30
+
+cover:
+  title: Python 元类与动态类创建
+  summary: 说明 class 声明背后的 type() 构造逻辑，阐述自定义 metaclass 拦截类构建、校验成员属性以及注册子类的精妙过程。
+  tags:
+    - PYTHON
+    - OOP
+    - Metaclasses
+    - Type
+  image:
+    src: https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=800&auto=format&fit=crop
+    brightness: 0.75
+    scale: 1.08
+    badge:
+      text: PYTHON | OOP
+      position: top-right
+    hover:
+      scale: 1.14
+      brightness: 0.9
+      rotate: 0
+      blur: 0px
