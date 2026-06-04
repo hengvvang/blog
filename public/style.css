@@ -1575,7 +1575,7 @@ body {
   justify-content: flex-end;
 }
 .toolchain-horizontal-card .card-btn {
-  height: 70%;
+  height: 60%;
   width: 26px; /* 统一再粗一点 */
   padding: 0;
   display: flex;

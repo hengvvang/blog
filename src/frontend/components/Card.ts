@@ -113,12 +113,12 @@ export function renderFeaturedCardHTML(art: Article, categoryColor: string): str
 
   return `
     <div class="card toolchain-horizontal-card" data-action="view-article" data-id="${art.id}" ${scaleVar}>
-      <div class="card-cover-wrapper" style="height: auto; display: flex; flex-direction: column; gap: 14px; padding: 22px 24px 24px 24px;">
+      <div class="card-cover-wrapper" style="height: auto; display: flex; flex-direction: column; gap: 10px; padding: 18px 20px 20px 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; line-height: 1.2;">
           ${renderBadgeHTML(art)}
           <span class="featured-date" style="font-size: 12px; color: var(--text-light);">${getDisplayTime(art)}</span>
         </div>
-        <div class="featured-cover" style="position: relative; overflow: hidden; height: 160px; border-radius: 4px;">
+        <div class="featured-cover" style="position: relative; overflow: hidden; height: 135px; border-radius: 4px;">
           ${renderCoverHTML(art.cover, categoryColor, '11px')}
         </div>
         <div class="featured-info" style="padding: 0; display: flex; flex-direction: column; gap: 6px;">
