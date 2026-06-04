@@ -1527,7 +1527,7 @@ body {
   justify-content: flex-end;
 }
 .toolchain-horizontal-card:hover .card-content {
-  width: 36px;
+  width: 42px;
   height: auto;
 }
 @media (min-width: 769px) {
@@ -1536,7 +1536,7 @@ body {
     width: 25% !important;
   }
   .toolchain-horizontal-card:hover {
-    width: calc(25% + 36px) !important;
+    width: calc(25% + 42px) !important;
   }
   .toolchain-featured-section[data-count="1"] .toolchain-horizontal-card {
     width: 100% !important;
@@ -1548,13 +1548,13 @@ body {
     width: 50% !important;
   }
   .toolchain-featured-section[data-count="2"] .toolchain-horizontal-card:hover {
-    width: calc(50% + 36px) !important;
+    width: calc(50% + 42px) !important;
   }
   .toolchain-featured-section[data-count="3"] .toolchain-horizontal-card {
     width: 33.33% !important;
   }
   .toolchain-featured-section[data-count="3"] .toolchain-horizontal-card:hover {
-    width: calc(33.33% + 36px) !important;
+    width: calc(33.33% + 42px) !important;
   }
   .toolchain-horizontal-card .card-cover-wrapper {
     flex: 1 !important;
@@ -1576,7 +1576,7 @@ body {
 }
 .toolchain-horizontal-card .card-btn {
   height: 60%;
-  width: 22px; /* 统一再粗一点 */
+  width: 28px; /* 统一再粗一点 */
   padding: 0;
   display: flex;
   align-items: center;
