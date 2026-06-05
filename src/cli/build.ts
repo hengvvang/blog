@@ -1,9 +1,27 @@
-import { mkdir, rm, writeFile, readFile } from "node:fs/promises";
+import { mkdir, rm, writeFile, readFile, readdir, stat } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { loadArticles, ArticleMetadata } from "../backend/parser";
 import { compileArticleToContent } from "../backend/compiler";
 import { execSync } from "node:child_process";
 import { relative, join } from "node:path";
+
+async function getAllFiles(dir: string, fileList: string[] = []): Promise<string[]> {
+  try {
+    const files = await readdir(dir);
+    for (const file of files) {
+      const filePath = join(dir, file);
+      const fileStat = await stat(filePath);
+      if (fileStat.isDirectory()) {
+        await getAllFiles(filePath, fileList);
+      } else {
+        fileList.push(relative(join(process.cwd(), "public"), filePath).replace(/\\/g, "/"));
+      }
+    }
+  } catch (e) {
+    // Ignore
+  }
+  return fileList;
+}
 
 async function safeReadFile(path: string): Promise<string> {
   for (let i = 0; i < 5; i++) {
@@ -450,19 +468,18 @@ async function buildStatic() {
     }
   }
 
+  let compiledCount = 0;
   for (const bookSrc of uniqueBookSrcs) {
     // Locate and read book.toml to find its build-dir output directory
     const bookTomlPath = join(bookSrc, "book.toml");
     if (!existsSync(bookTomlPath)) {
-      console.warn(`[Build] book.toml not found at ${bookSrc}, skipping compile`);
-      continue;
+      throw new Error(`[Build] book.toml not found at ${bookSrc}`);
     }
     
     let bookToml = await safeReadFile(bookTomlPath);
     const match = bookToml.match(/build-dir\s*=\s*"([^"]+)"/);
     if (!match) {
-      console.error(`[Build] Missing build-dir in ${bookTomlPath}, skipping compile`);
-      continue;
+      throw new Error(`[Build] Missing build-dir in ${bookTomlPath}`);
     }
     
     const buildDir = match[1];
@@ -541,11 +558,20 @@ async function buildStatic() {
     try {
       await rm(destDir, { recursive: true, force: true });
       execSync(`"${mdbookCmd}" build "${bookSrc}" --dest-dir "${destDir}"`, { stdio: "inherit" });
+      compiledCount++;
     } catch (err) {
       console.error(`Error compiling mdbook at ${bookSrc}:`, err);
       throw err;
     }
   }
+  
+  if (compiledCount !== uniqueBookSrcs.size) {
+    throw new Error(`Failed to compile all books! Compiled ${compiledCount} out of ${uniqueBookSrcs.size}`);
+  }
+  
+  const publicFiles = await getAllFiles("./public");
+  await safeWriteFile("./public/api/files.json", JSON.stringify(publicFiles));
+  console.log(`Generated: public/api/files.json (${publicFiles.length} files listed for diagnostics)`);
   
   console.log("Static site build completed successfully!");
 }
