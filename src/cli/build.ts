@@ -550,4 +550,7 @@ async function buildStatic() {
   console.log("Static site build completed successfully!");
 }
 
-buildStatic().catch(console.error);
+buildStatic().catch(err => {
+  console.error(err);
+  process.exit(1);
+});
