@@ -5,7 +5,7 @@ src = "src"
 title = "Python asyncio"
 
 [build]
-build-dir = "../../../../public/books/python/concurrency/asyncio_basics.html"
+build-dir = "../../../../public/books/python/concurrency/asyncio_basics"
 
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

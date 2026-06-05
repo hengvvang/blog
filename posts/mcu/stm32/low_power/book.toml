@@ -5,7 +5,7 @@ description = "Systematic analysis of low power domains, GPIO leakage minimizati
 src = "src"
 
 [build]
-build-dir = "../../../../public/books/mcu/stm32/low_power.html"
+build-dir = "../../../../public/books/mcu/stm32/low_power"
 
 [output.html]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

@@ -5,7 +5,7 @@ description = "Exploration of Rust memory management, RAII, ownership moves, bor
 src = "src"
 
 [build]
-build-dir = "../../../../public/books/rust/ownership/borrow_checker.html"
+build-dir = "../../../../public/books/rust/ownership/borrow_checker"
 
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

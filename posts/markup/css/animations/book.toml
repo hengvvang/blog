@@ -5,7 +5,7 @@ description = "In-depth guide to CSS transitions, keyframes, compositor executio
 language = "zh-CN"
 
 [build]
-build-dir = "../../../../public/books/markup/css/animations.html"
+build-dir = "../../../../public/books/markup/css/animations"
 
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

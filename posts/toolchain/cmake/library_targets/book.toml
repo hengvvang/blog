@@ -6,7 +6,7 @@ language = "zh-CN"
 src = "src"
 
 [build]
-build-dir = "../../../../public/books/toolchain/cmake/library_targets.html"
+build-dir = "../../../../public/books/toolchain/cmake/library_targets"
 
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

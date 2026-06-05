@@ -5,7 +5,7 @@ authors = ["hengvvang"]
 description = "Exploration of Zephyr's Devicetree syntax, bindings matching, compile-time header macro generation, and C API access layers."
 
 [build]
-build-dir = "../../../../public/books/rtos/zephyr/devicetree.html"
+build-dir = "../../../../public/books/rtos/zephyr/devicetree"
 
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

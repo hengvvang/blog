@@ -5,7 +5,7 @@ description = "Analysis of GCC compilation optimization options, loop transforma
 src = "src"
 
 [build]
-build-dir = "../../../../public/books/toolchain/gcc/compiler_optimization.html"
+build-dir = "../../../../public/books/toolchain/gcc/compiler_optimization"
 
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

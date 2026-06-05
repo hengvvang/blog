@@ -5,7 +5,7 @@ description = "Comprehensive guide to I2C physical timing, GPIO simulation, hard
 src = "src"
 
 [build]
-build-dir = "../../../../public/books/mcu/stm32/i2c_driver.html"
+build-dir = "../../../../public/books/mcu/stm32/i2c_driver"
 
 [output.html]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

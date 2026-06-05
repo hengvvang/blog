@@ -6,7 +6,7 @@ language = "zh-CN"
 src = "src"
 
 [build]
-build-dir = "../../../../public/books/python/decorators/advanced_decorators.html"
+build-dir = "../../../../public/books/python/decorators/advanced_decorators"
 
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

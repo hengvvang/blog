@@ -543,6 +543,7 @@ async function buildStatic() {
       execSync(`"${mdbookCmd}" build "${bookSrc}" --dest-dir "${destDir}"`, { stdio: "inherit" });
     } catch (err) {
       console.error(`Error compiling mdbook at ${bookSrc}:`, err);
+      throw err;
     }
   }
   

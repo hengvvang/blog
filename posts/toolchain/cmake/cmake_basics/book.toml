@@ -5,7 +5,7 @@ description = "Deep dive into CMake syntax, variables, directory layout manageme
 src = "src"
 
 [build]
-build-dir = "../../../../public/books/toolchain/cmake/cmake_basics.html"
+build-dir = "../../../../public/books/toolchain/cmake/cmake_basics"
 
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

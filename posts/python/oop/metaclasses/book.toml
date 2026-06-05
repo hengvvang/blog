@@ -5,7 +5,7 @@ description = "Exploration of dynamic type construction, custom metaclass compil
 src = "src"
 
 [build]
-build-dir = "../../../../public/books/python/oop/metaclasses.html"
+build-dir = "../../../../public/books/python/oop/metaclasses"
 
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

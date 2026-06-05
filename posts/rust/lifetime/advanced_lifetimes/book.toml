@@ -5,7 +5,7 @@ authors = ["hengvvang"]
 description = "Deep dive into reference subtyping, variance principles, Higher-Rank Trait Bounds, and self-referential structures."
 
 [build]
-build-dir = "../../../../public/books/rust/lifetime/advanced_lifetimes.html"
+build-dir = "../../../../public/books/rust/lifetime/advanced_lifetimes"
 
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

@@ -5,7 +5,7 @@ description = "Comprehensive guide resolving definitions, dereferences, offsets,
 src = "src"
 
 [build]
-build-dir = "../../../../public/books/c/pointers/array_pointers.html"
+build-dir = "../../../../public/books/c/pointers/array_pointers"
 
 [output.html]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

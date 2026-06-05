@@ -5,7 +5,7 @@ description = "Analysis of TCB-embedded direct task notifications, API operation
 src = "src"
 
 [build]
-build-dir = "../../../../public/books/rtos/freertos/task_notification.html"
+build-dir = "../../../../public/books/rtos/freertos/task_notification"
 
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

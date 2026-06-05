@@ -6,7 +6,7 @@ language = "zh-CN"
 src = "src"
 
 [build]
-build-dir = "../../../../public/books/rtos/freertos/context_switch.html"
+build-dir = "../../../../public/books/rtos/freertos/context_switch"
 
 [output.html]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

@@ -4,7 +4,7 @@ authors = ["hengvvang"]
 description = "Production-grade guide on memory layout and alignment in embedded systems."
 
 [build]
-build-dir = "../../../../public/books/c/memory/memory_layout.html"
+build-dir = "../../../../public/books/c/memory/memory_layout"
 
 [output.html]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

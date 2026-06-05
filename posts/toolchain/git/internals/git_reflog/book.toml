@@ -5,7 +5,7 @@ authors = ["hengvvang"]
 description = "Low-level guide to Git HEAD reference changes logs, recovering dangling commits, reset safety, and reflog expiration policies."
 
 [build]
-build-dir = "../../../../../public/books/toolchain/git/internals/git_reflog.html"
+build-dir = "../../../../../public/books/toolchain/git/internals/git_reflog"
 
 [output.html]
 additional-js = ["../../../../__shared_theme/custom-mdbook.js"]

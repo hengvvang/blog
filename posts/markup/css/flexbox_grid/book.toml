@@ -5,7 +5,7 @@ description = "Comprehensive guide to Flexbox axes, alignment, Grid tracks, temp
 src = "src"
 
 [build]
-build-dir = "../../../../public/books/markup/css/flexbox_grid.html"
+build-dir = "../../../../public/books/markup/css/flexbox_grid"
 
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

@@ -5,7 +5,7 @@ description = "Deep dive into YAML/TOML metadata headers, static site generator 
 src = "src"
 
 [build]
-build-dir = "../../../../public/books/markup/markdown/frontmatter_guide.html"
+build-dir = "../../../../public/books/markup/markdown/frontmatter_guide"
 
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

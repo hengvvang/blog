@@ -5,7 +5,7 @@ description = "Exploration of Trunk-Based continuous integration, Feature Flags 
 language = "zh-CN"
 
 [build]
-build-dir = "../../../../../public/books/toolchain/git/workflow/trunk_based.html"
+build-dir = "../../../../../public/books/toolchain/git/workflow/trunk_based"
 
 [output.html]
 additional-js = ["../../../../__shared_theme/custom-mdbook.js"]

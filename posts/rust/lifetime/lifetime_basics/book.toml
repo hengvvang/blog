@@ -5,7 +5,7 @@ description = "Introduction to Rust lifetimes, reference scopes, borrow checker 
 src = "src"
 
 [build]
-build-dir = "../../../../public/books/rust/lifetime/lifetime_basics.html"
+build-dir = "../../../../public/books/rust/lifetime/lifetime_basics"
 
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

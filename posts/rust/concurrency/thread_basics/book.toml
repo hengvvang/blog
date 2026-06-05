@@ -6,7 +6,7 @@ language = "zh-CN"
 src = "src"
 
 [build]
-build-dir = "../../../../public/books/rust/concurrency/thread_basics.html"
+build-dir = "../../../../public/books/rust/concurrency/thread_basics"
 
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

@@ -5,7 +5,7 @@ authors = ["hengvvang"]
 description = "Deep dive into BLE GATT server architecture, initialization database tables, and callback event processing using ESP-IDF."
 
 [build]
-build-dir = "../../../../public/books/mcu/esp32/ble_gatt.html"
+build-dir = "../../../../public/books/mcu/esp32/ble_gatt"
 
 [output.html]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]

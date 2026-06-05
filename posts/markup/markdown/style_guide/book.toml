@@ -5,7 +5,7 @@ description = "Manual on typography structures, lists formatting, table alignmen
 src = "src"
 
 [build]
-build-dir = "../../../../public/books/markup/markdown/style_guide.html"
+build-dir = "../../../../public/books/markup/markdown/style_guide"
 
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

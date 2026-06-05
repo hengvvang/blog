@@ -5,7 +5,7 @@ description = "Deep dive into __new__ vs __init__, operator overloading, contain
 src = "src"
 
 [build]
-build-dir = "../../../../public/books/python/oop/dunder_methods.html"
+build-dir = "../../../../public/books/python/oop/dunder_methods"
 
 [output.html]
 additional-js = ["../../../__shared_theme/custom-mdbook.js"]

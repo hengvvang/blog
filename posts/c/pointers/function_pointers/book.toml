@@ -5,7 +5,7 @@ description = "Deep dive into function pointer syntax, indirect branch assembly 
 src = "src"
 
 [build]
-build-dir = "../../../../public/books/c/pointers/function_pointers.html"
+build-dir = "../../../../public/books/c/pointers/function_pointers"
 
 [output.html]
 additional-css = ["../../../__shared_theme/custom-mdbook.css"]
