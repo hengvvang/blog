@@ -103,6 +103,7 @@ window.addEventListener('scroll', () => {
 
 // App bootstrapping
 async function initBlog() {
+  console.log("Version: 1.0.4 - Test Deploy");
   try {
     await loadState();
     
