@@ -469,6 +469,7 @@ async function buildStatic() {
   }
 
   let compiledCount = 0;
+  let buildLog = "";
   for (const bookSrc of uniqueBookSrcs) {
     // Locate and read book.toml to find its build-dir output directory
     const bookTomlPath = join(bookSrc, "book.toml");
@@ -555,12 +556,16 @@ async function buildStatic() {
     await rm(join(bookSrc, "book"), { recursive: true, force: true });
 
     console.log(`Compiling mdbook: "${bookSrc}" -> "${destDir}"`);
+    buildLog += `Compiling mdbook: "${bookSrc}" -> "${destDir}"\n`;
     try {
       await rm(destDir, { recursive: true, force: true });
-      execSync(`"${mdbookCmd}" build "${bookSrc}" --dest-dir "${destDir}"`, { stdio: "inherit" });
+      const output = execSync(`"${mdbookCmd}" build "${bookSrc}" --dest-dir "${destDir}"`, { encoding: "utf-8" });
+      buildLog += `STDOUT:\n${output}\n`;
       compiledCount++;
-    } catch (err) {
+    } catch (err: any) {
+      buildLog += `ERROR:\n${err.message}\nSTDOUT:\n${err.stdout}\nSTDERR:\n${err.stderr}\n`;
       console.error(`Error compiling mdbook at ${bookSrc}:`, err);
+      await safeWriteFile("./public/api/build_log.txt", buildLog);
       throw err;
     }
   }
@@ -572,6 +577,9 @@ async function buildStatic() {
   const publicFiles = await getAllFiles("./public");
   await safeWriteFile("./public/api/files.json", JSON.stringify(publicFiles));
   console.log(`Generated: public/api/files.json (${publicFiles.length} files listed for diagnostics)`);
+  
+  await safeWriteFile("./public/api/build_log.txt", buildLog);
+  console.log("Generated: public/api/build_log.txt");
   
   console.log("Static site build completed successfully!");
 }
