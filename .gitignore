@@ -1,8 +1,6 @@
 node_modules/
 dist/
 public/main.js
-public/api/
-public/books/
 scratch/
 .bun
 .gemini/
