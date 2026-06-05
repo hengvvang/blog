@@ -484,7 +484,7 @@ async function buildStatic() {
     }
     
     const buildDir = match[1];
-    const destDir = join(bookSrc, buildDir).replace(/\\/g, "/");
+    const destDir = join(process.cwd(), bookSrc, buildDir).replace(/\\/g, "/");
     let updated = false;
     
     // Ensure book.toml contains theme path pointing to central posts/theme relatively

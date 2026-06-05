@@ -127,7 +127,7 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
         throw new Error(`Missing build-dir configuration in ${bookTomlPath}`);
       }
       const buildDir = match[1];
-      const destDir = join(bookSrc, buildDir).replace(/\\/g, "/");
+      const destDir = join(process.cwd(), bookSrc, buildDir).replace(/\\/g, "/");
       const publicRoot = join(process.cwd(), "public").replace(/\\/g, "/");
       const relativePath = relative(publicRoot, destDir).replace(/\\/g, "/");
       path = "/" + relativePath;
