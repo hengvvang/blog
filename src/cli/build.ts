@@ -559,8 +559,8 @@ async function buildStatic() {
     buildLog += `Compiling mdbook: "${bookSrc}" -> "${destDir}"\n`;
     try {
       await rm(destDir, { recursive: true, force: true });
-      const output = execSync(`"${mdbookCmd}" build "${bookSrc}" --dest-dir "${destDir}"`, { encoding: "utf-8" });
-      buildLog += `STDOUT:\n${output}\n`;
+      const output = execSync(`"${mdbookCmd}" build "${bookSrc}" --dest-dir "${destDir}" 2>&1`, { encoding: "utf-8" });
+      buildLog += `OUTPUT:\n${output}\n`;
       compiledCount++;
     } catch (err: any) {
       buildLog += `ERROR:\n${err.message}\nSTDOUT:\n${err.stdout}\nSTDERR:\n${err.stderr}\n`;
