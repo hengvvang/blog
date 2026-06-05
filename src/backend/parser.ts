@@ -131,11 +131,11 @@ export async function loadArticles(): Promise<ArticleMetadata[]> {
       const publicRoot = join(process.cwd(), "public").replace(/\\/g, "/");
       const relativePath = relative(publicRoot, destDir).replace(/\\/g, "/");
       path = "/" + relativePath;
-      if (!path.endsWith("/index.html")) {
-        path = path.replace(/\/$/, "") + "/index.html";
+      if (!path.endsWith("/")) {
+        path = path + "/";
       }
     } else {
-      path = `/books/${bookFolder}/index.html`;
+      path = `/books/${bookFolder}/`;
     }
     
     let file = join(bookSrc, "src", "README.md").replace(/\\/g, "/");

@@ -342,9 +342,9 @@ async function buildStatic() {
     const taxonomy = await taxonomyRes.json();
     
     // Find matching article based on pathname (normalize both to support Cloudflare Pretty URLs)
-    const pathname = window.location.pathname.replace(/\\\\index\\\\.html$/, '').replace(/\\\\$/, '');
+    const pathname = window.location.pathname.replace(/\\/index\\.html$/, '').replace(/\\/$/, '');
     const article = articles.find(a => {
-      const cleanPath = a.path.replace(/\\\\index\\\\.html$/, '').replace(/\\\\$/, '');
+      const cleanPath = a.path.replace(/\\/index\\.html$/, '').replace(/\\/$/, '');
       return pathname === cleanPath || pathname.endsWith(cleanPath) || pathname.includes(cleanPath);
     });
     if (!article) return; // Not a registered article book page
