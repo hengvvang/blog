@@ -102,6 +102,26 @@ function buildTaxonomy(articles: ArticleMetadata[]): Taxonomy {
 
 async function buildStatic() {
   console.log("Starting static site generation...");
+  
+  // Ensure mdbook is available on Linux/Unix CI systems (e.g. Cloudflare)
+  let mdbookCmd = "mdbook";
+  if (process.platform === "linux" || process.platform === "darwin") {
+    try {
+      execSync("which mdbook", { stdio: "ignore" });
+    } catch (e) {
+      const localMdbook = join(process.cwd(), "mdbook");
+      if (!existsSync(localMdbook)) {
+        console.log(`[Build] mdbook not found globally. Downloading v0.4.40 for ${process.platform}...`);
+        const arch = process.arch === "arm64" ? "aarch64" : "x86_64";
+        const platform = process.platform === "darwin" ? "apple-darwin" : "unknown-linux-gnu";
+        const downloadUrl = `https://github.com/rust-lang/mdBook/releases/download/v0.4.40/mdbook-v0.4.40-${arch}-${platform}.tar.gz`;
+        execSync(`curl -sL "${downloadUrl}" | tar -xz`, { stdio: "inherit" });
+        execSync(`chmod +x "${localMdbook}"`, { stdio: "inherit" });
+      }
+      mdbookCmd = localMdbook;
+    }
+  }
+
   const articles = await loadArticles();
   const taxonomy = buildTaxonomy(articles);
   
@@ -520,7 +540,7 @@ async function buildStatic() {
     console.log(`Compiling mdbook: "${bookSrc}" -> "${destDir}"`);
     try {
       await rm(destDir, { recursive: true, force: true });
-      execSync(`mdbook build "${bookSrc}" --dest-dir "${destDir}"`, { stdio: "inherit" });
+      execSync(`"${mdbookCmd}" build "${bookSrc}" --dest-dir "${destDir}"`, { stdio: "inherit" });
     } catch (err) {
       console.error(`Error compiling mdbook at ${bookSrc}:`, err);
     }
